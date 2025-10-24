@@ -3,25 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Магазин Овощей и Фруктов</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Мой магазин овощей и фруктов</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    #catalog {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      width: 150px;
+      text-align: center;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .card button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #27ae60;
+      color: #fff;
+    }
+    .card button:hover {
+      background-color: #2ecc71;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>🥕 Fresh Market</h1>
-    <p>Свежие овощи и фрукты, как в Самокате 🍎</p>
-  </header>
-
-  <main id="product-list"></main>
-
-  <div id="cart">
-    <h2>🛒 Корзина</h2>
-    <ul id="cart-items"></ul>
-    <div id="total">Итого: 0 ₽</div>
-    <button id="send-order">Отправить заказ</button>
+  <h1>Мой магазин овощей и фруктов</h1>
+  
+  <h2>Каталог товаров</h2>
+  <div id="catalog">
+    <!-- Товары будут добавляться здесь через JS -->
   </div>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="script.js"></script>
+  <script>
+    // Список товаров
+    const products = [
+      { name: "Яблоки", price: 150, img: "https://via.placeholder.com/150?text=Яблоки" },
+      { name: "Бананы", price: 120, img: "https://via.placeholder.com/150?text=Бананы" },
+      { name: "Морковь", price: 80, img: "https://via.placeholder.com/150?text=Морковь" },
+      { name: "Помидоры", price: 200, img: "https://via.placeholder.com/150?text=Помидоры" }
+    ];
+
+    const catalog = document.getElementById('catalog');
+
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${product.img}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>${product.price} ₽</p>
+        <button onclick="addToCart('${product.name}', ${product.price})">В корзину</button>
+      `;
+      catalog.appendChild(card);
+    });
+
+    function addToCart(name, price) {
+      alert(`${name} добавлен в корзину за ${price} ₽!`);
+    }
+  </script>
 </body>
 </html>

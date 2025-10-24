@@ -20,7 +20,7 @@ async def cmd_start(message: types.Message):
         keyboard=[[
             KeyboardButton(
                 text="🛒 Оформить заказ",
-                web_app=WebAppInfo(url="https://freshmarket.loca.lt")  # <-- сюда можно вставить локальный или хостинг URL
+                web_app=WebAppInfo(url="https://webappgorina1-27jw.vercel.app")  # <-- сюда можно вставить локальный или хостинг URL
             )
         ]],
         resize_keyboard=True
