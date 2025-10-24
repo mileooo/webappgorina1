@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Магазин у Дяди Лёши</title>
+  <title>Мой магазин овощей и фруктов</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 30px;
       background-color: #f5f5f5;
+      padding: 30px;
     }
     h1 {
+      text-align: center;
       color: #2c3e50;
     }
     #catalog {
@@ -36,7 +36,7 @@
     }
     .card button {
       margin-top: 10px;
-      padding: 5px 10px;
+      padding: 6px 10px;
       font-size: 14px;
       cursor: pointer;
       border: none;
@@ -47,15 +47,62 @@
     .card button:hover {
       background-color: #2ecc71;
     }
+
+    /* Корзина */
+    #cart {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      width: 250px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    #cart h3 {
+      margin-top: 0;
+      text-align: center;
+    }
+    .cart-item {
+      border-bottom: 1px solid #ddd;
+      padding: 5px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    #total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    #clear-cart {
+      width: 100%;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #clear-cart:hover {
+      background-color: #c0392b;
+    }
   </style>
 </head>
 <body>
-  <h1>Магазин у дяди Лёши</h1>
-  
-  <h2>Каталог товаров</h2>
-  <div id="catalog">
-    <!-- Товары будут добавляться здесь через JS -->
+  <h1>Мой магазин овощей и фруктов</h1>
+
+  <div id="cart">
+    <h3>🛒 Корзина</h3>
+    <div id="cart-items"></div>
+    <div id="total">Итого: 0 ₽</div>
+    <button id="clear-cart">Очистить корзину</button>
   </div>
+
+  <h2 style="text-align:center;">Каталог товаров</h2>
+  <div id="catalog"></div>
 
   <script>
     // Список товаров
@@ -107,24 +154,60 @@
   { name: "Лимон", price: 290, img: "https://via.placeholder.com/150?text=Лимон" }
 ];
 
-
     const catalog = document.getElementById('catalog');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const totalElement = document.getElementById('total');
+    const clearCartButton = document.getElementById('clear-cart');
 
-    products.forEach(product => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <img src="${product.img}" alt="${product.name}">
-        <h3>${product.name}</h3>
-        <p>${product.price} ₽</p>
-        <button onclick="addToCart('${product.name}', ${product.price})">В корзину</button>
-      `;
-      catalog.appendChild(card);
-    });
+    let cart = [];
+
+    function renderCatalog() {
+      catalog.innerHTML = '';
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${product.img}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>${product.price} ₽/кг</p>
+          <button onclick="addToCart('${product.name}', ${product.price})">В корзину</button>
+        `;
+        catalog.appendChild(card);
+      });
+    }
 
     function addToCart(name, price) {
-      alert(`${name} добавлен в корзину за ${price} ₽!`);
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.count++;
+      } else {
+        cart.push({ name, price, count: 1 });
+      }
+      renderCart();
     }
+
+    function renderCart() {
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
+      cart.forEach(item => {
+        total += item.price * item.count;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <span>${item.name} x${item.count}</span>
+          <span>${item.price * item.count} ₽</span>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+      totalElement.textContent = `Итого: ${total} ₽`;
+    }
+
+    clearCartButton.addEventListener('click', () => {
+      cart = [];
+      renderCart();
+    });
+
+    renderCatalog();
   </script>
 </body>
 </html>
