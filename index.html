@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Магазин овощей и фруктов</title>
 <style>
 :root{
@@ -12,50 +12,48 @@
   --card:#fff;
   --text:#243447;
 }
-*{box-sizing:border-box}
-body{font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;margin:0;padding:18px;background:var(--bg);color:var(--text);}
+*{box-sizing:border-box;}
+body{font-family:Arial,sans-serif;margin:0;padding:18px;background:var(--bg);color:var(--text);}
 h1{text-align:center;margin:6px 0 12px;font-size:26px;}
 .categories{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;justify-content:center;}
 .categories button{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;background:#eee;font-weight:600;transition:0.12s;}
-.categories button.active{background:var(--accent);color:white}
+.categories button.active{background:var(--accent);color:white;}
 .subcategories{display:flex;gap:10px;margin-bottom:18px;justify-content:center;flex-wrap:wrap;}
 .subcategories button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;background:#ddd;font-size:14px;transition:0.12s;}
-.subcategories button.active{background:var(--accent-2);color:white}
+.subcategories button.active{background:var(--accent-2);color:white;}
 .wrap{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
-#catalog{display:grid;grid-template-columns: repeat(auto-fill,minmax(220px,1fr));gap:16px;transition:opacity 0.3s;}
+#catalog{display:grid;grid-template-columns: repeat(auto-fill,minmax(220px,1fr));gap:16px;}
 .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(35,47,56,0.06);display:flex;flex-direction:column;gap:8px;min-height:200px;transition:transform .12s ease;}
-.card:hover{transform:translateY(-4px)}
+.card:hover{transform:translateY(-4px);}
 .img-placeholder{height:110px;border-radius:10px;background:linear-gradient(90deg,#f0f0f0,#fafafa);display:flex;align-items:center;justify-content:center;color:#9aa6b2;font-size:14px;}
-.title{font-weight:600;font-size:15px;height:40px;overflow:hidden}
-.price{color:#5b6b72;font-size:14px}
-.controls{display:flex;gap:8px;align-items:center;margin-top:auto}
+.title{font-weight:600;font-size:15px;height:40px;overflow:hidden;}
+.price{color:#5b6b72;font-size:14px;}
+.controls{display:flex;gap:8px;align-items:center;margin-top:auto;}
 .qty{display:flex;gap:6px;align-items:center;border-radius:8px;padding:6px;background:#fbfcfd;border:1px solid #e8eef2;}
 .qty input[type="number"]{width:70px;border:0;outline:none;text-align:center;font-size:14px;background:transparent;}
 .unit-select{padding:6px 8px;border-radius:8px;border:1px solid #e8eef2;background:white;font-size:13px;}
 .add-btn{background:var(--accent);color:white;border:0;padding:9px 10px;border-radius:10px;cursor:pointer;font-weight:600;transition:background .12s;}
-.add-btn:hover{background:var(--accent-2)}
+.add-btn:hover{background:var(--accent-2);}
 .cart{position:sticky;top:18px;background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(35,47,56,0.06);max-height:80vh;overflow:auto;}
-.cart h3{margin:0 0 8px;text-align:center}
-.cart-list{display:flex;flex-direction:column;gap:8px}
+.cart h3{margin:0 0 8px;text-align:center;}
+.cart-list{display:flex;flex-direction:column;gap:8px;}
 .cart-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:8px;padding:8px;background:#fbfdff;border:1px solid #eef6f2;font-size:14px;}
-.cart-item .left{display:flex;flex-direction:column;gap:6px}
-.remove{background:#fdecea;color:#b82c1a;border:0;padding:6px 8px;border-radius:8px;cursor:pointer}
+.cart-item .left{display:flex;flex-direction:column;gap:6px;}
+.remove{background:#fdecea;color:#b82c1a;border:0;padding:6px 8px;border-radius:8px;cursor:pointer;}
 .total{margin-top:10px;text-align:right;font-weight:700;font-size:16px;}
-.cart-actions{display:flex;gap:8px;margin-top:10px}
+.cart-actions{display:flex;gap:8px;margin-top:10px;}
 .btn{flex:1;padding:10px;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
-.btn-clear{background:#f44336;color:white}
-.btn-check{background:var(--accent);color:white}
-@media (max-width:980px){.wrap{grid-template-columns:1fr}.cart{position:static}}
-.muted{color:#6f7f87;font-size:13px}
-
-/* Оформление заказа */
-#checkout-section{display:none;margin-top:20px;opacity:0;transition:opacity 0.3s;}
-#checkout-section.show{display:block;opacity:1;}
+.btn-clear{background:#f44336;color:white;}
+.btn-check{background:var(--accent);color:white;}
+.muted{color:#6f7f87;font-size:13px;}
+#checkout-section{display:none;margin-top:20px;}
+#checkout-section.show{display:block;}
 .checkout-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;}
 .checkout-form input, .checkout-form select{padding:8px;border-radius:8px;border:1px solid #ccc;font-size:14px;width:100%;}
 .checkout-form label{font-weight:600;font-size:14px;}
 .checkout-form button{padding:10px;background:var(--accent);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:0.12s;}
 .checkout-form button:hover{background:var(--accent-2);}
+@media (max-width:980px){.wrap{grid-template-columns:1fr}.cart{position:static;}}
 </style>
 </head>
 <body>
@@ -80,77 +78,88 @@ h1{text-align:center;margin:6px 0 12px;font-size:26px;}
       <button id="clear-cart" class="btn btn-clear">Очистить</button>
       <button id="checkout" class="btn btn-check">Оформить заказ</button>
     </div>
-    <div style="margin-top:10px;font-size:13px;color:#667f87;text-align:center">
-      Тестовый режим — заказ пока через модальное окно
-    </div>
   </aside>
 </div>
 
-<!-- Шаг оформления заказа -->
 <div id="checkout-section">
   <h2>📦 Оформление заказа</h2>
   <form class="checkout-form" id="checkout-form">
-    <label>Имя *</label>
-    <input type="text" id="cust-name" required>
-    
-    <label>Телефон *</label>
-    <input type="tel" id="cust-phone" required>
-    
-    <label>Доп. телефон (по желанию)</label>
-    <input type="tel" id="cust-phone2">
-    
-    <label>Город *</label>
-    <input type="text" id="cust-city" required>
-    
-    <label>Улица *</label>
-    <input type="text" id="cust-street" required>
-    
-    <label>Дом *</label>
-    <input type="text" id="cust-house" required>
-    
-    <label>Подъезд</label>
-    <input type="text" id="cust-entrance">
-    
-    <label>Этаж</label>
-    <input type="text" id="cust-floor">
-    
-    <label>Квартира</label>
-    <input type="text" id="cust-apartment">
-    
+    <label>Имя *</label><input type="text" id="cust-name" required>
+    <label>Телефон *</label><input type="tel" id="cust-phone" required>
+    <label>Доп. телефон</label><input type="tel" id="cust-phone2">
+    <label>Город *</label><input type="text" id="cust-city" required>
+    <label>Улица *</label><input type="text" id="cust-street" required>
+    <label>Дом *</label><input type="text" id="cust-house" required>
+    <label>Подъезд</label><input type="text" id="cust-entrance">
+    <label>Этаж</label><input type="text" id="cust-floor">
+    <label>Квартира</label><input type="text" id="cust-apartment">
     <label>Время доставки *</label>
     <select id="delivery-time">
       <option value="asap">Как можно скорее</option>
       <option value="custom">Указать время</option>
     </select>
     <input type="time" id="custom-time" style="display:none;">
-    
     <label>Способ оплаты *</label>
     <select id="payment-method" required>
       <option value="cash">Наличные</option>
       <option value="online">Онлайн (карта, СБП)</option>
     </select>
-    
     <button type="submit">Подтвердить заказ</button>
   </form>
 </div>
 
 <script>
-//=== Данные товаров
-const products=[/* здесь вставь все свои товары */];
+// Товары
+const products=[
+  {name:"Арбуз", price:40, category:"fruits", subcategory:"Ягоды"},
+  {name:"Банан", price:170, category:"fruits", subcategory:"Ягоды"},
+  {name:"Дыня торпеда Узбекистан", price:80, category:"fruits", subcategory:"Ягоды"},
+  {name:"Дыня колхозница", price:80, category:"fruits", subcategory:"Ягоды"},
+  {name:"Черешня", price:580, category:"fruits", subcategory:"Ягоды"},
+  {name:"Голубика", price:800, category:"fruits", subcategory:"Ягоды"},
+  {name:"Виноград зеленый (без косточек)", price:320, category:"fruits", subcategory:"Ягоды"},
+  {name:"Виноград темный (без косточек)", price:320, category:"fruits", subcategory:"Ягоды"},
+  {name:"Виноград черный (Мерседес)", price:300, category:"fruits", subcategory:"Ягоды"},
+  {name:"Груша", price:340, category:"fruits", subcategory:"Косточковые"},
+  {name:"Апельсин", price:220, category:"fruits", subcategory:"Цитрусовые"},
+  {name:"Лимон", price:290, category:"fruits", subcategory:"Цитрусовые"},
+  {name:"Киви", price:450, category:"fruits", subcategory:"Цитрусовые"},
+  {name:"Картофель Чувашия", price:45, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Картофель Краснодар", price:45, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Морковь Волгоград", price:45, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Чеснок Ташкент", price:400, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Помидоры Азербайджанские", price:220, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры Ростовские", price:180, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры Волгоград (мелкие)", price:80, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры домашние", price:240, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры Астрахань (желтые)", price:190, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Огурцы Московские", price:150, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Огурцы Самарские", price:80, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Огурцы домашние", price:150, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Перец болгарский", price:130, category:"vegetables", subcategory:"Перцы"},
+  {name:"Перец чили", price:25, category:"vegetables", subcategory:"Перцы"},
+  {name:"Лук зеленый", price:350, category:"vegetables", subcategory:"Зелень"},
+  {name:"Укроп, петрушка", price:350, category:"vegetables", subcategory:"Зелень"},
+  {name:"Кинза", price:440, category:"vegetables", subcategory:"Зелень"},
+  {name:"Базелик (пучок)", price:50, category:"vegetables", subcategory:"Зелень"},
+  {name:"Кабачок", price:55, category:"vegetables", subcategory:"Прочие овощи"},
+  {name:"Баклажан", price:130, category:"vegetables", subcategory:"Прочие овощи"},
+  {name:"Лук репчатый Волгоград", price:45, category:"vegetables", subcategory:"Прочие овощи"}
+];
 
 let cart=[];
 let selectedCategory="fruits";
 let selectedSubcategory=null;
 
-// DOM элементы
+// DOM
 const catalogEl=document.getElementById('catalog');
-const catalogWrap=document.getElementById('catalog-wrap');
 const cartListEl=document.getElementById('cart-list');
 const cartTotalEl=document.getElementById('cart-total');
 const clearBtn=document.getElementById('clear-cart');
 const checkoutBtn=document.getElementById('checkout');
 const categoryButtons=document.getElementById('category-buttons');
 const subcategoryButtons=document.getElementById('subcategory-buttons');
+const catalogWrap=document.getElementById('catalog-wrap');
 const checkoutSection=document.getElementById('checkout-section');
 const checkoutForm=document.getElementById('checkout-form');
 const deliveryTimeSelect=document.getElementById('delivery-time');
@@ -244,12 +253,11 @@ checkoutBtn.onclick = () => {
   checkoutSection.classList.add('show');
 };
 
-// Форма оформления заказа
+// Форма заказа
 deliveryTimeSelect.onchange=()=>{customTimeInput.style.display=deliveryTimeSelect.value==='custom'?'block':'none';}
-
 checkoutForm.onsubmit=(e)=>{
   e.preventDefault();
-  alert('Заказ подтверждён! (Тестовое окно)');
+  alert('Заказ подтверждён! (тест)');
 };
 
 renderSubcategories();
