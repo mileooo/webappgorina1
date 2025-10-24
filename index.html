@@ -13,13 +13,7 @@
   --text:#243447;
 }
 *{box-sizing:border-box}
-body{
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  margin:0;
-  padding:18px;
-  background:var(--bg);
-  color:var(--text);
-}
+body{font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;margin:0;padding:18px;background:var(--bg);color:var(--text);}
 h1{text-align:center;margin:6px 0 12px;font-size:26px;}
 .categories{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;justify-content:center;}
 .categories button{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;background:#eee;font-weight:600;transition:0.12s;}
@@ -45,8 +39,6 @@ h1{text-align:center;margin:6px 0 12px;font-size:26px;}
 .cart-list{display:flex;flex-direction:column;gap:8px}
 .cart-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:8px;padding:8px;background:#fbfdff;border:1px solid #eef6f2;font-size:14px;}
 .cart-item .left{display:flex;flex-direction:column;gap:6px}
-.cart-controls{display:flex;gap:6px;align-items:center}
-.mini-btn{border:1px solid #e3e9ea;background:white;padding:6px 8px;border-radius:8px;cursor:pointer;}
 .remove{background:#fdecea;color:#b82c1a;border:0;padding:6px 8px;border-radius:8px;cursor:pointer}
 .total{margin-top:10px;text-align:right;font-weight:700;font-size:16px;}
 .cart-actions{display:flex;gap:8px;margin-top:10px}
@@ -86,7 +78,7 @@ h1{text-align:center;margin:6px 0 12px;font-size:26px;}
 </div>
 
 <script>
-const products = [
+const products=[
   // Фрукты
   {name:"Арбуз", price:40, category:"fruits", subcategory:"Ягоды"},
   {name:"Банан", price:170, category:"fruits", subcategory:"Ягоды"},
@@ -113,27 +105,27 @@ const products = [
   {name:"Киви", price:450, category:"fruits", subcategory:"Цитрусовые"},
   {name:"Груша", price:340, category:"fruits", subcategory:"Косточковые"},
   // Овощи
-  {name:"Картофель Чувашия", price:45, category:"vegetables"},
-  {name:"Картофель Краснодар", price:45, category:"vegetables"},
-  {name:"Морковь Волгоград", price:45, category:"vegetables"},
-  {name:"Лук репчатый Волгоград", price:45, category:"vegetables"},
-  {name:"Лук зеленый", price:350, category:"vegetables"},
-  {name:"Укроп, петрушка", price:350, category:"vegetables"},
-  {name:"Кинза", price:440, category:"vegetables"},
-  {name:"Базелик (пучок)", price:50, category:"vegetables"},
-  {name:"Чеснок Ташкент", price:400, category:"vegetables"},
-  {name:"Перец болгарский", price:130, category:"vegetables"},
-  {name:"Перец чили", price:25, category:"vegetables"},
-  {name:"Помидоры Азербайджанские", price:220, category:"vegetables"},
-  {name:"Помидоры Ростовские", price:180, category:"vegetables"},
-  {name:"Помидоры Волгоград (мелкие)", price:80, category:"vegetables"},
-  {name:"Помидоры домашние", price:240, category:"vegetables"},
-  {name:"Помидоры Астрахань (желтые)", price:190, category:"vegetables"},
-  {name:"Огурцы Московские", price:150, category:"vegetables"},
-  {name:"Огурцы Самарские", price:80, category:"vegetables"},
-  {name:"Огурцы домашние", price:150, category:"vegetables"},
-  {name:"Кабачок", price:55, category:"vegetables"},
-  {name:"Баклажан", price:130, category:"vegetables"}
+  {name:"Картофель Чувашия", price:45, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Картофель Краснодар", price:45, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Морковь Волгоград", price:45, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Чеснок Ташкент", price:400, category:"vegetables", subcategory:"Корнеплоды"},
+  {name:"Помидоры Азербайджанские", price:220, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры Ростовские", price:180, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры Волгоград (мелкие)", price:80, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры домашние", price:240, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Помидоры Астрахань (желтые)", price:190, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Огурцы Московские", price:150, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Огурцы Самарские", price:80, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Огурцы домашние", price:150, category:"vegetables", subcategory:"Томаты и огурцы"},
+  {name:"Перец болгарский", price:130, category:"vegetables", subcategory:"Перцы"},
+  {name:"Перец чили", price:25, category:"vegetables", subcategory:"Перцы"},
+  {name:"Лук зеленый", price:350, category:"vegetables", subcategory:"Зелень"},
+  {name:"Укроп, петрушка", price:350, category:"vegetables", subcategory:"Зелень"},
+  {name:"Кинза", price:440, category:"vegetables", subcategory:"Зелень"},
+  {name:"Базелик (пучок)", price:50, category:"vegetables", subcategory:"Зелень"},
+  {name:"Кабачок", price:55, category:"vegetables", subcategory:"Прочие овощи"},
+  {name:"Баклажан", price:130, category:"vegetables", subcategory:"Прочие овощи"},
+  {name:"Лук репчатый Волгоград", price:45, category:"vegetables", subcategory:"Прочие овощи"}
 ];
 
 let cart=[];
@@ -155,6 +147,15 @@ function renderSubcategories(){
   subcategoryButtons.innerHTML='';
   if(selectedCategory==='fruits'){
     const subs=["Ягоды","Косточковые","Цитрусовые"];
+    subs.forEach(sub=>{
+      const btn=document.createElement('button');
+      btn.textContent=sub;
+      btn.className=selectedSubcategory===sub?'active':'';
+      btn.onclick=()=>{selectedSubcategory=sub; renderSubcategories(); renderCatalog();}
+      subcategoryButtons.appendChild(btn);
+    });
+  } else if(selectedCategory==='vegetables'){
+    const subs=["Корнеплоды","Томаты и огурцы","Перцы","Зелень","Прочие овощи"];
     subs.forEach(sub=>{
       const btn=document.createElement('button');
       btn.textContent=sub;
@@ -220,7 +221,7 @@ function renderCart(){
 function removeFromCart(name){cart=cart.filter(c=>c.name!==name); renderCart();}
 
 clearBtn.onclick=()=>{cart=[]; renderCart();}
-checkoutBtn.onclick=()=>{alert('Тестовый заказ:\n'+cart.map(c=>c.name+' — '+c.qty.toFixed(2)+' кг — '+rub(c.total)).join('\n'));}
+checkoutBtn.onclick=()=>{alert('Тестовый заказ:\n'+cart.map(c=>c.name+' — '+cart.qty.toFixed(2)+' кг — '+rub(cart.total)).join('\n'));}
 
 categoryButtons.querySelectorAll('button').forEach(btn=>{
   btn.onclick=()=>{
