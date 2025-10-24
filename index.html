@@ -47,6 +47,15 @@ h1{text-align:center;margin:6px 0 12px;font-size:26px;}
 .btn-check{background:var(--accent);color:white}
 @media (max-width:980px){.wrap{grid-template-columns:1fr}.cart{position:static}}
 .muted{color:#6f7f87;font-size:13px}
+
+/* Оформление заказа */
+#checkout-section{display:none;margin-top:20px;}
+#checkout-section h2{text-align:center;margin-bottom:12px;}
+.checkout-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;}
+.checkout-form input, .checkout-form select{padding:8px;border-radius:8px;border:1px solid #ccc;font-size:14px;width:100%;}
+.checkout-form label{font-weight:600;font-size:14px;}
+.checkout-form button{padding:10px;background:var(--accent);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:0.12s;}
+.checkout-form button:hover{background:var(--accent-2);}
 </style>
 </head>
 <body>
@@ -60,7 +69,7 @@ h1{text-align:center;margin:6px 0 12px;font-size:26px;}
 <div class="subcategories" id="subcategory-buttons"></div>
 
 <div class="wrap">
-  <div>
+  <div id="catalog-wrap">
     <div id="catalog"></div>
   </div>
   <aside class="cart" id="cart">
@@ -77,9 +86,57 @@ h1{text-align:center;margin:6px 0 12px;font-size:26px;}
   </aside>
 </div>
 
+<!-- Шаг оформления заказа -->
+<div id="checkout-section">
+  <h2>📦 Оформление заказа</h2>
+  <form class="checkout-form" id="checkout-form">
+    <label>Имя *</label>
+    <input type="text" id="cust-name" required>
+    
+    <label>Телефон *</label>
+    <input type="tel" id="cust-phone" required>
+    
+    <label>Доп. телефон (по желанию)</label>
+    <input type="tel" id="cust-phone2">
+    
+    <label>Город *</label>
+    <input type="text" id="cust-city" required>
+    
+    <label>Улица *</label>
+    <input type="text" id="cust-street" required>
+    
+    <label>Дом *</label>
+    <input type="text" id="cust-house" required>
+    
+    <label>Подъезд</label>
+    <input type="text" id="cust-entrance">
+    
+    <label>Этаж</label>
+    <input type="text" id="cust-floor">
+    
+    <label>Квартира</label>
+    <input type="text" id="cust-apartment">
+    
+    <label>Время доставки *</label>
+    <select id="delivery-time">
+      <option value="asap">Как можно скорее</option>
+      <option value="custom">Указать время</option>
+    </select>
+    <input type="time" id="custom-time" style="display:none;">
+    
+    <label>Способ оплаты *</label>
+    <select id="payment-method" required>
+      <option value="cash">Наличные</option>
+      <option value="online">Онлайн (карта, СБП)</option>
+    </select>
+    
+    <button type="submit">Подтвердить заказ</button>
+  </form>
+</div>
+
 <script>
+//=== Данные товаров (фрукты + овощи)
 const products=[
-  // Фрукты
   {name:"Арбуз", price:40, category:"fruits", subcategory:"Ягоды"},
   {name:"Банан", price:170, category:"fruits", subcategory:"Ягоды"},
   {name:"Дыня торпеда Узбекистан", price:80, category:"fruits", subcategory:"Ягоды"},
@@ -104,7 +161,6 @@ const products=[
   {name:"Лимон", price:290, category:"fruits", subcategory:"Цитрусовые"},
   {name:"Киви", price:450, category:"fruits", subcategory:"Цитрусовые"},
   {name:"Груша", price:340, category:"fruits", subcategory:"Косточковые"},
-  // Овощи
   {name:"Картофель Чувашия", price:45, category:"vegetables", subcategory:"Корнеплоды"},
   {name:"Картофель Краснодар", price:45, category:"vegetables", subcategory:"Корнеплоды"},
   {name:"Морковь Волгоград", price:45, category:"vegetables", subcategory:"Корнеплоды"},
@@ -132,6 +188,7 @@ let cart=[];
 let selectedCategory="fruits";
 let selectedSubcategory=null;
 
+//=== DOM элементы
 const catalogEl=document.getElementById('catalog');
 const cartListEl=document.getElementById('cart-list');
 const cartTotalEl=document.getElementById('cart-total');
@@ -139,42 +196,38 @@ const clearBtn=document.getElementById('clear-cart');
 const checkoutBtn=document.getElementById('checkout');
 const categoryButtons=document.getElementById('category-buttons');
 const subcategoryButtons=document.getElementById('subcategory-buttons');
+const catalogWrap=document.getElementById('catalog-wrap');
+const checkoutSection=document.getElementById('checkout-section');
+const checkoutForm=document.getElementById('checkout-form');
+const deliveryTimeSelect=document.getElementById('delivery-time');
+const customTimeInput=document.getElementById('custom-time');
 
 function idify(name){return name.replace(/\s+/g,'_').replace(/[^\w\-]/g,'');}
 function rub(v){return Math.round(v)+' ₽';}
 
+//=== Подкатегории
 function renderSubcategories(){
   subcategoryButtons.innerHTML='';
-  if(selectedCategory==='fruits'){
-    const subs=["Ягоды","Косточковые","Цитрусовые"];
-    subs.forEach(sub=>{
-      const btn=document.createElement('button');
-      btn.textContent=sub;
-      btn.className=selectedSubcategory===sub?'active':'';
-      btn.onclick=()=>{selectedSubcategory=sub; renderSubcategories(); renderCatalog();}
-      subcategoryButtons.appendChild(btn);
-    });
-  } else if(selectedCategory==='vegetables'){
-    const subs=["Корнеплоды","Томаты и огурцы","Перцы","Зелень","Прочие овощи"];
-    subs.forEach(sub=>{
-      const btn=document.createElement('button');
-      btn.textContent=sub;
-      btn.className=selectedSubcategory===sub?'active':'';
-      btn.onclick=()=>{selectedSubcategory=sub; renderSubcategories(); renderCatalog();}
-      subcategoryButtons.appendChild(btn);
-    });
-  } else selectedSubcategory=null;
+  let subs=[];
+  if(selectedCategory==='fruits') subs=["Ягоды","Косточковые","Цитрусовые"];
+  else if(selectedCategory==='vegetables') subs=["Корнеплоды","Томаты и огурцы","Перцы","Зелень","Прочие овощи"];
+  subs.forEach(sub=>{
+    const btn=document.createElement('button');
+    btn.textContent=sub;
+    btn.className=selectedSubcategory===sub?'active':'';
+    btn.onclick=()=>{selectedSubcategory=sub; renderSubcategories(); renderCatalog();}
+    subcategoryButtons.appendChild(btn);
+  });
 }
 
+//=== Каталог
 function renderCatalog(){
   catalogEl.innerHTML='';
   let filtered=products.filter(p=>p.category===selectedCategory);
   if(selectedSubcategory) filtered=filtered.filter(p=>p.subcategory===selectedSubcategory);
-
   filtered.forEach(prod=>{
     const id=idify(prod.name);
-    const card=document.createElement('div');
-    card.className='card';
+    const card=document.createElement('div'); card.className='card';
     card.innerHTML=`<div class="img-placeholder">Фото (пока)</div>
       <div class="title">${prod.name}</div>
       <div class="price muted">${prod.price} ₽/кг</div>`;
@@ -186,17 +239,14 @@ function renderCatalog(){
     unitSelect.innerHTML=`<option value="kg">кг</option><option value="g">г</option>`;
     qtyWrap.appendChild(qtyInput); qtyWrap.appendChild(unitSelect);
     const addBtn=document.createElement('button'); addBtn.className='add-btn'; addBtn.textContent='Добавить';
-    addBtn.onclick=()=>{
-      let qty=parseFloat(qtyInput.value);
-      if(unitSelect.value==='g') qty/=1000;
-      addToCart(prod,qty);
-    };
+    addBtn.onclick=()=>{let qty=parseFloat(qtyInput.value); if(unitSelect.value==='g') qty/=1000; addToCart(prod,qty);}
     controls.appendChild(qtyWrap); controls.appendChild(addBtn);
     card.appendChild(controls);
     catalogEl.appendChild(card);
   });
 }
 
+//=== Корзина
 function addToCart(prod,qty){
   const existing=cart.find(c=>c.name===prod.name);
   if(existing){existing.qty+=qty; existing.total=existing.qty*prod.price;}
@@ -221,8 +271,8 @@ function renderCart(){
 function removeFromCart(name){cart=cart.filter(c=>c.name!==name); renderCart();}
 
 clearBtn.onclick=()=>{cart=[]; renderCart();}
-checkoutBtn.onclick=()=>{alert('Тестовый заказ:\n'+cart.map(c=>c.name+' — '+cart.qty.toFixed(2)+' кг — '+rub(cart.total)).join('\n'));}
 
+//=== Переключение категории
 categoryButtons.querySelectorAll('button').forEach(btn=>{
   btn.onclick=()=>{
     categoryButtons.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
@@ -234,6 +284,41 @@ categoryButtons.querySelectorAll('button').forEach(btn=>{
   }
 });
 
+//=== Кнопка "Оформить заказ"
+checkoutBtn.onclick=()=>{
+  if(cart.length===0){alert('Корзина пуста!'); return;}
+  catalogWrap.style.display='none';
+  checkoutSection.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+//=== Форма оформления заказа
+deliveryTimeSelect.onchange=()=>{customTimeInput.style.display=deliveryTimeSelect.value==='custom'?'block':'none';}
+
+checkoutForm.onsubmit=(e)=>{
+  e.preventDefault();
+  const name=document.getElementById('cust-name').value;
+  const phone=document.getElementById('cust-phone').value;
+  const phone2=document.getElementById('cust-phone2').value;
+  const city=document.getElementById('cust-city').value;
+  const street=document.getElementById('cust-street').value;
+  const house=document.getElementById('cust-house').value;
+  const entrance=document.getElementById('cust-entrance').value;
+  const floor=document.getElementById('cust-floor').value;
+  const apt=document.getElementById('cust-apartment').value;
+  let time=deliveryTimeSelect.value==='custom'?customTimeInput.value:'Как можно скорее';
+  const payment=document.getElementById('payment-method').value;
+
+  let orderText='🛒 Ваш заказ:\n\n';
+  cart.forEach(item=>{
+    let unitQty=(item.qty<1)?(item.qty*1000).toFixed(0)+' г':item.qty.toFixed(2)+' кг';
+    orderText+=`${item.name} — ${unitQty} — ${rub(item.total)}\n`;
+  });
+  orderText+=`\n👤 Имя: ${name}\n📞 Телефон: ${phone}${phone2?'\n📞 Доп: '+phone2:''}\n🏠 Адрес: ${city}, ${street}, д.${house}${entrance? ', подъезд '+entrance:''}${floor?', этаж '+floor:''}${apt?', кв '+apt:''}\n⏱ Доставка: ${time}\n💳 Оплата: ${payment==='cash'?'Наличные':'Онлайн'}`;
+
+  alert(orderText);
+  // Можно здесь потом добавить отправку через Telegram или email
+};
 renderSubcategories();
 renderCatalog();
 </script>
