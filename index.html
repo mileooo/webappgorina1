@@ -285,12 +285,18 @@ categoryButtons.querySelectorAll('button').forEach(btn=>{
 });
 
 //=== Кнопка "Оформить заказ"
-checkoutBtn.onclick=()=>{
-  if(cart.length===0){alert('Корзина пуста!'); return;}
-  catalogWrap.style.display='none';
-  checkoutSection.style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+checkoutBtn.onclick = () => {
+  if(cart.length === 0){
+    alert('Корзина пуста!');
+    return;
+  }
+  // Плавно скрываем каталог
+  catalogWrap.classList.add('hidden');
+  // Плавно показываем форму заказа
+  checkoutSection.classList.add('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
 
 //=== Форма оформления заказа
 deliveryTimeSelect.onchange=()=>{customTimeInput.style.display=deliveryTimeSelect.value==='custom'?'block':'none';}

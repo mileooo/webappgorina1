@@ -3,6 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f8f9fa;
+  overflow-x: hidden; /* важно для анимации */
 }
 
 header {
@@ -17,6 +18,27 @@ header {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   padding: 20px;
+  transition: all 0.5s ease;
+}
+
+#product-list.hidden {
+  transform: translateX(-120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#checkout-section {
+  transform: translateX(120%);
+  opacity: 0;
+  transition: all 0.5s ease;
+  display: none;
+  padding: 20px;
+}
+
+#checkout-section.show {
+  transform: translateX(0);
+  opacity: 1;
+  display: block;
 }
 
 #cart {
@@ -29,4 +51,95 @@ header {
   padding: 15px;
   width: 250px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.cart h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.cart-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.cart-item .remove {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.cart-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-clear {
+  background: #f44336;
+  color: white;
+}
+
+.btn-check {
+  background: #4CAF50;
+  color: white;
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.checkout-form input,
+.checkout-form select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+}
+
+.checkout-form label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.checkout-form button {
+  padding: 10px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.12s;
+}
+
+.checkout-form button:hover {
+  background: #45a049;
 }
