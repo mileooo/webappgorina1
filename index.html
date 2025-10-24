@@ -1,256 +1,531 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой магазин овощей и фруктов</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Магазин овощей и фруктов</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      padding: 30px;
+    :root{
+      --accent:#27ae60;
+      --accent-2:#2ecc71;
+      --bg:#f5f7fa;
+      --card:#fff;
+      --text:#243447;
     }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
+    *{box-sizing:border-box}
+    body{
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      margin:0;
+      padding:18px;
+      background:var(--bg);
+      color:var(--text);
     }
-    #catalog {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 10px;
-      width: 180px;
-      text-align: center;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .card img {
-      width: 100%;
-      border-radius: 10px;
-    }
-    .card input {
-      width: 80%;
-      margin-top: 5px;
-      padding: 5px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .card select {
-      margin-top: 5px;
-      padding: 5px;
-      border-radius: 5px;
-    }
-    .card button {
-      margin-top: 10px;
-      padding: 6px 10px;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background-color: #27ae60;
-      color: #fff;
-    }
-    .card button:hover {
-      background-color: #2ecc71;
+    h1{
+      text-align:center;
+      margin:6px 0 12px;
+      font-size:26px;
     }
 
+    .wrap{
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:20px;
+      align-items:start;
+    }
+
+    /* Каталог */
+    #catalog{
+      display:grid;
+      grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+      gap:16px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:12px;
+      box-shadow: 0 6px 18px rgba(35,47,56,0.06);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-height:200px;
+      transition:transform .12s ease;
+    }
+    .card:hover{transform:translateY(-4px)}
+    .img-placeholder{
+      height:110px;
+      border-radius:10px;
+      background:linear-gradient(90deg,#f0f0f0,#fafafa);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#9aa6b2;
+      font-size:14px;
+    }
+    .title{font-weight:600;font-size:15px;height:40px;overflow:hidden}
+    .price{color:#5b6b72;font-size:14px}
+    .controls{display:flex;gap:8px;align-items:center;margin-top:auto}
+    .qty{
+      display:flex;
+      gap:6px;
+      align-items:center;
+      border-radius:8px;
+      padding:6px;
+      background:#fbfcfd;
+      border:1px solid #e8eef2;
+    }
+    .qty input[type="number"]{
+      width:70px;
+      border:0;
+      outline:none;
+      text-align:center;
+      font-size:14px;
+      background:transparent;
+    }
+    .unit-select{
+      padding:6px 8px;
+      border-radius:8px;
+      border:1px solid #e8eef2;
+      background:white;
+      font-size:13px;
+    }
+    .add-btn{
+      background:var(--accent);
+      color:white;
+      border:0;
+      padding:9px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      transition:background .12s;
+    }
+    .add-btn:hover{background:var(--accent-2)}
+
     /* Корзина */
-    #cart {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      width: 280px;
-      max-height: 450px;
-      overflow-y: auto;
+    .cart{
+      position:sticky;
+      top:18px;
+      background:var(--card);
+      border-radius:12px;
+      padding:14px;
+      box-shadow: 0 6px 18px rgba(35,47,56,0.06);
+      max-height:80vh;
+      overflow:auto;
     }
-    #cart h3 {
-      margin-top: 0;
-      text-align: center;
+    .cart h3{margin:0 0 8px;text-align:center}
+    .cart-list{display:flex;flex-direction:column;gap:8px}
+    .cart-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      border-radius:8px;
+      padding:8px;
+      background:#fbfdff;
+      border:1px solid #eef6f2;
+      font-size:14px;
     }
-    .cart-item {
-      border-bottom: 1px solid #ddd;
-      padding: 5px 0;
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
+    .cart-item .left{display:flex;flex-direction:column;gap:6px}
+    .cart-controls{display:flex;gap:6px;align-items:center}
+    .mini-btn{
+      border:1px solid #e3e9ea;
+      background:white;
+      padding:6px 8px;
+      border-radius:8px;
+      cursor:pointer;
     }
-    #total {
-      text-align: right;
-      font-weight: bold;
-      margin-top: 10px;
+    .remove{background:#fdecea;color:#b82c1a;border:0;padding:6px 8px;border-radius:8px;cursor:pointer}
+    .total{
+      margin-top:10px;
+      text-align:right;
+      font-weight:700;
+      font-size:16px;
     }
-    #clear-cart, #checkout {
-      width: 100%;
-      padding: 8px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
+    .cart-actions{display:flex;gap:8px;margin-top:10px}
+    .btn{
+      flex:1;
+      padding:10px;
+      border-radius:10px;
+      border:0;
+      cursor:pointer;
+      font-weight:700;
     }
-    #clear-cart {
-      background-color: #e74c3c;
-      color: white;
+    .btn-clear{background:#f44336;color:white}
+    .btn-check{background:var(--accent);color:white}
+
+    /* мобильный */
+    @media (max-width:980px){
+      .wrap{grid-template-columns:1fr}
+      .cart{position:static}
     }
-    #checkout {
-      background-color: #2980b9;
-      color: white;
-    }
-    #clear-cart:hover {
-      background-color: #c0392b;
-    }
-    #checkout:hover {
-      background-color: #3498db;
-    }
+    /* небольшие правки для крутизны интерфейса */
+    .muted{color:#6f7f87;font-size:13px}
   </style>
 </head>
 <body>
-  <h1>Мой магазин овощей и фруктов</h1>
+  <h1>🥕 Магазин овощей и фруктов</h1>
 
-  <div id="cart">
-    <h3>🛒 Корзина</h3>
-    <div id="cart-items"></div>
-    <div id="total">Итого: 0 ₽</div>
-    <button id="checkout">Оформить заказ</button>
-    <button id="clear-cart">Очистить корзину</button>
+  <div class="wrap">
+    <!-- каталог -->
+    <div>
+      <div id="catalog"></div>
+    </div>
+
+    <!-- корзина -->
+    <aside class="cart" id="cart">
+      <h3>🛒 Корзина</h3>
+      <div id="cart-list" class="cart-list"></div>
+      <div class="total" id="cart-total">Итого: 0 ₽</div>
+      <div class="cart-actions">
+        <button id="clear-cart" class="btn btn-clear">Очистить</button>
+        <button id="checkout" class="btn btn-check">Оформить заказ</button>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:#667f87;text-align:center">Тестовый режим — отправка заказа пока в модальном окне</div>
+    </aside>
   </div>
 
-  <h2 style="text-align:center;">Каталог товаров</h2>
-  <div id="catalog"></div>
-
   <script>
-    // Список товаров
+    // ---- Каталог товаров (полный список) ----
+    // unitType: "weight" (kg/г) или "piece" (шт/пучок)
+    // avgWeightKg: только для unitType === "piece" — средний вес одной штуки в кг (для пересчета цены)
     const products = [
-  { name: "Арбуз", price: 40, img: "https://via.placeholder.com/150?text=Арбуз" },
-  { name: "Груша", price: 340, img: "https://via.placeholder.com/150?text=Груша" },
-  { name: "Апельсин", price: 220, img: "https://via.placeholder.com/150?text=Апельсин" },
-  { name: "Дыня торпеда Узбекистан", price: 80, img: "https://via.placeholder.com/150?text=Дыня" },
-  { name: "Дыня колхозница", price: 80, img: "https://via.placeholder.com/150?text=Дыня" },
-  { name: "Виноград зеленый (без косточек)", price: 320, img: "https://via.placeholder.com/150?text=Виноград" },
-  { name: "Виноград темный (без косточек)", price: 320, img: "https://via.placeholder.com/150?text=Виноград" },
-  { name: "Виноград черный (Мерседес)", price: 300, img: "https://via.placeholder.com/150?text=Виноград" },
-  { name: "Нектарин Узбекистан красный", price: 170, img: "https://via.placeholder.com/150?text=Нектарин" },
-  { name: "Нектарин Турция", price: 350, img: "https://via.placeholder.com/150?text=Нектарин" },
-  { name: "Нектарин Узбекистан желтый (вкус лимон)", price: 250, img: "https://via.placeholder.com/150?text=Нектарин" },
-  { name: "Нектарин Узбекистан зеленый", price: 190, img: "https://via.placeholder.com/150?text=Нектарин" },
-  { name: "Банан", price: 170, img: "https://via.placeholder.com/150?text=Банан" },
-  { name: "Картофель Чувашия", price: 45, img: "https://via.placeholder.com/150?text=Картофель" },
-  { name: "Картофель Краснодар", price: 45, img: "https://via.placeholder.com/150?text=Картофель" },
-  { name: "Морковь Волгоград", price: 45, img: "https://via.placeholder.com/150?text=Морковь" },
-  { name: "Лук репчатый Волгоград", price: 45, img: "https://via.placeholder.com/150?text=Лук" },
-  { name: "Лук зеленый", price: 350, img: "https://via.placeholder.com/150?text=Лук" },
-  { name: "Укроп, петрушка", price: 350, img: "https://via.placeholder.com/150?text=Укроп" },
-  { name: "Кинза", price: 440, img: "https://via.placeholder.com/150?text=Кинза" },
-  { name: "Базелик", price: 50, img: "https://via.placeholder.com/150?text=Базелик" },
-  { name: "Чеснок Ташкент", price: 400, img: "https://via.placeholder.com/150?text=Чеснок" },
-  { name: "Перец болгарский", price: 130, img: "https://via.placeholder.com/150?text=Перец" },
-  { name: "Перец чили", price: 25, img: "https://via.placeholder.com/150?text=Перец" },
-  { name: "Помидоры Азербайджанские", price: 220, img: "https://via.placeholder.com/150?text=Помидоры" },
-  { name: "Помидоры Ростовские", price: 180, img: "https://via.placeholder.com/150?text=Помидоры" },
-  { name: "Помидоры Волгоград (мелкие)", price: 80, img: "https://via.placeholder.com/150?text=Помидоры" },
-  { name: "Помидоры домашние", price: 240, img: "https://via.placeholder.com/150?text=Помидоры" },
-  { name: "Помидоры Астрахань (желтые)", price: 190, img: "https://via.placeholder.com/150?text=Помидоры" },
-  { name: "Огурцы Московские", price: 150, img: "https://via.placeholder.com/150?text=Огурцы" },
-  { name: "Огурцы Самарские", price: 80, img: "https://via.placeholder.com/150?text=Огурцы" },
-  { name: "Огурцы домашние", price: 150, img: "https://via.placeholder.com/150?text=Огурцы" },
-  { name: "Слива 4 вида", price: 220, img: "https://via.placeholder.com/150?text=Слива" },
-  { name: "Черешня", price: 580, img: "https://via.placeholder.com/150?text=Черешня" },
-  { name: "Голубика", price: 800, img: "https://via.placeholder.com/150?text=Голубика" },
-  { name: "Абрикос Армения", price: 240, img: "https://via.placeholder.com/150?text=Абрикос" },
-  { name: "Абрикос Киргизия", price: 150, img: "https://via.placeholder.com/150?text=Абрикос" },
-  { name: "Персик Ташкент", price: 250, img: "https://via.placeholder.com/150?text=Персик" },
-  { name: "Персик Армения", price: 380, img: "https://via.placeholder.com/150?text=Персик" },
-  { name: "Персик Турция", price: 450, img: "https://via.placeholder.com/150?text=Персик" },
-  { name: "Персик Инжирный", price: 350, img: "https://via.placeholder.com/150?text=Персик" },
-  { name: "Киви", price: 450, img: "https://via.placeholder.com/150?text=Киви" },
-  { name: "Кабачок", price: 55, img: "https://via.placeholder.com/150?text=Кабачок" },
-  { name: "Баклажан", price: 130, img: "https://via.placeholder.com/150?text=Баклажан" },
-  { name: "Лимон", price: 290, img: "https://via.placeholder.com/150?text=Лимон" }
-];
+      { name: "Арбуз", price: 40, unitType: "weight" },
+      { name: "Груша", price: 340, unitType: "weight" },
+      { name: "Апельсин", price: 220, unitType: "weight" },
+      { name: "Дыня торпеда Узбекистан", price: 80, unitType: "weight" },
+      { name: "Дыня колхозница", price: 80, unitType: "weight" },
+      { name: "Виноград зеленый (без косточек)", price: 320, unitType: "weight" },
+      { name: "Виноград темный (без косточек)", price: 320, unitType: "weight" },
+      { name: "Виноград черный (Мерседес)", price: 300, unitType: "weight" },
+      { name: "Нектарин Узбекистан красный", price: 170, unitType: "weight" },
+      { name: "Нектарин Турция", price: 350, unitType: "weight" },
+      { name: "Нектарин Узбекистан желтый (вкус лимон)", price: 250, unitType: "weight" },
+      { name: "Нектарин Узбекистан зеленый", price: 190, unitType: "weight" },
+      { name: "Банан", price: 170, unitType: "weight" },
+      { name: "Картофель Чувашия", price: 45, unitType: "weight" },
+      { name: "Картофель Краснодар", price: 45, unitType: "weight" },
+      { name: "Морковь Волгоград", price: 45, unitType: "weight" },
+      { name: "Лук репчатый Волгоград", price: 45, unitType: "weight" },
+      { name: "Лук зеленый", price: 350, unitType: "weight" },
+      { name: "Укроп, петрушка", price: 350, unitType: "weight" },
+      { name: "Кинза", price: 440, unitType: "weight" },
+      { name: "Базелик (пучок)", price: 50, unitType: "piece", avgWeightKg: 0.03 },
+      { name: "Чеснок Ташкент", price: 400, unitType: "weight" },
+      { name: "Перец болгарский", price: 130, unitType: "weight" },
+      { name: "Перец чили", price: 25, unitType: "piece", avgWeightKg: 0.02 },
+      { name: "Помидоры Азербайджанские", price: 220, unitType: "weight" },
+      { name: "Помидоры Ростовские", price: 180, unitType: "weight" },
+      { name: "Помидоры Волгоград (мелкие)", price: 80, unitType: "weight" },
+      { name: "Помидоры домашние", price: 240, unitType: "weight" },
+      { name: "Помидоры Астрахань (желтые)", price: 190, unitType: "weight" },
+      { name: "Огурцы Московские", price: 150, unitType: "weight" },
+      { name: "Огурцы Самарские", price: 80, unitType: "weight" },
+      { name: "Огурцы домашние", price: 150, unitType: "weight" },
+      { name: "Слива 4 вида", price: 220, unitType: "weight" },
+      { name: "Черешня", price: 580, unitType: "weight" },
+      { name: "Голубика", price: 800, unitType: "weight" },
+      { name: "Абрикос Армения", price: 240, unitType: "weight" },
+      { name: "Абрикос Киргизия", price: 150, unitType: "weight" },
+      { name: "Персик Ташкент", price: 250, unitType: "weight" },
+      { name: "Персик Армения", price: 380, unitType: "weight" },
+      { name: "Персик Турция", price: 450, unitType: "weight" },
+      { name: "Персик Инжирный", price: 350, unitType: "weight" },
+      { name: "Киви", price: 450, unitType: "weight" },
+      { name: "Кабачок", price: 55, unitType: "weight" },
+      { name: "Баклажан", price: 130, unitType: "weight" },
+      { name: "Лимон", price: 290, unitType: "piece", avgWeightKg: 0.15 }
+    ];
 
-    const catalog = document.getElementById('catalog');
-    const cartItemsContainer = document.getElementById('cart-items');
-    const totalElement = document.getElementById('total');
-    const clearCartButton = document.getElementById('clear-cart');
-    const checkoutButton = document.getElementById('checkout');
-
+    // ---- состояние корзины ----
     let cart = [];
 
-    function renderCatalog() {
-      catalog.innerHTML = '';
-      products.forEach(product => {
+    const catalogEl = document.getElementById('catalog');
+    const cartListEl = document.getElementById('cart-list');
+    const cartTotalEl = document.getElementById('cart-total');
+    const clearBtn = document.getElementById('clear-cart');
+    const checkoutBtn = document.getElementById('checkout');
+
+    // Помогает безопасно генерировать id элементов (без пробелов)
+    function idify(name){
+      return name.replace(/\s+/g,'_').replace(/[^\w\-]/g,'');
+    }
+
+    // Формат числа в рублях (целые рубли)
+    function rub(v){
+      return Math.round(v) + ' ₽';
+    }
+
+    // Рендер каталога
+    function renderCatalog(){
+      catalogEl.innerHTML = '';
+      products.forEach(prod => {
+        const id = idify(prod.name);
         const card = document.createElement('div');
         card.className = 'card';
+
+        // картинка-заглушка и название/цена
         card.innerHTML = `
-          <img src="${product.img}" alt="${product.name}">
-          <h3>${product.name}</h3>
-          <p>${product.price} ₽/кг</p>
-          <input type="number" id="qty-${product.name}" min="0.1" step="0.1" value="1">
-          <select id="unit-${product.name}">
-            <option value="кг">кг</option>
-            <option value="г">г</option>
-          </select>
-          <button onclick="addToCart('${product.name}', ${product.price})">В корзину</button>
+          <div class="img-placeholder">Фото (пока)</div>
+          <div class="title">${prod.name}</div>
+          <div class="price muted">${prod.price} ₽/кг</div>
         `;
-        catalog.appendChild(card);
+
+        // контролы (в зависимости от типа)
+        const controls = document.createElement('div');
+        controls.className = 'controls';
+
+        // quantity wrapper
+        const qtyWrap = document.createElement('div');
+        qtyWrap.className = 'qty';
+
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.id = `qty-${id}`;
+
+        // unit selector
+        const unitSelect = document.createElement('select');
+        unitSelect.id = `unit-${id}`;
+        unitSelect.className = 'unit-select';
+
+        if (prod.unitType === 'weight'){
+          // weight: allow kg or g (default kg)
+          qtyInput.step = '0.1';
+          qtyInput.min = '0.1';
+          qtyInput.value = '1';
+          unitSelect.innerHTML = `<option value="kg">кг</option><option value="g">г</option>`;
+        } else {
+          // piece: only integer pieces
+          qtyInput.step = '1';
+          qtyInput.min = '1';
+          qtyInput.value = '1';
+          unitSelect.innerHTML = `<option value="pcs">шт</option>`;
+        }
+
+        qtyWrap.appendChild(qtyInput);
+        qtyWrap.appendChild(unitSelect);
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-btn';
+        addBtn.textContent = 'Добавить';
+        addBtn.onclick = () => addToCart(prod.name);
+
+        controls.appendChild(qtyWrap);
+        controls.appendChild(addBtn);
+
+        card.appendChild(controls);
+        catalogEl.appendChild(card);
       });
     }
 
-    function addToCart(name, price) {
-      const qtyInput = document.getElementById(`qty-${name}`);
-      const unitSelect = document.getElementById(`unit-${name}`);
-      let qty = parseFloat(qtyInput.value) || 0;
-      if (unitSelect.value === 'г') qty = qty / 1000; // перевод граммов в кг
+    // добавление в корзину
+    function addToCart(name){
+      const prod = products.find(p => p.name === name);
+      const id = idify(name);
+      const qtyInput = document.getElementById(`qty-${id}`);
+      const unitSelect = document.getElementById(`unit-${id}`);
+      if(!qtyInput || !unitSelect) return;
 
-      const cost = Math.round(price * qty);
-      if (qty <= 0) return alert("Введите количество больше нуля!");
+      let qty = parseFloat(qtyInput.value);
+      if (isNaN(qty) || qty <= 0) { alert('Введите корректное количество'); return; }
 
-      cart.push({ name, price, qty, cost });
+      let unit = unitSelect.value; // 'kg'|'g'|'pcs'
+      // Для штучных товаров qty должен быть целым
+      if (prod.unitType === 'piece'){
+        qty = Math.round(qty);
+        if (qty < 1) qty = 1;
+      }
+
+      // Переводим к килограммам для расчета цены:
+      let kgAmount;
+      if (prod.unitType === 'weight'){
+        if (unit === 'kg') kgAmount = qty;
+        else if (unit === 'g') kgAmount = qty / 1000;
+        else kgAmount = qty; // fallback
+      } else {
+        // piece: используем avgWeightKg (если нет — возьмём 0.1 кг)
+        const avg = prod.avgWeightKg || 0.1;
+        kgAmount = qty * avg;
+      }
+
+      const cost = Math.round(prod.price * kgAmount);
+
+      // добавляем в корзину (если существует такой же товар с тем же юнитом — складываем)
+      // Для простоты: считаем одинаковыми товары по имени (складываем количества)
+      const existing = cart.find(item => item.name === name && item.unitLabel === getUnitLabel(prod,unit));
+      if (existing){
+        existing.qty += qty;
+        existing.kg += kgAmount;
+        existing.cost += cost;
+      } else {
+        cart.push({
+          name: prod.name,
+          pricePerKg: prod.price,
+          qty: qty,
+          unit: unit, // raw unit code
+          unitLabel: getUnitLabel(prod,unit),
+          kg: kgAmount,
+          cost: cost
+        });
+      }
       renderCart();
     }
 
-    function renderCart() {
-      cartItemsContainer.innerHTML = '';
+    function getUnitLabel(prod, unit){
+      if (prod.unitType === 'weight'){
+        return unit === 'kg' ? 'кг' : 'г';
+      } else {
+        // piece: display 'шт' or 'пучок' if name contains пучок
+        if (prod.name.toLowerCase().includes('пучок')) return 'пучок';
+        return 'шт';
+      }
+    }
+
+    // рендер корзины
+    function renderCart(){
+      cartListEl.innerHTML = '';
       let total = 0;
-      cart.forEach(item => {
-        total += item.cost;
+      cart.forEach((it, idx) => {
+        total += it.cost;
         const div = document.createElement('div');
         div.className = 'cart-item';
-        div.innerHTML = `
-          <span>${item.name} (${item.qty.toFixed(2)} кг)</span>
-          <span>${item.cost} ₽</span>
-        `;
-        cartItemsContainer.appendChild(div);
+
+        const left = document.createElement('div');
+        left.className = 'left';
+        const title = document.createElement('div');
+        title.textContent = it.name;
+        title.style.fontWeight = '600';
+        const sub = document.createElement('div');
+        sub.className = 'muted';
+        // отображаем qty и единицу; для весовых показываем в кг с 2 знаками, для грамм — можем показать шт
+        let qtyText;
+        if (it.unit === 'kg' || it.unit === 'g'){
+          // показываем kg с 2 знаками
+          qtyText = `${(it.kg).toFixed(2)} кг`;
+        } else {
+          qtyText = `${it.qty} ${it.unitLabel}`;
+        }
+        sub.textContent = `${qtyText} — ${rub(it.cost)}`;
+        left.appendChild(title);
+        left.appendChild(sub);
+
+        const controls = document.createElement('div');
+        controls.className = 'cart-controls';
+
+        const minus = document.createElement('button');
+        minus.className = 'mini-btn';
+        minus.textContent = '−';
+        minus.onclick = () => {
+          decrementItem(idx);
+        };
+
+        const plus = document.createElement('button');
+        plus.className = 'mini-btn';
+        plus.textContent = '+';
+        plus.onclick = () => {
+          incrementItem(idx);
+        };
+
+        const remove = document.createElement('button');
+        remove.className = 'remove';
+        remove.textContent = 'Удалить';
+        remove.onclick = () => {
+          removeItem(idx);
+        };
+
+        controls.appendChild(minus);
+        controls.appendChild(plus);
+        controls.appendChild(remove);
+
+        div.appendChild(left);
+        div.appendChild(controls);
+
+        cartListEl.appendChild(div);
       });
-      totalElement.textContent = `Итого: ${total} ₽`;
+
+      cartTotalEl.textContent = `Итого: ${rub(total)}`;
     }
 
-    clearCartButton.addEventListener('click', () => {
+    // инк/дек элементов в корзине
+    function incrementItem(index){
+      const it = cart[index];
+      const prod = products.find(p => p.name === it.name);
+      if (!prod) return;
+      if (prod.unitType === 'weight'){
+        // увеличим на 0.1 кг (100 г)
+        const deltaKg = 0.1;
+        it.kg += deltaKg;
+        // пересчитываем qty in displayed unit: if unit was g, keep unit as g but kg changed
+        // calc new qty in selected unit
+        if (it.unit === 'g'){
+          it.qty = Math.round(it.kg * 1000);
+        } else {
+          it.qty = +(it.kg).toFixed(2);
+        }
+        it.cost = Math.round(prod.price * it.kg);
+      } else {
+        // piece: +1 шт
+        it.qty = it.qty + 1;
+        const avg = prod.avgWeightKg || 0.1;
+        it.kg += avg;
+        it.cost = Math.round(prod.price * it.kg);
+      }
+      renderCart();
+    }
+
+    function decrementItem(index){
+      const it = cart[index];
+      const prod = products.find(p => p.name === it.name);
+      if (!prod) return;
+      if (prod.unitType === 'weight'){
+        const deltaKg = 0.1;
+        if (it.kg - deltaKg <= 0.09) {
+          // удаляем если станет ноль или слишком мало
+          removeItem(index); return;
+        }
+        it.kg = +(it.kg - deltaKg).toFixed(3);
+        if (it.unit === 'g') it.qty = Math.round(it.kg * 1000);
+        else it.qty = +(it.kg).toFixed(2);
+        it.cost = Math.round(prod.price * it.kg);
+      } else {
+        // piece
+        if (it.qty - 1 <= 0) { removeItem(index); return; }
+        it.qty = it.qty - 1;
+        const avg = prod.avgWeightKg || 0.1;
+        it.kg = +(it.kg - avg).toFixed(4);
+        it.cost = Math.round(prod.price * it.kg);
+      }
+      renderCart();
+    }
+
+    function removeItem(index){
+      cart.splice(index,1);
+      renderCart();
+    }
+
+    clearBtn.onclick = () => {
+      if (!confirm('Очистить корзину?')) return;
       cart = [];
       renderCart();
-    });
+    };
 
-    checkoutButton.addEventListener('click', () => {
-      if (cart.length === 0) return alert("Корзина пуста!");
-      const order = cart.map(item => `${item.name} — ${item.qty.toFixed(2)} кг (${item.cost} ₽)`).join('\n');
-      const total = totalElement.textContent;
-      const message = `🛍️ Новый заказ:\n\n${order}\n\n${total}`;
-      
-      // 👉 Здесь будет отправка данных в Telegram-бот
-      alert("Заказ оформлен! (пока только тестовая версия)\n\n" + message);
-    });
+    // Оформление заказа — пока тестовая реализация: показывает окно с данными заказа.
+    checkoutBtn.onclick = () => {
+      if (cart.length === 0) { alert('Корзина пуста!'); return; }
+      let lines = cart.map(it => {
+        const label = it.unit === 'kg' || it.unit === 'g' ? `${it.kg.toFixed(2)} кг` : `${it.qty} ${it.unitLabel}`;
+        return `${it.name} — ${label} — ${rub(it.cost)}`;
+      });
+      const totalText = cartTotalEl.textContent;
+      const full = `🛍️ Новый заказ\n\n${lines.join('\n')}\n\n${totalText}`;
+      // Пока тест — показываем заказ
+      alert(full);
 
+      // Здесь: в следующем шаге можно отправлять `full` на сервер или в Telegram бот.
+      // Пример: window.fetch('/send-order', {method:'POST', body: JSON.stringify({order:full})})
+    };
+
+    // Инициализация
     renderCatalog();
+    renderCart();
   </script>
 </body>
 </html>
