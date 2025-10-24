@@ -250,7 +250,7 @@ h1 {
 #checkout-section {
   transform: translateX(120%);
   opacity: 0;
-  display: none;
+  pointer-events: none;
   transition: all 0.5s ease;
   padding: 20px;
 }
@@ -258,7 +258,7 @@ h1 {
 #checkout-section.show {
   transform: translateX(0);
   opacity: 1;
-  display: block;
+  pointer-events: auto;
 }
 
 .checkout-form {
