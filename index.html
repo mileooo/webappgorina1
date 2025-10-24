@@ -5,314 +5,57 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Магазин овощей и фруктов</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f9fa;
-  overflow-x: hidden;
+:root{
+  --accent:#27ae60;
+  --accent-2:#2ecc71;
+  --bg:#f5f7fa;
+  --card:#fff;
+  --text:#243447;
 }
-
-h1 {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.categories {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.categories button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #eee;
-  font-weight: 600;
-  transition: 0.12s;
-}
-
-.categories button.active {
-  background: #27ae60;
-  color: white;
-}
-
-.subcategories {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 18px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.subcategories button {
-  padding: 6px 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #ddd;
-  font-size: 14px;
-  transition: 0.12s;
-}
-
-.subcategories button.active {
-  background: #2ecc71;
-  color: white;
-}
-
-.wrap {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 20px;
-  align-items: start;
-}
-
-#catalog-wrap {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  transition: all 0.5s ease;
-}
-
-#catalog-wrap.hidden {
-  transform: translateX(-120%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 6px 18px rgba(35,47,56,0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 200px;
-  transition: transform 0.12s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.img-placeholder {
-  height: 110px;
-  border-radius: 10px;
-  background: linear-gradient(90deg,#f0f0f0,#fafafa);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #9aa6b2;
-  font-size: 14px;
-}
-
-.title {
-  font-weight: 600;
-  font-size: 15px;
-  height: 40px;
-  overflow: hidden;
-}
-
-.price {
-  color: #5b6b72;
-  font-size: 14px;
-}
-
-.controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-top: auto;
-}
-
-.qty {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  border-radius: 8px;
-  padding: 6px;
-  background: #fbfcfd;
-  border: 1px solid #e8eef2;
-}
-
-.qty input[type="number"] {
-  width: 70px;
-  border: 0;
-  outline: none;
-  text-align: center;
-  font-size: 14px;
-  background: transparent;
-}
-
-.unit-select {
-  padding: 6px 8px;
-  border-radius: 8px;
-  border: 1px solid #e8eef2;
-  background: white;
-  font-size: 13px;
-}
-
-.add-btn {
-  background: #27ae60;
-  color: white;
-  border: 0;
-  padding: 9px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.12s;
-}
-
-.add-btn:hover {
-  background: #2ecc71;
-}
-
-.cart {
-  position: sticky;
-  top: 18px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 14px;
-  box-shadow: 0 6px 18px rgba(35,47,56,0.06);
-  max-height: 80vh;
-  overflow: auto;
-}
-
-.cart h3 {
-  margin: 0 0 8px;
-  text-align: center;
-}
-
-.cart-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  border-radius: 8px;
-  padding: 8px;
-  background: #fbfdff;
-  border: 1px solid #eef6f2;
-  font-size: 14px;
-}
-
-.cart-item .left {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.remove {
-  background: #fdecea;
-  color: #b82c1a;
-  border: 0;
-  padding: 6px 8px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.total {
-  margin-top: 10px;
-  text-align: right;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.cart-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.btn {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: 0;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.btn-clear {
-  background: #f44336;
-  color: white;
-}
-
-.btn-check {
-  background: #27ae60;
-  color: white;
-}
+*{box-sizing:border-box}
+body{font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;margin:0;padding:18px;background:var(--bg);color:var(--text);}
+h1{text-align:center;margin:6px 0 12px;font-size:26px;}
+.categories{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;justify-content:center;}
+.categories button{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;background:#eee;font-weight:600;transition:0.12s;}
+.categories button.active{background:var(--accent);color:white}
+.subcategories{display:flex;gap:10px;margin-bottom:18px;justify-content:center;flex-wrap:wrap;}
+.subcategories button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;background:#ddd;font-size:14px;transition:0.12s;}
+.subcategories button.active{background:var(--accent-2);color:white}
+.wrap{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+#catalog{display:grid;grid-template-columns: repeat(auto-fill,minmax(220px,1fr));gap:16px;transition:opacity 0.3s;}
+.card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(35,47,56,0.06);display:flex;flex-direction:column;gap:8px;min-height:200px;transition:transform .12s ease;}
+.card:hover{transform:translateY(-4px)}
+.img-placeholder{height:110px;border-radius:10px;background:linear-gradient(90deg,#f0f0f0,#fafafa);display:flex;align-items:center;justify-content:center;color:#9aa6b2;font-size:14px;}
+.title{font-weight:600;font-size:15px;height:40px;overflow:hidden}
+.price{color:#5b6b72;font-size:14px}
+.controls{display:flex;gap:8px;align-items:center;margin-top:auto}
+.qty{display:flex;gap:6px;align-items:center;border-radius:8px;padding:6px;background:#fbfcfd;border:1px solid #e8eef2;}
+.qty input[type="number"]{width:70px;border:0;outline:none;text-align:center;font-size:14px;background:transparent;}
+.unit-select{padding:6px 8px;border-radius:8px;border:1px solid #e8eef2;background:white;font-size:13px;}
+.add-btn{background:var(--accent);color:white;border:0;padding:9px 10px;border-radius:10px;cursor:pointer;font-weight:600;transition:background .12s;}
+.add-btn:hover{background:var(--accent-2)}
+.cart{position:sticky;top:18px;background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(35,47,56,0.06);max-height:80vh;overflow:auto;}
+.cart h3{margin:0 0 8px;text-align:center}
+.cart-list{display:flex;flex-direction:column;gap:8px}
+.cart-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:8px;padding:8px;background:#fbfdff;border:1px solid #eef6f2;font-size:14px;}
+.cart-item .left{display:flex;flex-direction:column;gap:6px}
+.remove{background:#fdecea;color:#b82c1a;border:0;padding:6px 8px;border-radius:8px;cursor:pointer}
+.total{margin-top:10px;text-align:right;font-weight:700;font-size:16px;}
+.cart-actions{display:flex;gap:8px;margin-top:10px}
+.btn{flex:1;padding:10px;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
+.btn-clear{background:#f44336;color:white}
+.btn-check{background:var(--accent);color:white}
+@media (max-width:980px){.wrap{grid-template-columns:1fr}.cart{position:static}}
+.muted{color:#6f7f87;font-size:13px}
 
 /* Оформление заказа */
-#checkout-section {
-  transform: translateX(120%);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.5s ease;
-  padding: 20px;
-}
-
-#checkout-section.show {
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.checkout-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.checkout-form input,
-.checkout-form select {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  width: 100%;
-}
-
-.checkout-form label {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.checkout-form button {
-  padding: 10px;
-  background: #27ae60;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.12s;
-}
-
-.checkout-form button:hover {
-  background: #2ecc71;
-}
-
-@media (max-width: 980px) {
-  .wrap {
-    grid-template-columns: 1fr;
-  }
-  .cart {
-    position: static;
-  }
-}
+#checkout-section{display:none;margin-top:20px;opacity:0;transition:opacity 0.3s;}
+#checkout-section.show{display:block;opacity:1;}
+.checkout-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;}
+.checkout-form input, .checkout-form select{padding:8px;border-radius:8px;border:1px solid #ccc;font-size:14px;width:100%;}
+.checkout-form label{font-weight:600;font-size:14px;}
+.checkout-form button{padding:10px;background:var(--accent);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:0.12s;}
+.checkout-form button:hover{background:var(--accent-2);}
 </style>
 </head>
 <body>
@@ -337,6 +80,9 @@ h1 {
       <button id="clear-cart" class="btn btn-clear">Очистить</button>
       <button id="checkout" class="btn btn-check">Оформить заказ</button>
     </div>
+    <div style="margin-top:10px;font-size:13px;color:#667f87;text-align:center">
+      Тестовый режим — заказ пока через модальное окно
+    </div>
   </aside>
 </div>
 
@@ -350,7 +96,7 @@ h1 {
     <label>Телефон *</label>
     <input type="tel" id="cust-phone" required>
     
-    <label>Доп. телефон</label>
+    <label>Доп. телефон (по желанию)</label>
     <input type="tel" id="cust-phone2">
     
     <label>Город *</label>
@@ -381,7 +127,7 @@ h1 {
     <label>Способ оплаты *</label>
     <select id="payment-method" required>
       <option value="cash">Наличные</option>
-      <option value="online">Онлайн</option>
+      <option value="online">Онлайн (карта, СБП)</option>
     </select>
     
     <button type="submit">Подтвердить заказ</button>
@@ -389,60 +135,14 @@ h1 {
 </div>
 
 <script>
-//=== Данные товаров (фрукты + овощи)
-const products=[
-  {name:"Арбуз", price:40, category:"fruits", subcategory:"Ягоды"},
-  {name:"Банан", price:170, category:"fruits", subcategory:"Ягоды"},
-  {name:"Дыня торпеда Узбекистан", price:80, category:"fruits", subcategory:"Ягоды"},
-  {name:"Дыня колхозница", price:80, category:"fruits", subcategory:"Ягоды"},
-  {name:"Черешня", price:580, category:"fruits", subcategory:"Ягоды"},
-  {name:"Голубика", price:800, category:"fruits", subcategory:"Ягоды"},
-  {name:"Виноград зеленый (без косточек)", price:320, category:"fruits", subcategory:"Ягоды"},
-  {name:"Виноград темный (без косточек)", price:320, category:"fruits", subcategory:"Ягоды"},
-  {name:"Виноград черный (Мерседес)", price:300, category:"fruits", subcategory:"Ягоды"},
-  {name:"Персик Ташкент", price:250, category:"fruits", subcategory:"Косточковые"},
-  {name:"Персик Армения", price:380, category:"fruits", subcategory:"Косточковые"},
-  {name:"Персик Турция", price:450, category:"fruits", subcategory:"Косточковые"},
-  {name:"Персик Инжирный", price:350, category:"fruits", subcategory:"Косточковые"},
-  {name:"Абрикос Армения", price:240, category:"fruits", subcategory:"Косточковые"},
-  {name:"Абрикос Киргизия", price:150, category:"fruits", subcategory:"Косточковые"},
-  {name:"Слива 4 вида", price:220, category:"fruits", subcategory:"Косточковые"},
-  {name:"Нектарин Узбекистан красный", price:170, category:"fruits", subcategory:"Косточковые"},
-  {name:"Нектарин Турция", price:350, category:"fruits", subcategory:"Косточковые"},
-  {name:"Нектарин Узбекистан желтый", price:250, category:"fruits", subcategory:"Косточковые"},
-  {name:"Нектарин Узбекистан зеленый", price:190, category:"fruits", subcategory:"Косточковые"},
-  {name:"Апельсин", price:220, category:"fruits", subcategory:"Цитрусовые"},
-  {name:"Лимон", price:290, category:"fruits", subcategory:"Цитрусовые"},
-  {name:"Киви", price:450, category:"fruits", subcategory:"Цитрусовые"},
-  {name:"Груша", price:340, category:"fruits", subcategory:"Косточковые"},
-  {name:"Картофель Чувашия", price:45, category:"vegetables", subcategory:"Корнеплоды"},
-  {name:"Картофель Краснодар", price:45, category:"vegetables", subcategory:"Корнеплоды"},
-  {name:"Морковь Волгоград", price:45, category:"vegetables", subcategory:"Корнеплоды"},
-  {name:"Чеснок Ташкент", price:400, category:"vegetables", subcategory:"Корнеплоды"},
-  {name:"Помидоры Азербайджанские", price:220, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Помидоры Ростовские", price:180, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Помидоры Волгоград (мелкие)", price:80, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Помидоры домашние", price:240, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Помидоры Астрахань (желтые)", price:190, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Огурцы Московские", price:150, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Огурцы Самарские", price:80, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Огурцы домашние", price:150, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Перец болгарский", price:130, category:"vegetables", subcategory:"Перцы"},
-  {name:"Перец чили", price:25, category:"vegetables", subcategory:"Перцы"},
-  {name:"Лук зеленый", price:350, category:"vegetables", subcategory:"Зелень"},
-  {name:"Укроп, петрушка", price:350, category:"vegetables", subcategory:"Зелень"},
-  {name:"Кинза", price:440, category:"vegetables", subcategory:"Зелень"},
-  {name:"Базелик (пучок)", price:50, category:"vegetables", subcategory:"Зелень"},
-  {name:"Кабачок", price:55, category:"vegetables", subcategory:"Прочие овощи"},
-  {name:"Баклажан", price:130, category:"vegetables", subcategory:"Прочие овощи"},
-  {name:"Лук репчатый Волгоград", price:45, category:"vegetables", subcategory:"Прочие овощи"}
-];
+//=== Данные товаров
+const products=[/* здесь вставь все свои товары */];
 
 let cart=[];
 let selectedCategory="fruits";
 let selectedSubcategory=null;
 
-//=== DOM элементы
+// DOM элементы
 const catalogEl=document.getElementById('catalog');
 const catalogWrap=document.getElementById('catalog-wrap');
 const cartListEl=document.getElementById('cart-list');
@@ -459,7 +159,7 @@ const customTimeInput=document.getElementById('custom-time');
 function idify(name){return name.replace(/\s+/g,'_').replace(/[^\w\-]/g,'');}
 function rub(v){return Math.round(v)+' ₽';}
 
-//=== Подкатегории
+// Подкатегории
 function renderSubcategories(){
   subcategoryButtons.innerHTML='';
   let subs=[];
@@ -474,7 +174,7 @@ function renderSubcategories(){
   });
 }
 
-//=== Каталог
+// Каталог
 function renderCatalog(){
   catalogEl.innerHTML='';
   let filtered=products.filter(p=>p.category===selectedCategory);
@@ -500,7 +200,7 @@ function renderCatalog(){
   });
 }
 
-//=== Корзина
+// Корзина
 function addToCart(prod,qty){
   const existing=cart.find(c=>c.name===prod.name);
   if(existing){existing.qty+=qty; existing.total=existing.qty*prod.price;}
@@ -523,10 +223,9 @@ function renderCart(){
 }
 
 function removeFromCart(name){cart=cart.filter(c=>c.name!==name); renderCart();}
-
 clearBtn.onclick=()=>{cart=[]; renderCart();}
 
-//=== Переключение категории
+// Категории
 categoryButtons.querySelectorAll('button').forEach(btn=>{
   btn.onclick=()=>{
     categoryButtons.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
@@ -538,46 +237,19 @@ categoryButtons.querySelectorAll('button').forEach(btn=>{
   }
 });
 
-//=== Кнопка "Оформить заказ"
+// Кнопка Оформить заказ
 checkoutBtn.onclick = () => {
-  if(cart.length === 0){
-    alert('Корзина пуста!');
-    return;
-  }
-  catalogWrap.classList.add('hidden');
+  if(cart.length === 0){ alert('Корзина пуста!'); return; }
+  catalogWrap.style.display='none';
   checkoutSection.classList.add('show');
-  window.scrollTo({top:0, behavior:'smooth'});
 };
 
-//=== Форма оформления заказа
+// Форма оформления заказа
 deliveryTimeSelect.onchange=()=>{customTimeInput.style.display=deliveryTimeSelect.value==='custom'?'block':'none';}
 
 checkoutForm.onsubmit=(e)=>{
   e.preventDefault();
-  const name=document.getElementById('cust-name').value;
-  const phone=document.getElementById('cust-phone').value;
-  const phone2=document.getElementById('cust-phone2').value;
-  const city=document.getElementById('cust-city').value;
-  const street=document.getElementById('cust-street').value;
-  const house=document.getElementById('cust-house').value;
-  const entrance=document.getElementById('cust-entrance').value;
-  const floor=document.getElementById('cust-floor').value;
-  const apt=document.getElementById('cust-apartment').value;
-  let time=deliveryTimeSelect.value==='custom'?customTimeInput.value:'Как можно скорее';
-  const payment=document.getElementById('payment-method').value;
-
-  let orderText='🛒 Ваш заказ:\n\n';
-  cart.forEach(item=>{
-    let unitQty=(item.qty<1)?(item.qty*1000).toFixed(0)+' г':item.qty.toFixed(2)+' кг';
-    orderText+=`${item.name} — ${unitQty} — ${rub(item.total)}\n`;
-  });
-  orderText+=`\n👤 Имя: ${name}\n📞 Телефон: ${phone}${phone2?'\n📞 Доп: '+phone2:''}\n🏠 Адрес: ${city}, ${street}, д.${house}${entrance? ', подъезд '+entrance:''}${floor?', этаж '+floor:''}${apt?', кв '+apt:''}\n⏱ Доставка: ${time}\n💳 Оплата: ${payment==='cash'?'Наличные':'Онлайн'}`;
-
-  alert(orderText);
-  cart=[];
-  renderCart();
-  checkoutSection.classList.remove('show');
-  catalogWrap.classList.remove('hidden');
+  alert('Заказ подтверждён! (Тестовое окно)');
 };
 
 renderSubcategories();
