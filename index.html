@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой магазин овощей и фруктов</title>
+  <title>Магазин у Дяди Лёши</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -50,7 +50,7 @@
   </style>
 </head>
 <body>
-  <h1>Мой магазин овощей и фруктов</h1>
+  <h1>Магазин у дяди Лёши</h1>
   
   <h2>Каталог товаров</h2>
   <div id="catalog">
@@ -60,11 +60,53 @@
   <script>
     // Список товаров
     const products = [
-      { name: "Яблоки", price: 150, img: "https://via.placeholder.com/150?text=Яблоки" },
-      { name: "Бананы", price: 120, img: "https://via.placeholder.com/150?text=Бананы" },
-      { name: "Морковь", price: 80, img: "https://via.placeholder.com/150?text=Морковь" },
-      { name: "Помидоры", price: 200, img: "https://via.placeholder.com/150?text=Помидоры" }
-    ];
+  { name: "Арбуз", price: 40, img: "https://via.placeholder.com/150?text=Арбуз" },
+  { name: "Груша", price: 340, img: "https://via.placeholder.com/150?text=Груша" },
+  { name: "Апельсин", price: 220, img: "https://via.placeholder.com/150?text=Апельсин" },
+  { name: "Дыня торпеда Узбекистан", price: 80, img: "https://via.placeholder.com/150?text=Дыня" },
+  { name: "Дыня колхозница", price: 80, img: "https://via.placeholder.com/150?text=Дыня" },
+  { name: "Виноград зеленый (без косточек)", price: 320, img: "https://via.placeholder.com/150?text=Виноград" },
+  { name: "Виноград темный (без косточек)", price: 320, img: "https://via.placeholder.com/150?text=Виноград" },
+  { name: "Виноград черный (Мерседес)", price: 300, img: "https://via.placeholder.com/150?text=Виноград" },
+  { name: "Нектарин Узбекистан красный", price: 170, img: "https://via.placeholder.com/150?text=Нектарин" },
+  { name: "Нектарин Турция", price: 350, img: "https://via.placeholder.com/150?text=Нектарин" },
+  { name: "Нектарин Узбекистан желтый (вкус лимон)", price: 250, img: "https://via.placeholder.com/150?text=Нектарин" },
+  { name: "Нектарин Узбекистан зеленый", price: 190, img: "https://via.placeholder.com/150?text=Нектарин" },
+  { name: "Банан", price: 170, img: "https://via.placeholder.com/150?text=Банан" },
+  { name: "Картофель Чувашия", price: 45, img: "https://via.placeholder.com/150?text=Картофель" },
+  { name: "Картофель Краснодар", price: 45, img: "https://via.placeholder.com/150?text=Картофель" },
+  { name: "Морковь Волгоград", price: 45, img: "https://via.placeholder.com/150?text=Морковь" },
+  { name: "Лук репчатый Волгоград", price: 45, img: "https://via.placeholder.com/150?text=Лук" },
+  { name: "Лук зеленый", price: 350, img: "https://via.placeholder.com/150?text=Лук" },
+  { name: "Укроп, петрушка", price: 350, img: "https://via.placeholder.com/150?text=Укроп" },
+  { name: "Кинза", price: 440, img: "https://via.placeholder.com/150?text=Кинза" },
+  { name: "Базелик", price: 50, img: "https://via.placeholder.com/150?text=Базелик" },
+  { name: "Чеснок Ташкент", price: 400, img: "https://via.placeholder.com/150?text=Чеснок" },
+  { name: "Перец болгарский", price: 130, img: "https://via.placeholder.com/150?text=Перец" },
+  { name: "Перец чили", price: 25, img: "https://via.placeholder.com/150?text=Перец" },
+  { name: "Помидоры Азербайджанские", price: 220, img: "https://via.placeholder.com/150?text=Помидоры" },
+  { name: "Помидоры Ростовские", price: 180, img: "https://via.placeholder.com/150?text=Помидоры" },
+  { name: "Помидоры Волгоград (мелкие)", price: 80, img: "https://via.placeholder.com/150?text=Помидоры" },
+  { name: "Помидоры домашние", price: 240, img: "https://via.placeholder.com/150?text=Помидоры" },
+  { name: "Помидоры Астрахань (желтые)", price: 190, img: "https://via.placeholder.com/150?text=Помидоры" },
+  { name: "Огурцы Московские", price: 150, img: "https://via.placeholder.com/150?text=Огурцы" },
+  { name: "Огурцы Самарские", price: 80, img: "https://via.placeholder.com/150?text=Огурцы" },
+  { name: "Огурцы домашние", price: 150, img: "https://via.placeholder.com/150?text=Огурцы" },
+  { name: "Слива 4 вида", price: 220, img: "https://via.placeholder.com/150?text=Слива" },
+  { name: "Черешня", price: 580, img: "https://via.placeholder.com/150?text=Черешня" },
+  { name: "Голубика", price: 800, img: "https://via.placeholder.com/150?text=Голубика" },
+  { name: "Абрикос Армения", price: 240, img: "https://via.placeholder.com/150?text=Абрикос" },
+  { name: "Абрикос Киргизия", price: 150, img: "https://via.placeholder.com/150?text=Абрикос" },
+  { name: "Персик Ташкент", price: 250, img: "https://via.placeholder.com/150?text=Персик" },
+  { name: "Персик Армения", price: 380, img: "https://via.placeholder.com/150?text=Персик" },
+  { name: "Персик Турция", price: 450, img: "https://via.placeholder.com/150?text=Персик" },
+  { name: "Персик Инжирный", price: 350, img: "https://via.placeholder.com/150?text=Персик" },
+  { name: "Киви", price: 450, img: "https://via.placeholder.com/150?text=Киви" },
+  { name: "Кабачок", price: 55, img: "https://via.placeholder.com/150?text=Кабачок" },
+  { name: "Баклажан", price: 130, img: "https://via.placeholder.com/150?text=Баклажан" },
+  { name: "Лимон", price: 290, img: "https://via.placeholder.com/150?text=Лимон" }
+];
+
 
     const catalog = document.getElementById('catalog');
 
