@@ -61,7 +61,7 @@ button,input,select,textarea{font-family:inherit}
 .qty-input{width:84px;padding:8px;border-radius:8px;border:1px solid var(--border);text-align:center}
 .add-to-cart{background:var(--brand);color:#fff;border:0;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(164,222,2,0.12);transition:background .12s}
 .add-to-cart:hover{background:var(--cta)}
-.cart-panel{position:fixed;right:20px;top:90px;width:360px;background:var(--white);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:14px;z-index:60;border:1px solid var(--border);display:none}
+.cart-panel{position:fixed;right:20px;bottom:80px;width:360px;background:var(--white);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:14px;z-index:60;border:1px solid var(--border);display:none}
 .cart-row{display:flex;align-items:center;justify-content:space-between;background:#fbfbfb;padding:10px;border-radius:8px;border:1px solid var(--border)}
 .cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:800;font-size:16px}
 .cart-actions{display:flex;gap:8px;margin-top:12px}
@@ -84,6 +84,7 @@ button,input,select,textarea{font-family:inherit}
 </style>
 </head>
 <body>
+
 <header class="header">
   <div class="header-inner">
     <div style="display:flex;align-items:center;gap:12px">
@@ -101,9 +102,6 @@ button,input,select,textarea{font-family:inherit}
       <a href="#">Доставка</a>
       <a href="#">Контакты</a>
     </nav>
-    <div style="display:flex;align-items:center;gap:12px">
-      <button id="open-cart" title="Корзина" style="background:transparent;border:0;cursor:pointer;font-weight:700;color:var(--brand);">🛒 <span id="cart-count">0</span></button>
-    </div>
   </div>
 </header>
 
@@ -159,7 +157,16 @@ button,input,select,textarea{font-family:inherit}
     <div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:12px">
       <div>Итого</div><div id="modal-total">0 ₽</div>
     </div>
-    <button id="close-modal" class="btn btn-clear">Закрыть</button>
+    <div class="form-grid">
+      <div class="form-row"><label>Имя</label><input type="text" placeholder="Ваше имя"></div>
+      <div class="form-row"><label>Телефон</label><input type="tel" placeholder="+7 999 999-99-99"></div>
+      <div class="form-row"><label>Адрес</label><input type="text" placeholder="Улица, дом, кв."></div>
+      <div class="form-row"><label>Комментарий</label><textarea placeholder="Комментарий к заказу"></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button id="close-modal" class="btn btn-clear">Закрыть</button>
+      <button class="btn btn-check">Отправить заказ</button>
+    </div>
   </div>
 </div>
 
@@ -221,13 +228,11 @@ const products = [
   ["🥗 Акция: Ягоды — 300₽","Акция: Ягоды",300,"promo"]
 ];
 
-
 // ================== Переменные ==================
 let cart = [];
 const catalogEl = document.getElementById('catalog');
 const cartItemsEl = document.getElementById('cart-items');
 const cartSumEl = document.getElementById('cart-sum');
-const cartCountTop = document.getElementById('cart-count');
 const cartCountSmall = document.getElementById('cart-count-2');
 const floatingCartCount = document.getElementById('floating-cart-count');
 const floatingCartSum = document.getElementById('floating-cart-sum');
@@ -236,10 +241,10 @@ const floatingCart = document.getElementById('floating-cart');
 
 // ================== Хелперы ==================
 function formatRub(n){return n+' ₽';}
-function animateFloatingCart(){floatingCart.style.transform='scale(1.3)';setTimeout(()=>floatingCart.style.transform='scale(1)',200);}
+function animateFloatingCart(){floatingCart.style.transform='scale(1.2)';setTimeout(()=>floatingCart.style.transform='scale(1)',200);}
 
 // ================== Летающий товар ==================
-function flyToCart(img, qty){
+function flyToCart(img){
   const flyImg = img.cloneNode(true);
   const rect = img.getBoundingClientRect();
   flyImg.style.position='fixed';
@@ -250,37 +255,9 @@ function flyToCart(img, qty){
   flyImg.style.zIndex=9999;
   flyImg.style.transition='all 0.8s cubic-bezier(.5,-0.2,.3,1.5)';
   document.body.appendChild(flyImg);
-
   const cartRect = floatingCart.getBoundingClientRect();
-  setTimeout(()=>{
-    flyImg.style.left = (cartRect.left+cartRect.width/2 - rect.width/2) + 'px';
-    flyImg.style.top = (cartRect.top+cartRect.height/2 - rect.height/2) + 'px';
-    flyImg.style.width = '20px';
-    flyImg.style.height = '20px';
-    flyImg.style.opacity = 0.5;
-  },10);
-
-  flyImg.addEventListener('transitionend', ()=>{flyImg.remove();});
-}
-
-// ================== Всплывающее "+1 товар" ==================
-function showPlusOne(){
-  const plus = document.createElement('div');
-  plus.textContent = '+1';
-  plus.style.position = 'fixed';
-  const rect = floatingCart.getBoundingClientRect();
-  plus.style.left = (rect.left + rect.width/2 - 10) + 'px';
-  plus.style.top = (rect.top - 20) + 'px';
-  plus.style.color = '#fff';
-  plus.style.background = '#FF8C42';
-  plus.style.padding = '2px 6px';
-  plus.style.borderRadius = '12px';
-  plus.style.fontWeight = '700';
-  plus.style.zIndex = 10000;
-  plus.style.transition = 'all 0.8s ease-out';
-  document.body.appendChild(plus);
-  setTimeout(()=>{plus.style.top = (rect.top - 50) + 'px'; plus.style.opacity = '0';},10);
-  setTimeout(()=>plus.remove(),800);
+  setTimeout(()=>{flyImg.style.left=(cartRect.left+cartRect.width/2-rect.width/2)+'px'; flyImg.style.top=(cartRect.top+cartRect.height/2-rect.height/2)+'px'; flyImg.style.width='20px'; flyImg.style.height='20px'; flyImg.style.opacity=0.5;},10);
+  flyImg.addEventListener('transitionend', ()=>flyImg.remove());
 }
 
 // ================== Рендер каталога ==================
@@ -305,18 +282,18 @@ function renderCatalog(filter='all'){
       </div>
     `;
     catalogEl.appendChild(card);
-    card.querySelector('img').onload=()=>card.querySelector('img').style.opacity=1;
+    const imgEl=card.querySelector('img');
+    imgEl.onload=()=>imgEl.style.opacity=1;
     const addBtn=card.querySelector('.add-to-cart');
     const qtyInput=card.querySelector('.qty-input');
-    const imgEl=card.querySelector('img');
     addBtn.onclick=()=>{
       const qty=Number(qtyInput.value);
-      flyToCart(imgEl, qty);
-      showPlusOne(); // <- показываем всплывающее уведомление
+      flyToCart(imgEl);
       const existing=cart.find(c=>c.name===desc);
       if(existing){existing.qty+=qty; existing.total=existing.qty*price;}
       else cart.push({name:desc,price,qty,total:price*qty});
-      renderCart();animateFloatingCart();
+      renderCart();
+      animateFloatingCart();
     }
   });
   document.getElementById('shown-count').textContent=shown;
@@ -330,25 +307,15 @@ function renderCart(){
     sum+=item.total;
     const row=document.createElement('div');row.className='cart-row';
     row.innerHTML=`
-      <div class="left">
-        <div style="font-weight:700">${item.name}</div>
-        <div class="small" style="color:var(--muted)">${item.qty} шт • ${formatRub(item.total)}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-        <button style="background:transparent;border:0;cursor:pointer;color:${'#e74c3c'}" data-remove="${item.name}">✕</button>
-        <div style="font-weight:700">${formatRub(item.total)}</div>
-      </div>
+      <div style="font-weight:700">${item.name} x ${item.qty} шт</div>
+      <div>${formatRub(item.total)}</div>
     `;
     cartItemsEl.appendChild(row);
   });
   cartSumEl.textContent=formatRub(sum);
-  cartCountTop.textContent=cart.length;
   cartCountSmall.textContent=cart.length;
   floatingCartCount.textContent=cart.length;
   floatingCartSum.textContent=formatRub(sum);
-  cartItemsEl.querySelectorAll('[data-remove]').forEach(btn=>{
-    btn.onclick=()=>{cart=cart.filter(c=>c.name!==btn.dataset.remove);renderCart();}
-  });
 }
 
 // ================== Фильтры ==================
@@ -361,7 +328,6 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{
 });
 
 // ================== Корзина ==================
-document.getElementById('open-cart').onclick=()=>cartPanel.style.display='block';
 floatingCart.onclick=()=>cartPanel.style.display='block';
 document.getElementById('clear-cart').onclick=()=>{cart=[];renderCart();};
 
@@ -372,13 +338,7 @@ document.getElementById('goto-checkout').onclick=()=>{
   const modalList=document.getElementById('modal-order-list');
   modalList.innerHTML='';
   let sum=0;
-  cart.forEach(item=>{
-    sum+=item.total;
-    const div=document.createElement('div');div.style.display='flex';
-    div.style.justifyContent='space-between';
-    div.textContent=`${item.name} x ${item.qty} шт - ${formatRub(item.total)}`;
-    modalList.appendChild(div);
-  });
+  cart.forEach(item=>{sum+=item.total; const div=document.createElement('div'); div.textContent=`${item.name} x ${item.qty} шт - ${formatRub(item.total)}`; modalList.appendChild(div);});
   document.getElementById('modal-total').textContent=formatRub(sum);
 }
 document.getElementById('close-modal').onclick=()=>modal.style.display='none';
@@ -387,5 +347,5 @@ document.getElementById('close-modal').onclick=()=>modal.style.display='none';
 renderCatalog();
 renderCart();
 </script>
-
-
+</body>
+</html>
