@@ -43,7 +43,7 @@ button,input,select,textarea{font-family:inherit}
 .btn-secondary{background:transparent;border:1px solid var(--border);padding:10px 14px;border-radius:10px;color:var(--text);cursor:pointer}
 .hero-right{width:420px;max-width:40%}
 .hero-image{border-radius:14px;overflow:hidden;height:220px;background:linear-gradient(180deg,#fff,#f6f5f3);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-.hero-image img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .45s}
+.hero-image img{width:100%;height:100%;object-fit:cover;display:block}
 .main{max-width:var(--container);margin:0 auto;padding:0 24px 80px}
 .filters{display:flex;gap:12px;align-items:center;margin:20px 0;flex-wrap:wrap}
 .filter-btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:transparent;font-weight:600;cursor:pointer}
@@ -61,7 +61,7 @@ button,input,select,textarea{font-family:inherit}
 .qty-input{width:84px;padding:8px;border-radius:8px;border:1px solid var(--border);text-align:center}
 .add-to-cart{background:var(--brand);color:#fff;border:0;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(164,222,2,0.12);transition:background .12s}
 .add-to-cart:hover{background:var(--cta)}
-.cart-panel{position:fixed;right:20px;top:90px;width:360px;background:var(--white);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:14px;z-index:60;border:1px solid var(--border);display:none}
+.cart-panel{position:fixed;right:20px;bottom:80px;width:360px;background:var(--white);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:14px;z-index:60;border:1px solid var(--border);display:none}
 .cart-row{display:flex;align-items:center;justify-content:space-between;background:#fbfbfb;padding:10px;border-radius:8px;border:1px solid var(--border)}
 .cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:800;font-size:16px}
 .cart-actions{display:flex;gap:8px;margin-top:12px}
@@ -76,33 +76,12 @@ button,input,select,textarea{font-family:inherit}
 .form-row label{font-weight:600;font-size:14px}
 .form-row input, .form-row select, .form-row textarea {padding:10px;border-radius:8px;border:1px solid #ccc}
 .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
-.floating-cart{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:var(--brand);
-  color:#fff;
-  padding:12px 18px;
-  border-radius:40px;
-  box-shadow:0 8px 18px rgba(0,0,0,0.15);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  z-index:100;
-  transition:transform .2s,opacity .3s;
-  opacity:0.95;
-}
-.floating-cart:hover{transform:scale(1.05);opacity:1;}
+.floating-cart{position:fixed;bottom:20px;right:20px;background:var(--brand);color:#fff;padding:12px 18px;border-radius:40px;box-shadow:0 8px 18px rgba(0,0,0,0.15);cursor:pointer;display:flex;align-items:center;gap:12px;z-index:100;transition:transform .2s,opacity .3s}
+.floating-cart.hidden{opacity:0;pointer-events:none}
+@media (max-width:980px){.hero{flex-direction:column}.grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}.cart-panel{right:12px;left:12px;width:auto;top:auto;bottom:80px}.modal .panel{width:95%}}
+.footer{max-width:var(--container);margin:40px auto 80px;padding:24px;text-align:center;color:var(--muted);font-size:14px}
 .fade-in{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-@media (max-width:980px){
-  .hero{flex-direction:column}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-  .cart-panel{right:12px;left:12px;width:auto;top:auto;bottom:80px}
-  .modal .panel{width:95%}
-}
-.footer{max-width:var(--container);margin:40px auto 80px;padding:24px;text-align:center;color:var(--muted);font-size:14px}
 </style>
 </head>
 <body>
@@ -182,7 +161,7 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </div>
 
-<div class="floating-cart" id="floating-cart">
+<div class="floating-cart hidden" id="floating-cart">
   🛒 <span id="floating-cart-count">0</span> • <span id="floating-cart-sum">0 ₽</span>
 </div>
 
@@ -196,149 +175,214 @@ const products = [
   ["🍊 Апельсин — 220₽/кг", "Апельсин", 220, "fruits"],
   ["🍈 Дыня торпеда Узбекистан — 80₽/кг", "Дыня торпеда Узбекистан", 80, "fruits"],
   ["🍈 Дыня колхозница — 80₽/кг", "Дыня колхозница", 80, "fruits"],
-  ["🍇 Виноград зеленый (без косточек) — 320₽/кг", "Виноград зеленый", 320, "fruits"],
-  ["🍇 Виноград темный (без косточек) — 320₽/кг", "Виноград темный", 320, "fruits"],
-  ["🍇 Виноград черный (Мерседес) — 300₽/кг", "Виноград черный", 300, "fruits"],
-  ["🍑 Нектарин Узбекистан красный — 170₽/кг", "Нектарин красный", 170, "fruits"],
+  ["🍇 Виноград зеленый (без косточек) — 320₽/кг", "Виноград зеленый (без косточек)", 320, "fruits"],
+  ["🍇 Виноград темный (без косточек) — 320₽/кг", "Виноград темный (без косточек)", 320, "fruits"],
+  ["🍇 Виноград черный (Мерседес) — 300₽/кг", "Виноград черный (Мерседес)", 300, "fruits"],
+  ["🍑 Нектарин Узбекистан красный — 170₽/кг", "Нектарин Узбекистан красный", 170, "fruits"],
   ["🍑 Нектарин Турция — 350₽/кг", "Нектарин Турция", 350, "fruits"],
+  ["🍑 Нектарин Узбекистан желтый (вкус лимон) — 250₽/кг", "Нектарин Узбекистан желтый", 250, "fruits"],
+  ["🍑 Нектарин Узбекистан зеленый — 190₽/кг", "Нектарин Узбекистан зеленый", 190, "fruits"],
   ["🍌 Банан — 170₽/кг", "Банан", 170, "fruits"],
   ["🥔 Картофель Чувашия — 45₽/кг", "Картофель Чувашия", 45, "vegetables"],
+  ["🥔 Картофель Краснодар — 45₽/кг", "Картофель Краснодар", 45, "vegetables"],
   ["🥕 Морковь Волгоград — 45₽/кг", "Морковь Волгоград", 45, "vegetables"],
   ["🧅 Лук репчатый Волгоград — 45₽/кг", "Лук репчатый Волгоград", 45, "vegetables"],
   ["🌱 Лук зеленый — 350₽/кг", "Лук зеленый", 350, "vegetables"],
   ["🌱 Укроп, петрушка — 350₽/кг", "Укроп, петрушка", 350, "vegetables"],
   ["🌱 Кинза — 440₽/кг", "Кинза", 440, "vegetables"],
-  ["🌱 Базелик — 50₽/пучок", "Базелик (пучок)", 50, "vegetables"],
+  ["🌱 Базелик — 50₽/пучок", "Базелик", 50, "vegetables"],
   ["🧄 Чеснок Ташкент — 400₽/кг", "Чеснок Ташкент", 400, "vegetables"],
   ["🫑 Перец болгарский — 130₽/кг", "Перец болгарский", 130, "vegetables"],
-  ["🌶️ Перец чили — 25₽/шт", "Перец чили", 25, "vegetables"],
+  ["🌶️ Перец чили — 25₽", "Перец чили", 25, "vegetables"],
   ["🍅 Помидоры Азербайджанские — 220₽/кг", "Помидоры Азербайджанские", 220, "vegetables"],
   ["🍅 Помидоры Ростовские — 180₽/кг", "Помидоры Ростовские", 180, "vegetables"],
-  ["🥒 Огурцы Иран — 200₽/кг", "Огурцы Иран", 200, "vegetables"],
-  ["🥬 Салат Айсберг — 350₽/кг", "Салат Айсберг", 350, "vegetables"],
-  ["🥬 Салат Романо — 400₽/кг", "Салат Романо", 400, "vegetables"],
-  ["🥦 Брокколи — 440₽/кг", "Брокколи", 440, "vegetables"],
-  ["🥬 Капуста белокочанная — 40₽/кг", "Капуста белокочанная", 40, "vegetables"],
-  ["🥬 Капуста пекинская — 90₽/кг", "Капуста пекинская", 90, "vegetables"],
-  ["🥦 Цветная капуста — 170₽/кг", "Цветная капуста", 170, "vegetables"],
-  ["🥗 Сет «Фитнес» — 1200₽", "Сет Фитнес", 1200, "sets"],
-  ["🥗 Сет «Вегетарианский» — 900₽", "Сет Вегетарианский", 900, "sets"],
-  ["🍏 Акция «Яблоко зеленое — 99₽/кг»", "Акция Яблоко", 99, "promo"],
-  ["🍓 Акция «Клубника — 150₽/кг»", "Акция Клубника", 150, "promo"],
-  ["🥝 Акция «Киви — 130₽/кг»", "Акция Киви", 130, "promo"],
-  ["🍊 Акция «Мандарины — 120₽/кг»", "Акция Мандарины", 120, "promo"]
+  ["🍅 Помидоры Волгоград (мелкие) — 80₽/кг", "Помидоры Волгоград (мелкие)", 80, "vegetables"],
+  ["🍅 Помидоры домашние — 240₽/кг", "Помидоры домашние", 240, "vegetables"],
+  ["🍅 Помидоры Астрахань (желтые) — 190₽/кг", "Помидоры Астрахань (желтые)", 190, "vegetables"],
+  ["🥒 Огурцы Московские — 150₽/кг", "Огурцы Московские", 150, "vegetables"],
+  ["🥒 Огурцы Самарские — 80₽/кг", "Огурцы Самарские", 80, "vegetables"],
+  ["🥒 Огурцы домашние — 150₽/кг", "Огурцы домашние", 150, "vegetables"],
+  ["🍑 Слива 4 вида — 190₽/кг - Ташкент; Медовая - 220₽/кг; Желтая - 250₽/кг; Чернослива - 220₽/кг", "Слива 4 вида", 220, "fruits"],
+  ["🍒 Черешня — 580₽/кг", "Черешня", 580, "fruits"],
+  ["🫐 Голубика — 800₽/кг", "Голубика", 800, "fruits"],
+  ["🍑 Абрикос Армения — 240₽/кг", "Абрикос Армения", 240, "fruits"],
+  ["🍑 Абрикос Киргизия — 150₽/кг", "Абрикос Киргизия", 150, "fruits"],
+  ["🍑 Персик Ташкент — 250₽/кг", "Персик Ташкент", 250, "fruits"],
+  ["🍑 Персик Армения — 380₽/кг", "Персик Армения", 380, "fruits"],
+  ["🍑 Персик Турция — 450₽/кг", "Персик Турция", 450, "fruits"],
+  ["🍑 Персик Инжирный — 350₽/кг", "Персик Инжирный", 350, "fruits"],
+  ["🥝 Киви — 450₽/кг", "Киви", 450, "fruits"],
+  ["Кабачок — 55₽/кг", "Кабачок", 55, "vegetables"],
+  ["🍆 Баклажан — 130₽/кг", "Баклажан", 130, "vegetables"],
+  ["🍋 Лимон — 290₽/кг", "Лимон", 290, "fruits"],
+  ["🥗 Сет «Фермерский» — 550₽","Сет «Фермерский»",550,"sets"],
+  ["🥗 Акция: Ягоды — 300₽","Акция: Ягоды",300,"promo"]
 ];
-// ================== Рендер товаров ==================
+
+// ================== Переменные ==================
+let cart = [];
 const catalogEl = document.getElementById('catalog');
-const shownCount = document.getElementById('shown-count');
-function renderCatalog(filter="all"){
-  catalogEl.innerHTML="";
+const cartItemsEl = document.getElementById('cart-items');
+const cartSumEl = document.getElementById('cart-sum');
+const cartCountSmall = document.getElementById('cart-count-2');
+const floatingCart = document.getElementById('floating-cart');
+const floatingCartCount = document.getElementById('floating-cart-count');
+const floatingCartSum = document.getElementById('floating-cart-sum');
+const cartPanel = document.getElementById('cart-panel');
+
+// ================== Хелперы ==================
+function formatRub(n){return n+' ₽';}
+function animateFloatingCart(){floatingCart.style.transform='scale(1.3)';setTimeout(()=>floatingCart.style.transform='scale(1)',200);}
+
+// ================== Летающий товар ==================
+function flyToCart(img){
+  const flyImg = img.cloneNode(true);
+  const rect = img.getBoundingClientRect();
+  flyImg.style.position='fixed';
+  flyImg.style.left=rect.left+'px';
+  flyImg.style.top=rect.top+'px';
+  flyImg.style.width=rect.width+'px';
+  flyImg.style.height=rect.height+'px';
+  flyImg.style.zIndex=9999;
+  flyImg.style.transition='all 0.8s cubic-bezier(.5,-0.2,.3,1.5)';
+  document.body.appendChild(flyImg);
+
+  const cartRect = floatingCart.getBoundingClientRect();
+  setTimeout(()=>{
+    flyImg.style.left = (cartRect.left+cartRect.width/2 - rect.width/2) + 'px';
+    flyImg.style.top = (cartRect.top+cartRect.height/2 - rect.height/2) + 'px';
+    flyImg.style.width = '20px';
+    flyImg.style.height = '20px';
+    flyImg.style.opacity = 0.5;
+  },10);
+
+  flyImg.addEventListener('transitionend', ()=>{flyImg.remove();});
+}
+
+// ================== Всплывающее "+1 товар" ==================
+function showPlusOne(){
+  const plus = document.createElement('div');
+  plus.textContent = '+1';
+  const rect = floatingCart.getBoundingClientRect();
+  plus.style.position = 'fixed';
+  plus.style.left = (rect.left + rect.width/2 - 10) + 'px';
+  plus.style.top = (rect.top - 20) + 'px';
+  plus.style.color = '#fff';
+  plus.style.background = '#FF8C42';
+  plus.style.padding = '2px 6px';
+  plus.style.borderRadius = '12px';
+  plus.style.fontWeight = '700';
+  plus.style.zIndex = 10000;
+  plus.style.transition = 'all 0.8s ease-out';
+  document.body.appendChild(plus);
+  setTimeout(()=>{plus.style.top = (rect.top - 50) + 'px'; plus.style.opacity = '0';},10);
+  setTimeout(()=>plus.remove(),800);
+}
+
+// ================== Рендер каталога ==================
+function renderCatalog(filter='all'){
+  catalogEl.innerHTML='';
   let shown=0;
-  products.forEach((p,i)=>{
-    if(filter==="all"||p[3]===filter){
-      shown++;
-      const card=document.createElement('div');card.className="card fade-in";
-      card.innerHTML=`
-        <div class="photo"><img src="https://source.unsplash.com/300x200/?${p[1]}" alt="${p[1]}" /></div>
-        <div class="info">
-          <div class="name">${p[1]}</div>
-          <div class="desc">${p[0]}</div>
-          <div class="price">${p[2]} ₽</div>
-          <div class="actions">
-            <input class="qty-input" type="number" min="1" value="1">
-            <button class="add-to-cart">В корзину</button>
-          </div>
-        </div>`;
-      catalogEl.appendChild(card);
-      card.querySelector('img').onload=function(){this.style.opacity=1}
-      const btn=card.querySelector('.add-to-cart');
-      btn.addEventListener('click',()=>addToCart(p,card));
+  products.forEach(p=>{
+    const [name,desc,price,cat]=p;
+    if(filter!=='all' && cat!==filter) return;
+    shown++;
+    const card=document.createElement('div');card.className='card fade-in';
+    card.innerHTML=`
+      <div class="photo"><img src="https://source.unsplash.com/400x300/?${desc}" alt="${desc}"></div>
+      <div class="info">
+        <div class="name">${name}</div>
+        <div class="desc">${desc}</div>
+        <div class="price">${formatRub(price)}</div>
+        <div class="actions">
+          <input type="number" value="1" min="1" class="qty-input">
+          <button class="add-to-cart">В корзину</button>
+        </div>
+      </div>
+    `;
+    catalogEl.appendChild(card);
+    card.querySelector('img').onload=()=>card.querySelector('img').style.opacity=1;
+    const addBtn=card.querySelector('.add-to-cart');
+    const qtyInput=card.querySelector('.qty-input');
+    const imgEl=card.querySelector('img');
+    addBtn.onclick=()=>{
+      const qty=Number(qtyInput.value);
+      for(let i=0;i<qty;i++) flyToCart(imgEl);
+      showPlusOne();
+      const existing=cart.find(c=>c.name===desc);
+      if(existing){existing.qty+=qty; existing.total=existing.qty*price;}
+      else cart.push({name:desc,price,qty,total:price*qty});
+      renderCart();
+      animateFloatingCart();
     }
   });
-  shownCount.textContent=shown;
+  document.getElementById('shown-count').textContent=shown;
 }
-renderCatalog();
+
+// ================== Рендер корзины ==================
+function renderCart(){
+  if(cart.length===0){floatingCart.classList.add('hidden');} else{floatingCart.classList.remove('hidden');}
+  cartItemsEl.innerHTML='';
+  let sum=0;
+  cart.forEach(item=>{
+    sum+=item.total;
+    const row=document.createElement('div');row.className='cart-row';
+    row.innerHTML=`
+      <div style="font-weight:700">${item.name}</div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <button style="background:transparent;border:0;cursor:pointer;color:${'#e74c3c'}" data-remove="${item.name}">✕</button>
+        <div style="font-weight:700">${formatRub(item.total)}</div>
+      </div>
+    `;
+    cartItemsEl.appendChild(row);
+  });
+  floatingCartCount.textContent=cart.length;
+  floatingCartSum.textContent=formatRub(sum);
+  cartCountSmall.textContent=cart.length;
+  cartSumEl.textContent=formatRub(sum);
+  cartItemsEl.querySelectorAll('[data-remove]').forEach(btn=>{
+    btn.onclick=()=>{
+      cart=cart.filter(c=>c.name!==btn.dataset.remove);
+      renderCart();
+    }
+  });
+}
+
 // ================== Фильтры ==================
 document.querySelectorAll('.filter-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
+  btn.onclick=()=>{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     renderCatalog(btn.dataset.filter);
-  });
+  }
 });
-
-// ================== Корзина ==================
-let cart = [];
-function addToCart(product,card){
-  const qty = parseInt(card.querySelector('.qty-input').value)||1;
-  let item = cart.find(i=>i[1]===product[1]);
-  if(item)item[2]+=qty; else cart.push([product[0],product[1],qty,product[2]]);
-  updateCart();
-  flyToCart(card);
-}
-function updateCart(){
-  const cartPanel=document.getElementById('cart-panel');
-  const cartItemsEl=document.getElementById('cart-items');
-  const floatingCartCount=document.getElementById('floating-cart-count');
-  const floatingCartSum=document.getElementById('floating-cart-sum');
-  const cartSumEl=document.getElementById('cart-sum');
-  cartItemsEl.innerHTML="";
-  let totalCount=0,totalSum=0;
-  cart.forEach(item=>{
-    const row=document.createElement('div');row.className="cart-row";
-    row.innerHTML=`<span>${item[1]} x ${item[2]}</span><span>${item[2]*item[3]} ₽</span>`;
-    cartItemsEl.appendChild(row);
-    totalCount+=item[2];
-    totalSum+=item[2]*item[3];
-  });
-  floatingCartCount.textContent=totalCount;
-  floatingCartSum.textContent=totalSum+" ₽";
-  cartSumEl.textContent=totalSum+" ₽";
-}
-
-// ================== Анимации ==================
-const floatingCart = document.getElementById('floating-cart');
-function flyToCart(card){
-  const img = card.querySelector('img');
-  const flyer = img.cloneNode(true);
-  const rect = img.getBoundingClientRect();
-  flyer.style.position='fixed';
-  flyer.style.left=rect.left+'px';
-  flyer.style.top=rect.top+'px';
-  flyer.style.width=rect.width+'px';
-  flyer.style.height=rect.height+'px';
-  flyer.style.transition='all 0.7s ease-in-out';
-  flyer.style.zIndex=9999;
-  document.body.appendChild(flyer);
-  const cartRect = floatingCart.getBoundingClientRect();
-  setTimeout(()=>{
-    flyer.style.left=cartRect.left+'px';
-    flyer.style.top=cartRect.top+'px';
-    flyer.style.width='40px';
-    flyer.style.height='40px';
-    flyer.style.opacity=0;
-  },10);
-  flyer.addEventListener('transitionend',()=>flyer.remove());
-}
 
 // ================== Плавающая корзина ==================
-floatingCart.addEventListener('click',()=>{document.getElementById('cart-panel').style.display='block'});
-document.getElementById('clear-cart').addEventListener('click',()=>{cart=[];updateCart()});
-document.getElementById('goto-checkout').addEventListener('click',()=>{
+floatingCart.onclick=()=>{cartPanel.style.display=cartPanel.style.display==='none'?'block':'none';}
+
+// ================== Очистка ==================
+document.getElementById('clear-cart').onclick=()=>{
+  cart=[];renderCart();
+}
+
+// ================== Оформление заказа ==================
+document.getElementById('goto-checkout').onclick=()=>{
   const modal=document.getElementById('modal');
   const list=document.getElementById('modal-order-list');
-  list.innerHTML="";
-  let total=0;
-  cart.forEach(i=>{
+  list.innerHTML='';
+  cart.forEach(item=>{
     const div=document.createElement('div');
-    div.textContent=`${i[1]} x ${i[2]} = ${i[2]*i[3]} ₽`;
+    div.textContent=`${item.name} x${item.qty} — ${formatRub(item.total)}`;
     list.appendChild(div);
-    total+=i[2]*i[3];
   });
-  document.getElementById('modal-total').textContent=total+" ₽";
+  document.getElementById('modal-total').textContent=floatingCartSum.textContent;
   modal.style.display='flex';
-});
-document.getElementById('close-modal').addEventListener('click',()=>document.getElementById('modal').style.display='none');
+}
+document.getElementById('close-modal').onclick=()=>document.getElementById('modal').style.display='none';
+
+// ================== Начальный рендер ==================
+renderCatalog();
+renderCart();
 </script>
 </body>
 </html>
