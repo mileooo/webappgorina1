@@ -20,7 +20,7 @@
   --container:1200px;
 }
 
-/* reset / base */
+/* базовые правила */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--white);color:var(--text);font-family:Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
@@ -28,62 +28,51 @@ button,input,select,textarea{font-family:inherit}
 
 /* layout */
 .container{max-width:var(--container);margin:0 auto;padding:24px;}
-.header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,0.98);backdrop-filter:blur(4px);border-bottom:1px solid var(--border)}
-.header-inner{max-width:var(--container);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;gap:20px}
+.header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,0.98);backdrop-filter:blur(4px);border-bottom:1px solid var(--border)}
+.header-inner{max-width:var(--container);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;gap:20px}
 .logo{display:flex;align-items:center;gap:12px}
 .logo .mark{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--brand),#7cc900);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(164,222,2,0.12)}
 .logo .mark svg{width:22px;height:22px;fill:#fff}
 .logo h4{font-family:Poppins,Inter;font-weight:700;font-size:18px;margin:0;color:var(--text)}
+.header-right{display:flex;align-items:center;gap:12px}
 
-/* nav */
-.nav{display:flex;gap:16px;align-items:center}
-.nav a{font-weight:600;padding:8px 10px;border-radius:8px}
-.nav a:hover{background:var(--card-bg)}
+/* мелкие элементы шапки */
+.search-wrap{display:flex;align-items:center;gap:8px;background:#fff;padding:6px;border-radius:12px;border:1px solid var(--border)}
+.search-wrap input{border:0;outline:0;padding:8px 10px;width:320px;border-radius:8px}
+.sort-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff}
+.loyalty-badge{background:linear-gradient(180deg,#fff,#f4fff0);padding:8px 12px;border-radius:999px;border:1px solid rgba(164,222,2,0.12);font-weight:700;color:#2e2e2e}
 
 /* hero */
-.hero{max-width:var(--container);margin:20px auto;padding:28px;background:var(--card-bg);border-radius:16px;display:flex;gap:24px;align-items:center;box-shadow:var(--shadow)}
-.hero-left{flex:1;min-width:260px}
-.hero h1{font-family:Poppins;font-weight:800;font-size:40px;margin:0 0 8px;color:var(--text);line-height:1.02}
-.hero p{font-size:18px;color:var(--muted);margin:0 0 12px}
-.hero-cta{display:flex;gap:12px}
-.btn-cta{background:var(--cta);color:#fff;border:0;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;font-family:Poppins;box-shadow:0 6px 18px rgba(255,140,66,0.12);transition:transform .14s}
-.btn-cta:hover{transform:translateY(-3px);background:#ff7a18}
-.btn-secondary{background:transparent;border:1px solid var(--border);padding:10px 14px;border-radius:10px;color:var(--text);cursor:pointer}
-
-/* hero image */
-.hero-right{width:420px;max-width:40%}
-.hero-image{border-radius:14px;overflow:hidden;height:220px;background:linear-gradient(180deg,#fff,#f6f5f3);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-.hero-image img{width:100%;height:100%;object-fit:cover;display:block}
-
-/* main */
-.main{max-width:var(--container);margin:0 auto;padding:0 24px 80px}
-
-/* filters */
-.filters{display:flex;gap:12px;align-items:center;margin:20px 0;flex-wrap:wrap}
-.filter-btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:transparent;font-weight:600;cursor:pointer}
-.filter-btn.active{background:var(--brand);color:#fff;box-shadow:0 8px 20px rgba(164,222,2,0.12);border-color:transparent}
+.hero{max-width:var(--container);margin:20px auto;padding:20px;background:var(--card-bg);border-radius:12px;display:flex;gap:16px;align-items:center;box-shadow:var(--shadow)}
+.hero-left{flex:1;min-width:220px}
+.hero h1{font-family:Poppins;font-weight:800;font-size:32px;margin:0 0 6px;color:var(--text);line-height:1.02}
+.hero p{font-size:15px;color:var(--muted);margin:0 0 8px}
+.hero-cta{display:flex;gap:10px}
+.btn-cta{background:var(--cta);color:#fff;border:0;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-family:Poppins;box-shadow:0 6px 18px rgba(255,140,66,0.12);transition:transform .14s}
+.btn-secondary{background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer}
 
 /* grid & cards */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
-.card{background:var(--card-bg);border-radius:12px;box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:10px;height:380px;transition:transform .18s,box-shadow .18s}
-.card:hover{transform:scale(1.03);box-shadow:0 8px 28px rgba(0,0,0,0.08)}
-.photo{height:70%;border-radius:10px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
-.photo img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s}
+.main{max-width:var(--container);margin:0 auto;padding:8px 24px 80px}
+.controls{display:flex;gap:12px;align-items:center;margin:10px 0;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{background:var(--card-bg);border-radius:10px;box-shadow:var(--shadow);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:330px;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-6px);box-shadow:0 10px 28px rgba(0,0,0,0.08)}
+.photo{height:62%;border-radius:8px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+.photo img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s;border-radius:6px}
 .info{display:flex;flex-direction:column;gap:6px;flex:1}
-.name{font-family:Poppins;font-weight:600;font-size:16px;color:var(--text)}
+.name{font-family:Poppins;font-weight:600;font-size:15px;color:var(--text)}
 .desc{font-size:13px;color:var(--muted);min-height:34px}
-.price{font-weight:700;color:var(--text);font-size:16px}
+.price{font-weight:800;color:var(--text);font-size:16px}
 .actions{display:flex;align-items:center;gap:8px;justify-content:space-between}
-.qty-input{width:84px;padding:8px;border-radius:8px;border:1px solid var(--border);text-align:center}
+.qty-input{width:78px;padding:8px;border-radius:8px;border:1px solid var(--border);text-align:center}
 .unit-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff}
-.add-to-cart{background:var(--brand);color:#fff;border:0;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(164,222,2,0.12);transition:background .12s}
+.add-to-cart{background:var(--brand);color:#fff;border:0;padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 6px 12px rgba(164,222,2,0.12);transition:background .12s}
 .add-to-cart:hover{background:var(--cta)}
-
-/* micro animation */
-.checkmark{position:absolute;right:8px;top:-8px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--success);color:#fff;font-weight:700;opacity:0;transform:scale(.6);transition:all .28s}
+.reco{margin-top:6px;font-size:13px;color:var(--muted)}
+.custom-btn{background:#fff;border:1px solid var(--border);padding:8px;border-radius:8px;cursor:pointer}
 
 /* cart panel */
-.cart-panel{position:fixed;right:20px;top:90px;width:360px;background:var(--white);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:14px;z-index:60;border:1px solid var(--border);display:none}
+.cart-panel{position:fixed;right:18px;top:86px;width:360px;background:var(--white);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:14px;z-index:70;border:1px solid var(--border);display:none}
 .cart-panel h4{margin:0 0 10px;font-family:Poppins}
 .cart-items{max-height:420px;overflow:auto;display:flex;flex-direction:column;gap:8px;padding-right:8px}
 .cart-row{display:flex;align-items:center;justify-content:space-between;background:#fbfbfb;padding:10px;border-radius:8px;border:1px solid var(--border)}
@@ -95,29 +84,34 @@ button,input,select,textarea{font-family:inherit}
 .btn-check{background:var(--brand);color:#fff}
 .btn-check:hover{background:var(--cta)}
 
-/* modal checkout */
-.modal { position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:80; }
-.modal .panel { width:820px;max-width:95%;background:var(--card-bg);border-radius:12px;padding:20px;box-shadow:0 12px 36px rgba(0,0,0,0.18); }
+/* modal */
+.modal { position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:90; }
+.modal .panel { width:920px;max-width:95%;background:var(--card-bg);border-radius:12px;padding:18px;box-shadow:0 12px 36px rgba(0,0,0,0.18); }
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
 .form-row label{font-weight:600;font-size:14px}
 .form-row input, .form-row select, .form-row textarea {padding:10px;border-radius:8px;border:1px solid #ccc}
 .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
+/* custom bowl */
+.ingredients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}
+.ingredient{background:#fff;padding:8px;border-radius:10px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+.ingredient.selected{outline:3px solid rgba(164,222,2,0.18)}
+.ingredient img{width:100%;height:80px;object-fit:cover;border-radius:8px}
+
 /* responsive */
 @media (max-width:980px){
-  .hero{flex-direction:column}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
   .cart-panel{right:12px;left:12px;width:auto;top:auto;bottom:80px}
   .modal .panel{width:95%}
 }
 .footer{max-width:var(--container);margin:40px auto 80px;padding:24px;text-align:center;color:var(--muted);font-size:14px}
 .fade-in{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.small{font-size:13px;color:var(--muted)}
 </style>
 </head>
 <body>
-<!-- Header -->
 <header class="header">
   <div class="header-inner">
     <div style="display:flex;align-items:center;gap:12px">
@@ -127,48 +121,53 @@ button,input,select,textarea{font-family:inherit}
         </div>
         <h4>ФермаFresh</h4>
       </div>
+      <div style="margin-left:14px" class="small">Свежесть, которую можно почувствовать</div>
     </div>
-    <nav class="nav" aria-label="Меню">
-      <a href="#">Главная</a>
-      <a href="#">Каталог</a>
-      <a href="#">О нас</a>
-      <a href="#">Доставка</a>
-      <a href="#">Контакты</a>
-    </nav>
-    <div style="display:flex;align-items:center;gap:12px">
+
+    <div class="header-right">
+      <div class="search-wrap" title="Поиск по товарам">
+        <input id="search-input" placeholder="Поиск товара (например: Банан, Помидоры)"/>
+        <select id="sort-select" class="sort-select" title="Сортировка">
+          <option value="default">Сорт</option>
+          <option value="price_asc">Цена ↑</option>
+          <option value="price_desc">Цена ↓</option>
+          <option value="name_asc">A → Я</option>
+          <option value="name_desc">Я → A</option>
+        </select>
+      </div>
+
+      <div class="loyalty-badge" id="loyalty-badge" title="Ваши баллы">Баллы: 0</div>
+
       <button id="open-cart" title="Корзина" style="background:transparent;border:0;cursor:pointer;font-weight:700;color:var(--brand);">🛒 <span id="cart-count">0</span></button>
+      <button id="open-custom" class="custom-btn" title="Собрать боул">Собрать боул</button>
     </div>
   </div>
 </header>
 
-<!-- Hero -->
 <section class="hero container">
   <div class="hero-left">
     <h1>Свежие продукты — прямо к вам домой</h1>
-    <p>Доставим за 60 минут из фермерских хозяйств. Свежесть, которую можно почувствовать.</p>
+    <p>Доставим за 60 минут из фермерских хозяйств. Составь свой боул или выбери из каталога.</p>
     <div class="hero-cta">
       <button class="btn-cta" id="hero-order">Заказать сейчас</button>
       <button class="btn-secondary" id="view-catalog">Посмотреть каталог</button>
     </div>
   </div>
-  <div class="hero-right">
-    <div class="hero-image">
+  <div class="hero-right" style="min-width:260px">
+    <div class="hero-image" style="height:160px;border-radius:10px">
       <img src="https://images.unsplash.com/photo-1518976024611-6d9b0b0b1f7f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=0a9c9e3b9a95f1b8ad1b" alt="Свежие фрукты" />
     </div>
   </div>
 </section>
 
-<!-- Main -->
 <main class="main container">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-    <div>
-      <div class="filters" id="filters">
-        <button class="filter-btn active" data-filter="all">Все</button>
-        <button class="filter-btn" data-filter="fruits">Фрукты</button>
-        <button class="filter-btn" data-filter="vegetables">Овощи</button>
-        <button class="filter-btn" data-filter="sets">Сеты</button>
-        <button class="filter-btn" data-filter="promo">Акции</button>
-      </div>
+  <div class="controls">
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-filter="all">Все</button>
+      <button class="filter-btn" data-filter="fruits">Фрукты</button>
+      <button class="filter-btn" data-filter="vegetables">Овощи</button>
+      <button class="filter-btn" data-filter="sets">Сеты</button>
+      <button class="filter-btn" data-filter="promo">Акции</button>
     </div>
     <div style="margin-left:auto" class="small">Показано <span id="shown-count">0</span> товаров</div>
   </div>
@@ -178,7 +177,6 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </main>
 
-<!-- Cart Panel -->
 <aside id="cart-panel" class="cart-panel" aria-hidden="true">
   <h4>Корзина <small style="color:var(--muted);font-weight:600">(<span id="cart-count-2">0</span>)</small></h4>
   <div class="cart-items" id="cart-items"></div>
@@ -203,21 +201,47 @@ button,input,select,textarea{font-family:inherit}
         <form id="order-form">
           <div class="form-row"><label>Имя *</label><input id="cust-name" required></div>
           <div class="form-row"><label>Телефон *</label><input id="cust-phone" required></div>
-          <div class="form-row"><label>Доп. телефон</label><input id="cust-phone2"></div>
-          <div class="form-row"><label>Город *</label><input id="cust-city" required></div>
+          <div class="form-row"><label>Город *</label><input id="cust-city" required placeholder="Например: Москва"></div>
           <div class="form-row"><label>Улица *</label><input id="cust-street" required></div>
-          <div class="form-row" style="display:flex;gap:8px"><div style="flex:1"><label>Дом *</label><input id="cust-house" required></div><div style="flex:1"><label>Подъезд</label><input id="cust-entrance"></div></div>
-          <div class="form-row" style="display:flex;gap:8px"><div style="flex:1"><label>Этаж</label><input id="cust-floor"></div><div style="flex:1"><label>Квартира</label><input id="cust-apartment"></div></div>
+          <div class="form-row" style="display:flex;gap:8px"><div style="flex:1"><label>Дом *</label><input id="cust-house" required></div><div style="flex:1"><label>Квартира</label><input id="cust-apartment"></div></div>
           <div class="form-row"><label>Время доставки *</label>
             <select id="delivery-time"><option value="asap">Как можно скорее</option><option value="custom">Указать время</option></select>
             <input type="time" id="custom-time" style="display:none;margin-top:8px"></div>
           <div class="form-row"><label>Почта для чека</label><input id="cust-email" type="email"></div>
-          <div class="form-row"><label>Способ оплаты *</label><select id="payment-method"><option value="cash">Наличные</option><option value="card">Карта</option><option value="sbp">СБП</option></select></div>
+          <div class="form-row"><label>Способ оплаты *</label><select id="payment-method"><option value="cash">Наличные</option><option value="card">Карта</option></select></div>
           <div class="form-actions" style="margin-top:12px">
             <button type="button" id="close-modal" class="btn btn-clear">Отмена</button>
             <button type="submit" class="btn btn-check">Подтвердить заказ</button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Custom Bowl -->
+<div id="custom-modal" class="modal" aria-hidden="true">
+  <div class="panel">
+    <h3 style="font-family:Poppins;margin:0 0 8px">Собрать Custom Bowl</h3>
+    <div style="display:flex;gap:18px;flex-wrap:wrap">
+      <div style="flex:1;min-width:300px">
+        <div style="font-weight:700;margin-bottom:6px">База</div>
+        <div id="ingredients-base" class="ingredients-grid"></div>
+
+        <div style="font-weight:700;margin:12px 0 6px">Белки</div>
+        <div id="ingredients-protein" class="ingredients-grid"></div>
+
+        <div style="font-weight:700;margin:12px 0 6px">Топпинги</div>
+        <div id="ingredients-toppings" class="ingredients-grid"></div>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <div style="font-weight:700;margin-bottom:8px">Ваш боул</div>
+        <div id="custom-summary" style="background:#fff;padding:10px;border-radius:8px;border:1px solid var(--border);min-height:120px"></div>
+        <div style="margin-top:10px;font-weight:800;display:flex;justify-content:space-between"><div>Итого</div><div id="custom-total">0 ₽</div></div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button id="add-custom-to-cart" class="btn btn-check">Добавить в корзину</button>
+          <button id="close-custom" class="btn btn-clear">Отмена</button>
+        </div>
       </div>
     </div>
   </div>
@@ -246,7 +270,7 @@ const products = [
   ["🥕 Морковь Волгоград — 45₽/кг", "Морковь Волгоград", 45, "vegetables"],
   ["🧅 Лук репчатый Волгоград — 45₽/кг", "Лук репчатый Волгоград", 45, "vegetables"],
   ["🌱 Лук зеленый — 350₽/кг", "Лук зеленый", 350, "vegetables"],
-  ["🌱 Укrop, петрушка — 350₽/кг", "Укроп, петрушка", 350, "vegetables"],
+  ["🌱 Укроп, петрушка — 350₽/кг", "Укроп, петрушка", 350, "vegetables"],
   ["🌱 Кинза — 440₽/кг", "Кинза", 440, "vegetables"],
   ["🌱 Базелик — 50₽/пучок", "Базелик (пучок)", 50, "vegetables"],
   ["🧄 Чеснок Ташкент — 400₽/кг", "Чеснок Ташкент", 400, "vegetables"],
@@ -276,13 +300,12 @@ const products = [
 ];
 
 /* ========== State ========== */
-let cart = []; // {id, name, price, qtyKg, total}
+let cart = []; // {id, name, price, qtyKg, total, components (optional)}
 let visibleProducts = products.slice();
 let currentFilter = 'all';
 
 /* ========== DOM refs ========== */
 const catalogEl = document.getElementById('catalog');
-const filtersEl = document.getElementById('filters');
 const shownCountEl = document.getElementById('shown-count');
 const cartPanel = document.getElementById('cart-panel');
 const cartItemsEl = document.getElementById('cart-items');
@@ -300,13 +323,57 @@ const deliveryTimeSelect = document.getElementById('delivery-time');
 const customTimeInput = document.getElementById('custom-time');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
+const searchInput = document.getElementById('search-input');
+const sortSelect = document.getElementById('sort-select');
+const loyaltyBadge = document.getElementById('loyalty-badge');
+const openCustomBtn = document.getElementById('open-custom');
+const customModal = document.getElementById('custom-modal');
+
+const ingredientsBaseEl = document.getElementById('ingredients-base');
+const ingredientsProteinEl = document.getElementById('ingredients-protein');
+const ingredientsToppingsEl = document.getElementById('ingredients-toppings');
+const customSummary = document.getElementById('custom-summary');
+const customTotal = document.getElementById('custom-total');
+const addCustomToCartBtn = document.getElementById('add-custom-to-cart');
+
+const allowedCities = ['Москва','Санкт-Петербург','Казань','Воронеж','Самара']; // пример зон доставки
 
 /* ========== Helpers ========== */
 function idify(s){ return s.replace(/\W+/g,'_'); }
 function formatRub(v){ return Math.round(v) + ' ₽'; }
 function displayQty(kg){ if(kg<1) return Math.round(kg*1000) + ' г'; return kg.toFixed(2) + ' кг'; }
+function randInt(max){ return Math.floor(Math.random()*max); }
 
-/* ========== Render catalog ========== */
+/* ========== Image loader (webp-first + fallbacks) ========== */
+function tryLoadImage(imgEl, name){
+  const exts = ['.webp','.jpg','.jpeg','.png','.gif'];
+  const encoded = encodeURIComponent(name);
+  const noimage = 'images/noimage.png';
+  let idx = 0;
+
+  function tryNext(){
+    if(idx >= exts.length){
+      imgEl.src = noimage;
+      imgEl.onload = ()=> imgEl.style.opacity = '1';
+      return;
+    }
+    const url = 'images/' + encoded + exts[idx];
+    // проверяем существование через объект Image
+    const tester = new Image();
+    tester.onload = () => {
+      imgEl.src = url;
+      imgEl.onload = ()=> imgEl.style.opacity = '1';
+    };
+    tester.onerror = () => {
+      idx++;
+      tryNext();
+    };
+    tester.src = url;
+  }
+  tryNext();
+}
+
+/* ========== Render catalog with search/sort/recommendations ========== */
 function renderCatalog(list){
   catalogEl.innerHTML = '';
   list.forEach((p, idx) => {
@@ -315,13 +382,9 @@ function renderCatalog(list){
     const card = document.createElement('div');
     card.className = 'card fade-in';
 
-    // Пути к картинкам. Используем encodeURIComponent для корректного URL (пробелы и спецсимволы будут закодированы)
-    const jpgPath = 'images/' + encodeURIComponent(name) + '.jpg';
-    const pngPath = 'images/' + encodeURIComponent(name) + '.png';
-    const noImagePath = 'images/noimage.png';
-
+    // кнопки и поля
     card.innerHTML = `
-      <div class="photo"><img data-src="${jpgPath}" alt="${name}"></div>
+      <div class="photo"><img alt="${name}" loading="lazy"></div>
       <div class="info">
         <div class="name">${label}</div>
         <div class="desc">${name}</div>
@@ -336,66 +399,56 @@ function renderCatalog(list){
             <button class="add-to-cart" data-idx="${idx}">В корзину</button>
           </div>
         </div>
+        <div class="reco small" data-idx="${idx}"></div>
       </div>
     `;
     catalogEl.appendChild(card);
 
+    // load image with fallbacks
     const img = card.querySelector('img');
+    tryLoadImage(img, name);
 
-    // Показываем картинку плавно после загрузки
-    img.onload = ()=> { img.style.opacity = '1'; };
+    img.onerror = ()=> { /* на всякий — handled in tryLoadImage */ };
 
-    // onerror: цепочка fallback'ов: .jpg -> .png -> noimage.png
-    img.onerror = function() {
-      try {
-        const cur = this.src || '';
-        // Если текущий src содержит .jpg (или это первый запрос), пробуем .png
-        if (cur.indexOf('.jpg') !== -1 || cur.indexOf(encodeURIComponent(name) + '.jpg') !== -1) {
-          // чтобы не зациклиться, временно отключаем обработчик, затем назначаем новый при установке следующего src
-          this.onerror = null;
-          this.src = pngPath;
-          // не забудем снова установить обработчик для переключения на noimage
-          this.onerror = function() {
-            this.onerror = null;
-            this.src = noImagePath;
-          };
-        } else if (cur.indexOf('.png') !== -1 || cur.indexOf(encodeURIComponent(name) + '.png') !== -1) {
-          this.onerror = null;
-          this.src = noImagePath;
-        } else {
-          // На всякий случай - ставим плейсхолдер
-          this.onerror = null;
-          this.src = noImagePath;
-        }
-      } catch(e) {
-        this.onerror = null;
-        this.src = noImagePath;
-      }
-    };
+    // render recommendations (2 случайных, отличных от текущего)
+    const recoEl = card.querySelector('.reco');
+    const others = products.map((pp,i)=> i !== idx ? pp : null).filter(Boolean);
+    const picks = [];
+    while(picks.length < 2 && others.length){
+      const k = randInt(others.length);
+      picks.push(others.splice(k,1)[0]);
+    }
+    if(picks.length){
+      recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>x[1]).join(', ');
+    }
 
-    // Запуск загрузки (img.dataset.src задан выше)
-    img.src = img.dataset.src;
   });
   shownCountEl.textContent = list.length;
 }
 
-/* ========== Cart logic ========== */
-function addToCart(product, qty, unit){
-  const [label,name,price] = product;
-  let qtyKg = (unit === 'g') ? (qty / 1000) : qty;
-  if(qtyKg <= 0) return;
-  const existing = cart.find(i => i.name === name);
+/* ========== Cart logic (поддерживает обычные товары и кастомные боулы) ========== */
+function addToCart(productObj){
+  // productObj: {name, price, qtyKg, components?}
+  const existing = cart.find(i => i.name === productObj.name && JSON.stringify(i.components || []) === JSON.stringify(productObj.components || []));
   if(existing){
-    existing.qtyKg += qtyKg;
-    existing.total = existing.qtyKg * price;
+    existing.qtyKg += productObj.qtyKg;
+    existing.total = existing.qtyKg * productObj.price;
   } else {
-    cart.push({ id: idify(name), name, price, qtyKg: qtyKg, total: qtyKg * price });
+    cart.push({
+      id: idify(productObj.name) + '_' + Math.random().toString(36).slice(2,8),
+      name: productObj.name,
+      price: productObj.price,
+      qtyKg: productObj.qtyKg,
+      total: productObj.qtyKg * productObj.price,
+      components: productObj.components || null
+    });
   }
+  console.log('analytics: add_to_cart', productObj);
   renderCart();
 }
 
-function removeFromCart(name){
-  cart = cart.filter(i => i.name !== name);
+function removeFromCart(id){
+  cart = cart.filter(i => i.id !== id);
   renderCart();
 }
 
@@ -414,11 +467,11 @@ function renderCart(){
     row.className = 'cart-row';
     row.innerHTML = `
       <div class="left">
-        <div style="font-weight:700">${item.name}</div>
+        <div style="font-weight:700">${item.name}${item.components ? ' (Custom)' : ''}</div>
         <div class="small" style="color:var(--muted)">${displayQty(item.qtyKg)} • ${formatRub(item.total)}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-        <button style="background:transparent;border:0;cursor:pointer;color:${'#e74c3c'}" data-remove="${item.name}">✕</button>
+        <button style="background:transparent;border:0;cursor:pointer;color:${'#e74c3c'}" data-remove="${item.id}">✕</button>
         <div style="font-weight:700">${formatRub(item.total)}</div>
       </div>
     `;
@@ -434,7 +487,7 @@ function renderCart(){
   });
 }
 
-/* ========== Catalog click delegation (add to cart) ========== */
+/* ========== Delegation: add to cart from catalog ========== */
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if(!btn) return;
@@ -444,14 +497,15 @@ document.addEventListener('click', (e) => {
   const unitSelect = card.querySelector('.unit-select');
   const qty = parseFloat(qtyInput.value) || 0;
   const unit = unitSelect.value;
-  addToCart(products[idx], qty, unit);
-
-  // micro check animation
-  const ck = document.createElement('div');
-  ck.className = 'checkmark';
-  ck.textContent = '✓';
-  card.style.position = 'relative';
-  card.appendChild(ck);
+  let qtyKg = unit === 'g' ? qty/1000 : qty;
+  if(qtyKg <= 0) return;
+  const product = products[idx];
+  const name = product[1];
+  const price = product[2];
+  addToCart({ name, price, qtyKg });
+  // tiny check animation
+  const ck = document.createElement('div'); ck.className = 'checkmark'; ck.textContent = '✓';
+  const c = btn.closest('.card'); c.style.position = 'relative'; c.appendChild(ck);
   setTimeout(()=>{ ck.style.opacity = '1'; ck.style.transform = 'scale(1)'; }, 10);
   setTimeout(()=>{ ck.style.opacity = '0'; ck.style.transform = 'scale(.6)'; }, 900);
   setTimeout(()=>{ ck.remove(); }, 1200);
@@ -463,13 +517,15 @@ openCartBtn.addEventListener('click', ()=> {
   cartOpen = !cartOpen;
   cartPanel.style.display = cartOpen ? 'block' : 'none';
 });
+
+/* clear cart */
 clearCartBtn.addEventListener('click', ()=> {
   clearCart();
   cartPanel.style.display = 'none';
   cartOpen = false;
 });
 
-/* ========== Filters ========== */
+/* filters (категории) */
 document.getElementById('filters').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-filter]');
   if(!b) return;
@@ -480,24 +536,43 @@ document.getElementById('filters').addEventListener('click', (e) => {
   if(f === 'all') visibleProducts = products.slice();
   else if(f === 'sets' || f === 'promo') visibleProducts = []; // none now
   else visibleProducts = products.filter(p => p[3] === f);
-  renderCatalog(visibleProducts);
+  applySearchAndSort();
 });
+
+/* search & sort */
+searchInput.addEventListener('input', ()=> applySearchAndSort());
+sortSelect.addEventListener('change', ()=> applySearchAndSort());
+
+function applySearchAndSort(){
+  const q = (searchInput.value || '').trim().toLowerCase();
+  let list = (currentFilter === 'all') ? products.slice() : products.filter(p => p[3] === currentFilter);
+  if(q) list = list.filter(p => (p[0] + ' ' + p[1]).toLowerCase().includes(q));
+  const s = sortSelect.value;
+  if(s === 'price_asc') list.sort((a,b)=> a[2] - b[2]);
+  else if(s === 'price_desc') list.sort((a,b)=> b[2] - a[2]);
+  else if(s === 'name_asc') list.sort((a,b)=> a[1].localeCompare(b[1],'ru'));
+  else if(s === 'name_desc') list.sort((a,b)=> b[1].localeCompare(a[1],'ru'));
+  visibleProducts = list;
+  renderCatalog(visibleProducts);
+}
 
 /* ========== Checkout flow (modal) ========== */
 gotoCheckoutBtn.addEventListener('click', ()=> {
   if(cart.length === 0){ alert('Корзина пуста — добавьте товары.'); return; }
+  // populate modal order list
   modalOrderList.innerHTML = '';
   let sum = 0;
   cart.forEach(i => {
     const el = document.createElement('div');
     el.style.padding = '6px 4px';
-    el.innerHTML = `<div style="font-weight:700">${i.name}</div><div style="color:var(--muted)">${displayQty(i.qtyKg)} • ${formatRub(i.total)}</div>`;
+    el.innerHTML = `<div style="font-weight:700">${i.name}${i.components ? ' (Custom)' : ''}</div><div style="color:var(--muted)">${displayQty(i.qtyKg)} • ${formatRub(i.total)}</div>`;
     modalOrderList.appendChild(el);
     sum += i.total;
   });
   modalTotal.textContent = formatRub(sum);
   modal.style.display = 'flex';
   modal.setAttribute('aria-hidden', 'false');
+  console.log('analytics: open_checkout_modal');
 });
 
 document.getElementById('close-modal').addEventListener('click', ()=> {
@@ -516,26 +591,40 @@ orderForm.addEventListener('submit', (e) => {
   if(cart.length === 0){ alert('Корзина пуста!'); modal.style.display='none'; return; }
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
-  const phone2 = document.getElementById('cust-phone2').value.trim();
   const city = document.getElementById('cust-city').value.trim();
   const street = document.getElementById('cust-street').value.trim();
   const house = document.getElementById('cust-house').value.trim();
-  const entrance = document.getElementById('cust-entrance').value.trim();
-  const floor = document.getElementById('cust-floor').value.trim();
   const apt = document.getElementById('cust-apartment').value.trim();
   const time = deliveryTimeSelect.value === 'custom' ? (customTimeInput.value || '—') : 'Как можно скорее';
   const email = document.getElementById('cust-email').value.trim();
   const payment = document.getElementById('payment-method').value;
 
+  // Проверка зоны доставки (простая)
+  if(!allowedCities.includes(city)){
+    const ok = confirm(`Похоже, доставка в город "${city}" не гарантирована. Продолжить оформление? (Нажми Отмена, чтобы изменить город.)`);
+    if(!ok) return;
+  }
+
+  // build order text
   let message = '🛒 Ваш заказ:\n\n';
   cart.forEach(i => {
     message += `${i.name} — ${displayQty(i.qtyKg)} — ${formatRub(i.total)}\n`;
+    if(i.components && i.components.length){
+      message += `  Состав: ${i.components.map(c=>c.name).join(', ')}\n`;
+    }
   });
   message += `\nИтого: ${modalTotal.textContent}\n\n`;
-  message += `👤 Имя: ${name}\n📞 Телефон: ${phone}${phone2 ? '\n📞 Доп: ' + phone2 : ''}\n🏠 Адрес: ${city}, ${street}, д.${house}${entrance ? ', подъезд ' + entrance : ''}${floor ? ', этаж ' + floor : ''}${apt ? ', кв. ' + apt : ''}\n⏰ Доставка: ${time}\n✉ Почта: ${email}\n💳 Оплата: ${payment}\n\n(Тестовое оформление — заказ не отправлен на сервер)`;
+  message += `👤 Имя: ${name}\n📞 Телефон: ${phone}\n🏠 Адрес: ${city}, ${street}, д.${house}${apt ? ', кв. ' + apt : ''}\n⏰ Доставка: ${time}\n✉ Почта: ${email}\n💳 Оплата: ${payment}\n\n(Тестовое оформление — заказ не отправлен на сервер)`;
 
   alert(message);
 
+  // начисляем баллы — 5% от суммы (округляем вниз)
+  const sum = cart.reduce((s,i)=> s + i.total, 0);
+  const points = Math.floor(sum * 0.05);
+  addLoyaltyPoints(points);
+
+  // логирование и очистка
+  console.log('analytics: order_submitted', {sum, points, items: cart});
   cart = [];
   renderCart();
   orderForm.reset();
@@ -543,18 +632,164 @@ orderForm.addEventListener('submit', (e) => {
   modal.style.display = 'none';
 });
 
-/* hero / view catalog */
-heroOrderBtn.addEventListener('click', ()=> {
-  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'});
+/* hero / view catalog scroll */
+heroOrderBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'}));
+viewCatalogBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'}));
+
+/* ========== Loyalty (localStorage) ========== */
+function getLoyalty(){
+  return parseInt(localStorage.getItem('ferma_loyalty') || '0', 10);
+}
+function setLoyalty(v){
+  localStorage.setItem('ferma_loyalty', String(v));
+  loyaltyBadge.textContent = 'Баллы: ' + v;
+}
+function addLoyaltyPoints(v){
+  if(!v || v <= 0) return;
+  const cur = getLoyalty();
+  setLoyalty(cur + v);
+  alert('Начислено ' + v + ' баллов. Всего: ' + (cur + v));
+}
+
+/* ========== Custom Bowl (минимальная реализация) ========== */
+/* ingredients — простой набор для демо */
+const ingredients = {
+  base: [
+    {name:'Рис', price:40},
+    {name:'Листья салата', price:30},
+    {name:'Киноа', price:55}
+  ],
+  protein: [
+    {name:'Курица', price:120},
+    {name:'Лосось', price:220},
+    {name:'Нут', price:80}
+  ],
+  toppings: [
+    {name:'Авокадо', price:60},
+    {name:'Помидор', price:30},
+    {name:'Огурец', price:25},
+    {name:'Сыр фета', price:70}
+  ]
+};
+
+let customSelection = { base: null, protein: [], toppings: [] };
+
+function renderIngredients(){
+  ingredientsBaseEl.innerHTML = '';
+  ingredientsProteinEl.innerHTML = '';
+  ingredientsToppingsEl.innerHTML = '';
+
+  ingredients.base.forEach((it, i) => {
+    const el = document.createElement('div'); el.className = 'ingredient';
+    el.innerHTML = `<div style="font-weight:700">${it.name}</div><div class="small">${formatRub(it.price)}</div>`;
+    el.onclick = ()=> {
+      customSelection.base = it;
+      updateCustomUI();
+    };
+    ingredientsBaseEl.appendChild(el);
+  });
+
+  ingredients.protein.forEach((it, i) => {
+    const el = document.createElement('div'); el.className = 'ingredient';
+    el.innerHTML = `<div style="font-weight:700">${it.name}</div><div class="small">${formatRub(it.price)}</div>`;
+    el.onclick = ()=> {
+      // toggle
+      const idx = customSelection.protein.findIndex(x=>x.name===it.name);
+      if(idx===-1) customSelection.protein.push(it);
+      else customSelection.protein.splice(idx,1);
+      updateCustomUI();
+    };
+    ingredientsProteinEl.appendChild(el);
+  });
+
+  ingredients.toppings.forEach((it, i) => {
+    const el = document.createElement('div'); el.className = 'ingredient';
+    el.innerHTML = `<div style="font-weight:700">${it.name}</div><div class="small">${formatRub(it.price)}</div>`;
+    el.onclick = ()=> {
+      const idx = customSelection.toppings.findIndex(x=>x.name===it.name);
+      if(idx===-1) customSelection.toppings.push(it);
+      else customSelection.toppings.splice(idx,1);
+      updateCustomUI();
+    };
+    ingredientsToppingsEl.appendChild(el);
+  });
+
+  updateCustomUI();
+}
+
+function updateCustomUI(){
+  // mark selected
+  document.querySelectorAll('#ingredients-base .ingredient').forEach((el,i)=>{
+    const it = ingredients.base[i];
+    if(customSelection.base && customSelection.base.name === it.name) el.classList.add('selected'); else el.classList.remove('selected');
+  });
+  document.querySelectorAll('#ingredients-protein .ingredient').forEach((el,i)=>{
+    const it = ingredients.protein[i];
+    if(customSelection.protein.find(x=>x.name===it.name)) el.classList.add('selected'); else el.classList.remove('selected');
+  });
+  document.querySelectorAll('#ingredients-toppings .ingredient').forEach((el,i)=>{
+    const it = ingredients.toppings[i];
+    if(customSelection.toppings.find(x=>x.name===it.name)) el.classList.add('selected'); else el.classList.remove('selected');
+  });
+
+  // summary
+  const parts = [];
+  if(customSelection.base) parts.push(customSelection.base.name);
+  if(customSelection.protein.length) parts.push(...customSelection.protein.map(x=>x.name));
+  if(customSelection.toppings.length) parts.push(...customSelection.toppings.map(x=>x.name));
+  customSummary.innerHTML = parts.length ? parts.map(x=>`<div>${x}</div>`).join('') : '<div class="small">Выберите ингредиенты слева</div>';
+
+  // price calc — базовая логика: сумма ингредиентов за порцию (1 штука)
+  let price = 0;
+  if(customSelection.base) price += customSelection.base.price;
+  price += customSelection.protein.reduce((s,x)=> s+x.price, 0);
+  price += customSelection.toppings.reduce((s,x)=> s+x.price, 0);
+  customTotal.textContent = formatRub(price);
+}
+
+openCustomBtn.addEventListener('click', ()=> {
+  customModal.style.display = 'flex';
+  customModal.setAttribute('aria-hidden','false');
+  renderIngredients();
+  console.log('analytics: open_custom_builder');
 });
-viewCatalogBtn.addEventListener('click', ()=> {
-  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'});
+document.getElementById('close-custom').addEventListener('click', ()=> {
+  customModal.style.display = 'none';
+  customModal.setAttribute('aria-hidden','true');
 });
 
-/* init */
-let visibleProductsList = products.slice();
-renderCatalog(visibleProductsList);
-renderCart();
+// add custom bowl to cart
+addCustomToCartBtn.addEventListener('click', ()=> {
+  if(!customSelection.base){ alert('Выберите базу для боула'); return; }
+  const components = [];
+  components.push(customSelection.base);
+  components.push(...customSelection.protein);
+  components.push(...customSelection.toppings);
+  // price per bowl (в рублях)
+  const price = (components.reduce((s,i)=> s + i.price, 0));
+  // добавляем как один товар с qty 1 (шт)
+  addToCart({ name: 'Custom Bowl', price: price, qtyKg: 1, components });
+  customModal.style.display = 'none';
+  customModal.setAttribute('aria-hidden','true');
+  // сбросить выбор
+  customSelection = { base: null, protein: [], toppings: [] };
+  console.log('analytics: add_custom_bowl', {price, components});
+});
+
+/* ========== Init ========== */
+function init(){
+  // load loyalty
+  const l = getLoyalty();
+  loyaltyBadge.textContent = 'Баллы: ' + l;
+
+  // initial render
+  visibleProducts = products.slice();
+  renderCatalog(visibleProducts);
+  renderCart();
+  // attach quantity handlers for catalog (delegation handled above)
+}
+
+init();
 
 </script>
 </body>
