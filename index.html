@@ -5,175 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Магазин овощей и фруктов</title>
 <style>
-:root {
-  --primary:#A4DE02;
-  --primary-hover:#FF8C42;
+:root{
+  --accent:#A4DE02;
+  --accent-hover:#FF8C42;
   --bg:#FFFFFF;
-  --card-bg:#FAF9F6;
+  --card:#FAF9F6;
   --text:#2E2E2E;
-  --text-secondary:#666666;
+  --text-muted:#666666;
   --border:#E6E6E6;
-  --success:#5CB85C;
-  --error:#E74C3C;
 }
-
-body {
-  margin:0;
-  font-family: 'Inter', sans-serif;
-  background:var(--bg);
-  color:var(--text);
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;}
+body{background:var(--bg); color:var(--text); padding:16px;}
+h1{text-align:center;font-family:Poppins,sans-serif;font-weight:700;font-size:42px;margin-bottom:20px;}
+.categories, .subcategories{display:flex;gap:12px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
+.categories button, .subcategories button{
+  padding:8px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600; background:#eee;
 }
-
-h1,h2,h3,h4 {margin:0;}
-
-header {
-  background: var(--primary);
-  color:white;
-  padding:20px;
-  text-align:center;
-  font-family: 'Poppins', sans-serif;
-  font-weight:600;
-}
-
-.categories, .subcategories {
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin:16px 0;
-}
-
-.categories button, .subcategories button {
-  padding:8px 12px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-  transition:0.12s;
-  background:#eee;
-}
-
-.categories button.active, .subcategories button.active {
-  background:var(--primary);
-  color:white;
-}
-
-.wrap {
-  display:flex;
-  gap:20px;
-  padding:0 16px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-#catalog {
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-  gap:16px;
-}
-
-.card {
-  background:var(--card-bg);
-  border-radius:12px;
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
-  cursor:pointer;
-  transition: transform 0.2s;
-}
-.card:hover {transform: scale(1.03);}
-
-.img-placeholder {
-  height:180px;
-  background:linear-gradient(90deg,#f0f0f0,#fafafa);
-  border-radius:10px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:#999;
-}
-
-.title {font-weight:600; font-size:16px;}
-.price {color:#666; font-size:14px;}
-
-.cart {
-  position:fixed;
-  right:16px;
-  top:100px;
-  width:280px;
-  background:white;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-
-.cart h3 {text-align:center; font-weight:600;}
-.cart-list {max-height:300px; overflow-y:auto; margin:8px 0;}
-.cart-item {display:flex; justify-content:space-between; align-items:center; padding:6px; border-radius:8px; background:#fafafa;}
-.remove {background:var(--error); color:white; border:none; border-radius:6px; cursor:pointer; padding:4px 6px;}
-.total {text-align:right; font-weight:700; margin-top:8px;}
-.cart-actions {display:flex; gap:8px; margin-top:8px;}
-.btn {flex:1; padding:8px; border-radius:8px; border:none; cursor:pointer; font-weight:600;}
-.btn-clear {background:var(--error); color:white;}
-.btn-check {background:var(--primary); color:white;}
+.categories button.active{background:var(--accent);color:#fff;}
+.subcategories button.active{background:var(--accent-hover);color:#fff;}
+.wrap{display:grid;grid-template-columns:1fr 340px; gap:20px;align-items:start;}
+#catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);display:flex;flex-direction:column;gap:8px;min-height:220px;cursor:pointer;transition:transform .12s;}
+.card:hover{transform:scale(1.03);}
+.img-placeholder{height:120px;background:linear-gradient(90deg,#f0f0f0,#fafafa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#9aa6b2;font-size:14px;}
+.title{font-weight:600;font-size:16px;height:40px;overflow:hidden;}
+.price{color:var(--text-muted);font-size:14px;}
+.controls{display:flex;gap:8px;align-items:center;margin-top:auto;}
+.qty{display:flex;gap:6px;align-items:center;border-radius:8px;padding:6px;background:#fbfcfd;border:1px solid #e8eef2;}
+.qty input[type="number"]{width:70px;border:0;outline:none;text-align:center;font-size:14px;background:transparent;}
+.unit-select{padding:6px 8px;border-radius:8px;border:1px solid #e8eef2;background:white;font-size:13px;}
+.add-btn{background:var(--accent);color:white;border:0;padding:9px 10px;border-radius:10px;cursor:pointer;font-weight:600;transition:0.12s;}
+.add-btn:hover{background:var(--accent-hover);}
+.cart{position:sticky;top:18px;background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06);max-height:80vh;overflow:auto;}
+.cart h3{text-align:center;margin-bottom:8px;}
+.cart-list{display:flex;flex-direction:column;gap:8px;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:8px;padding:8px;background:#fbfdff;border:1px solid #eef6f2;font-size:14px;}
+.cart-item .left{display:flex;flex-direction:column;gap:4px;}
+.remove{background:#fdecea;color:#b82c1a;border:0;padding:6px 8px;border-radius:8px;cursor:pointer;}
+.total{margin-top:10px;text-align:right;font-weight:700;font-size:16px;}
+.cart-actions{display:flex;gap:8px;margin-top:10px;}
+.btn{flex:1;padding:10px;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
+.btn-clear{background:#f44336;color:white;}
+.btn-check{background:var(--accent);color:white;}
+.muted{color:#666666;font-size:13px;}
 
 /* Модальное окно товара */
-.modal {
-  display:none;
-  position:fixed;
-  top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.5);
-  justify-content:center;
-  align-items:center;
-  z-index:1000;
-}
-
-.modal-content {
-  background:white;
-  max-width:500px;
-  width:90%;
-  border-radius:12px;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-}
-
-.modal-content h2 {font-family:'Poppins', sans-serif; font-weight:600;}
-.modal-content .description {font-size:14px; color:#666;}
-.modal-content .kbju {font-size:14px; font-weight:600;}
-.modal-content textarea {width:100%; min-height:60px; border-radius:8px; border:1px solid #ccc; padding:8px;}
-.close-btn {
-  position:absolute; top:12px; right:12px;
-  background:#E74C3C; color:white; border:none; border-radius:50%;
-  width:28px; height:28px; cursor:pointer;
-}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);justify-content:center;align-items:center;z-index:1000;}
+.modal-content{background:var(--card);padding:20px;border-radius:12px;max-width:400px;width:90%;position:relative;display:flex;flex-direction:column;gap:12px;}
+.modal-close{position:absolute;top:10px;right:10px;font-size:20px;cursor:pointer;}
+.modal h2{margin-bottom:8px;font-family:Poppins,sans-serif;}
+.modal .desc{font-size:14px;color:var(--text-muted);}
+.modal .kbtju{font-size:14px;font-weight:600;}
+.modal .comment input{width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;}
+.modal .add-modal-btn{background:var(--accent);color:white;border:0;padding:10px;border-radius:8px;cursor:pointer;font-weight:600;transition:0.12s;}
+.modal .add-modal-btn:hover{background:var(--accent-hover);}
 
 /* Оформление заказа */
-#checkout-section {
-  display:none;
-  padding:16px;
-  max-width:500px;
-  margin:20px auto;
-  background:#FAF9F6;
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
-}
+#checkout-section{display:none;margin-top:20px;}
+#checkout-section h2{text-align:center;margin-bottom:12px;}
+.checkout-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;}
+.checkout-form input, .checkout-form select{padding:8px;border-radius:8px;border:1px solid #ccc;font-size:14px;width:100%;}
+.checkout-form label{font-weight:600;font-size:14px;}
+.checkout-form button{padding:10px;background:var(--accent);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:0.12s;}
+.checkout-form button:hover{background:var(--accent-hover);}
 
-.checkout-form {display:flex; flex-direction:column; gap:12px;}
-.checkout-form input, .checkout-form select {padding:8px; border-radius:8px; border:1px solid #ccc; font-size:14px;}
-.checkout-form button {background:var(--primary); color:white; border:none; border-radius:12px; padding:10px; font-weight:600; cursor:pointer;}
-.checkout-form button:hover {background:var(--primary-hover);}
+@media (max-width:980px){.wrap{grid-template-columns:1fr}.cart{position:static;}}
 </style>
 </head>
 <body>
-<header>
-  🥕 Магазин овощей и фруктов
-</header>
+<h1>🥕 Магазин овощей и фруктов</h1>
 
 <div class="categories" id="category-buttons">
   <button class="active" data-cat="fruits">Фрукты</button>
@@ -182,8 +82,9 @@ header {
 <div class="subcategories" id="subcategory-buttons"></div>
 
 <div class="wrap">
-  <div id="catalog"></div>
-
+  <div id="catalog-wrap">
+    <div id="catalog"></div>
+  </div>
   <aside class="cart" id="cart">
     <h3>🛒 Корзина</h3>
     <div id="cart-list" class="cart-list"></div>
@@ -192,20 +93,24 @@ header {
       <button id="clear-cart" class="btn btn-clear">Очистить</button>
       <button id="checkout" class="btn btn-check">Оформить заказ</button>
     </div>
+    <div style="margin-top:10px;font-size:13px;color:#667f87;text-align:center">
+      Тестовый режим — заказ пока через модальное окно
+    </div>
   </aside>
 </div>
 
 <!-- Модальное окно товара -->
 <div class="modal" id="product-modal">
   <div class="modal-content">
-    <button class="close-btn" id="close-modal">×</button>
+    <span class="modal-close" id="modal-close">&times;</span>
     <h2 id="modal-title"></h2>
-    <div class="img-placeholder" style="height:200px;">Фото (пока)</div>
-    <div class="kbju" id="modal-kbju"></div>
-    <div class="description" id="modal-desc"></div>
-    <label>Комментарий к заказу:</label>
-    <textarea id="modal-comment" placeholder="Например: средний арбуз"></textarea>
-    <button id="modal-add" class="btn btn-check">Добавить в корзину</button>
+    <div class="desc" id="modal-desc"></div>
+    <div class="kbtju" id="modal-kbtju"></div>
+    <div class="comment">
+      <label>Комментарий к заказу</label>
+      <input type="text" id="modal-comment" placeholder="Например: средний арбуз">
+    </div>
+    <button class="add-modal-btn" id="modal-add-btn">Добавить в корзину</button>
   </div>
 </div>
 
@@ -213,46 +118,70 @@ header {
 <div id="checkout-section">
   <h2>📦 Оформление заказа</h2>
   <form class="checkout-form" id="checkout-form">
-    <input type="text" id="cust-name" placeholder="Имя *" required>
-    <input type="tel" id="cust-phone" placeholder="Телефон *" required>
-    <input type="tel" id="cust-phone2" placeholder="Доп. телефон (по желанию)">
-    <input type="text" id="cust-city" placeholder="Город *" required>
-    <input type="text" id="cust-street" placeholder="Улица *" required>
-    <input type="text" id="cust-house" placeholder="Дом *" required>
-    <input type="text" id="cust-entrance" placeholder="Подъезд">
-    <input type="text" id="cust-floor" placeholder="Этаж">
-    <input type="text" id="cust-apartment" placeholder="Квартира">
+    <label>Имя *</label>
+    <input type="text" id="cust-name" required>
+    
+    <label>Телефон *</label>
+    <input type="tel" id="cust-phone" required>
+    
+    <label>Доп. телефон</label>
+    <input type="tel" id="cust-phone2">
+    
+    <label>Город *</label>
+    <input type="text" id="cust-city" required>
+    
+    <label>Улица *</label>
+    <input type="text" id="cust-street" required>
+    
+    <label>Дом *</label>
+    <input type="text" id="cust-house" required>
+    
+    <label>Подъезд</label>
+    <input type="text" id="cust-entrance">
+    
+    <label>Этаж</label>
+    <input type="text" id="cust-floor">
+    
+    <label>Квартира</label>
+    <input type="text" id="cust-apartment">
+    
+    <label>Время доставки *</label>
     <select id="delivery-time">
       <option value="asap">Как можно скорее</option>
       <option value="custom">Указать время</option>
     </select>
     <input type="time" id="custom-time" style="display:none;">
-    <input type="email" id="cust-email" placeholder="Почта для чека">
-    <select id="payment-method">
+    
+    <label>Почта для чека</label>
+    <input type="email" id="cust-email">
+    
+    <label>Способ оплаты *</label>
+    <select id="payment-method" required>
       <option value="cash">Наличные</option>
-      <option value="online">Онлайн (карта, СБП)</option>
+      <option value="online">Онлайн (карта / СБП)</option>
     </select>
+    
     <button type="submit">Подтвердить заказ</button>
   </form>
 </div>
 
 <script>
-//=== Ассортимент
+//=== Данные товаров с индивидуальными комментариями
 const products=[
-  {name:"Арбуз", price:40, category:"fruits", subcategory:"Ягоды", kbju:"К:6г Ж:0г Б:0г", desc:"Арбуз — отличный источник воды и витамина С."},
-  {name:"Банан", price:170, category:"fruits", subcategory:"Ягоды", kbju:"К:22г Ж:0г Б:1г", desc:"Банан помогает поддерживать энергию и работу сердца."},
-  {name:"Груша", price:340, category:"fruits", subcategory:"Косточковые", kbju:"К:15г Ж:0г Б:0г", desc:"Груша улучшает пищеварение и насыщает клетчаткой."},
-  {name:"Киви", price:450, category:"fruits", subcategory:"Цитрусовые", kbju:"К:10г Ж:0г Б:1г", desc:"Киви богат витамином C, укрепляет иммунитет."},
-  {name:"Перец чили", price:25, category:"vegetables", subcategory:"Перцы", kbju:"К:7г Ж:0г Б:1г", desc:"Перец чили стимулирует метаболизм и укрепляет иммунитет."}
-  // сюда добавляй остальные товары аналогично
+  {name:"Арбуз", price:40, category:"fruits", subcategory:"Ягоды", desc:"Сочный и сладкий, богат витамином C и клетчаткой.", kbtju:"КБЖУ на 100г: 30 ккал, 0.6г белка, 0.1г жира, 8г углеводов", comment:"Средний арбуз"},
+  {name:"Банан", price:170, category:"fruits", subcategory:"Ягоды", desc:"Источник калия и энергии, улучшает работу сердца.", kbtju:"КБЖУ на 100г: 89 ккал, 1.1г белка, 0.3г жира, 23г углеводов", comment:"Один крупный банан"},
+  {name:"Дыня торпеда Узбекистан", price:80, category:"fruits", subcategory:"Ягоды", desc:"Сладкая и сочная, увлажняет и насыщает витамином A.", kbtju:"КБЖУ на 100г: 34 ккал, 0.8г белка, 0.2г жира, 8.2г углеводов", comment:"Средняя дыня"},
+  {name:"Дыня колхозница", price:80, category:"fruits", subcategory:"Ягоды", desc:"Легкая и ароматная, полезна для кожи и зрения.", kbtju:"КБЖУ на 100г: 36 ккал, 0.7г белка, 0.1г жира, 8.5г углеводов", comment:"Средняя дыня"},
+  {name:"Киви", price:450, category:"fruits", subcategory:"Цитрусовые", desc:"Содержит витамин C, укрепляет иммунитет и улучшает пищеварение.", kbtju:"КБЖУ на 100г: 61 ккал, 1.1г белка, 0.5г жира, 15г углеводов"},
+  // Добавь остальные товары по аналогии...
 ];
 
+//=== Корзина
 let cart=[];
 let selectedCategory="fruits";
 let selectedSubcategory=null;
-let selectedProduct=null;
 
-//=== DOM
+//=== DOM элементы
 const catalogEl=document.getElementById('catalog');
 const cartListEl=document.getElementById('cart-list');
 const cartTotalEl=document.getElementById('cart-total');
@@ -260,84 +189,90 @@ const clearBtn=document.getElementById('clear-cart');
 const checkoutBtn=document.getElementById('checkout');
 const categoryButtons=document.getElementById('category-buttons');
 const subcategoryButtons=document.getElementById('subcategory-buttons');
+const catalogWrap=document.getElementById('catalog-wrap');
+const checkoutSection=document.getElementById('checkout-section');
 
 const modal=document.getElementById('product-modal');
+const modalClose=document.getElementById('modal-close');
 const modalTitle=document.getElementById('modal-title');
-const modalKbju=document.getElementById('modal-kbju');
 const modalDesc=document.getElementById('modal-desc');
+const modalKbtju=document.getElementById('modal-kbtju');
 const modalComment=document.getElementById('modal-comment');
-const modalAdd=document.getElementById('modal-add');
-const closeModal=document.getElementById('close-modal');
+const modalAddBtn=document.getElementById('modal-add-btn');
 
-const checkoutSection=document.getElementById('checkout-section');
-const checkoutForm=document.getElementById('checkout-form');
-const deliveryTimeSelect=document.getElementById('delivery-time');
-const customTimeInput=document.getElementById('custom-time');
+function idify(name){return name.replace(/\s+/g,'_').replace(/[^\w\-]/g,'');}
+function rub(v){return Math.round(v)+' ₽';}
 
-//=== Функции
+//=== Подкатегории
 function renderSubcategories(){
   subcategoryButtons.innerHTML='';
   let subs=[];
   if(selectedCategory==='fruits') subs=["Ягоды","Косточковые","Цитрусовые"];
-  else if(selectedCategory==='vegetables') subs=["Корнеплоды","Томаты и огурцы","Перцы","Зелень"];
+  else if(selectedCategory==='vegetables') subs=["Корнеплоды","Томаты и огурцы","Перцы","Зелень","Прочие овощи"];
   subs.forEach(sub=>{
     const btn=document.createElement('button');
     btn.textContent=sub;
     btn.className=selectedSubcategory===sub?'active':'';
-    btn.onclick=()=>{selectedSubcategory=sub; renderSubcategories(); renderCatalog();}
+    btn.onclick=()=>{
+      selectedSubcategory=sub; renderSubcategories(); renderCatalog();
+    };
     subcategoryButtons.appendChild(btn);
   });
 }
 
+//=== Каталог
 function renderCatalog(){
   catalogEl.innerHTML='';
   let filtered=products.filter(p=>p.category===selectedCategory);
   if(selectedSubcategory) filtered=filtered.filter(p=>p.subcategory===selectedSubcategory);
   filtered.forEach(prod=>{
+    const id=idify(prod.name);
     const card=document.createElement('div'); card.className='card';
-    card.innerHTML=`<div class="img-placeholder">Фото</div><div class="title">${prod.name}</div><div class="price">${prod.price} ₽/кг</div>`;
-    card.onclick=()=>{openModal(prod);}
+    card.innerHTML=`<div class="img-placeholder">Фото (пока)</div>
+      <div class="title">${prod.name}</div>
+      <div class="price muted">${prod.price} ₽/кг</div>`;
+    card.onclick=()=>openModal(prod);
     catalogEl.appendChild(card);
   });
 }
 
+//=== Модалка
 function openModal(prod){
-  selectedProduct=prod;
   modalTitle.textContent=prod.name;
-  modalKbju.textContent=prod.kbju;
   modalDesc.textContent=prod.desc;
-  modalComment.value='';
+  modalKbtju.textContent=prod.kbtju;
+  modalComment.value=prod.comment||"";
   modal.style.display='flex';
+
+  modalAddBtn.onclick=()=>{
+    let qty=1;
+    cart.push({name:prod.name,qty,total:prod.price*qty,comment:modalComment.value});
+    renderCart();
+    modal.style.display='none';
+  }
 }
+modalClose.onclick=()=>{modal.style.display='none';}
+window.onclick=(e)=>{if(e.target===modal) modal.style.display='none';}
 
-closeModal.onclick=()=>{modal.style.display='none';}
-
-modalAdd.onclick=()=>{
-  const qty=1; // можно расширить ввод кол-ва
-  const comment=modalComment.value;
-  const existing=cart.find(c=>c.name===selectedProduct.name);
-  if(existing){existing.qty+=qty; existing.comment=comment; existing.total=existing.qty*selectedProduct.price;}
-  else cart.push({name:selectedProduct.name, qty, total:selectedProduct.price, comment});
-  renderCart();
-  modal.style.display='none';
-}
-
+//=== Корзина
 function renderCart(){
   cartListEl.innerHTML='';
   let total=0;
   cart.forEach(item=>{
     total+=item.total;
     const div=document.createElement('div'); div.className='cart-item';
-    div.innerHTML=`<div>${item.name} <span style="font-size:12px;">${item.comment}</span></div><div>${item.total} ₽</div><button class="remove" onclick="removeFromCart('${item.name}')">×</button>`;
+    div.innerHTML=`<div class="left">${item.name} <span class="muted">${item.comment}</span></div>
+      <div>${rub(item.total)}</div>
+      <button class="remove" onclick="removeFromCart('${item.name}')">×</button>`;
     cartListEl.appendChild(div);
   });
-  cartTotalEl.textContent='Итого: '+total+' ₽';
+  cartTotalEl.textContent='Итого: '+rub(total);
 }
 
 function removeFromCart(name){cart=cart.filter(c=>c.name!==name); renderCart();}
-
 clearBtn.onclick=()=>{cart=[]; renderCart();}
 
+//=== Переключение категорий
 categoryButtons.querySelectorAll('button').forEach(btn=>{
   btn.onclick=()=>{
     categoryButtons.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
@@ -349,37 +284,42 @@ categoryButtons.querySelectorAll('button').forEach(btn=>{
   }
 });
 
-checkoutBtn.onclick=()=>{
+//=== Кнопка оформления заказа
+checkoutBtn.onclick = () => {
   if(cart.length===0){alert('Корзина пуста!'); return;}
+  catalogWrap.style.display='none';
   checkoutSection.style.display='block';
-  window.scrollTo({top:checkoutSection.offsetTop, behavior:'smooth'});
-}
+  window.scrollTo({top:0,behavior:'smooth'});
+};
 
+const checkoutForm=document.getElementById('checkout-form');
+const deliveryTimeSelect=document.getElementById('delivery-time');
+const customTimeInput=document.getElementById('custom-time');
 deliveryTimeSelect.onchange=()=>{customTimeInput.style.display=deliveryTimeSelect.value==='custom'?'block':'none';}
 
 checkoutForm.onsubmit=(e)=>{
   e.preventDefault();
-  let name=document.getElementById('cust-name').value;
-  let phone=document.getElementById('cust-phone').value;
-  let phone2=document.getElementById('cust-phone2').value;
-  let city=document.getElementById('cust-city').value;
-  let street=document.getElementById('cust-street').value;
-  let house=document.getElementById('cust-house').value;
-  let entrance=document.getElementById('cust-entrance').value;
-  let floor=document.getElementById('cust-floor').value;
-  let apt=document.getElementById('cust-apartment').value;
-  let email=document.getElementById('cust-email').value;
+  const name=document.getElementById('cust-name').value;
+  const phone=document.getElementById('cust-phone').value;
+  const phone2=document.getElementById('cust-phone2').value;
+  const city=document.getElementById('cust-city').value;
+  const street=document.getElementById('cust-street').value;
+  const house=document.getElementById('cust-house').value;
+  const entrance=document.getElementById('cust-entrance').value;
+  const floor=document.getElementById('cust-floor').value;
+  const apt=document.getElementById('cust-apartment').value;
+  const email=document.getElementById('cust-email').value;
   let time=deliveryTimeSelect.value==='custom'?customTimeInput.value:'Как можно скорее';
-  let payment=document.getElementById('payment-method').value;
+  const payment=document.getElementById('payment-method').value;
 
   let orderText='🛒 Ваш заказ:\n\n';
   cart.forEach(item=>{
-    orderText+=`${item.name} — ${item.qty} шт — ${item.comment} — ${item.total} ₽\n`;
+    orderText+=`${item.name} — ${item.comment} — ${rub(item.total)}\n`;
   });
-  orderText+=`\n👤 Имя: ${name}\n📞 Телефон: ${phone}${phone2?'\n📞 Доп: '+phone2:''}\n🏠 Адрес: ${city}, ${street}, д.${house}${entrance?', подъезд '+entrance:''}${floor?', этаж '+floor:''}${apt?', кв '+apt:''}\n✉ Почта: ${email}\n⏱ Доставка: ${time}\n💳 Оплата: ${payment==='cash'?'Наличные':'Онлайн'}`;
-
+  orderText+=`\n👤 Имя: ${name}\n📞 Телефон: ${phone}${phone2?'\n📞 Доп: '+phone2:''}\n🏠 Адрес: ${city}, ${street}, д.${house}${entrance?', подъезд '+entrance:''}${floor?', этаж '+floor:''}${apt?', кв '+apt:''}\n📧 Почта: ${email}\n⏱ Доставка: ${time}\n💳 Оплата: ${payment==='cash'?'Наличные':'Онлайн'}`;
+  
   alert(orderText);
-}
+};
 
 renderSubcategories();
 renderCatalog();
