@@ -4,301 +4,524 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ФермаFresh — свежие овощи и фрукты</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --white: #fff;
-  --brand: #A4DE02;
-  --cta: #FF8C42;
-  --text: #2E2E2E;
-  --muted: #666;
-  --border: #E6E6E6;
-  --card-bg: #FAF9F6;
+:root{
+  --white:#FFFFFF;
+  --card-bg:#FAF9F6;
+  --brand:#A4DE02;       /* лайм */
+  --cta:#FF8C42;         /* апельсиново-оранжевый */
+  --text:#2E2E2E;        /* графит */
+  --muted:#666666;
+  --border:#E6E6E6;
+  --success:#5CB85C;
+  --danger:#E74C3C;
   --shadow: 0 2px 8px rgba(0,0,0,0.05);
+  --container:1200px;
 }
-body {
-  margin:0;
-  font-family:Inter,Arial,sans-serif;
-  background:var(--white);
-  color:var(--text);
+
+/* reset / base */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--white);color:var(--text);font-family:Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit}
+
+/* layout */
+.container{max-width:var(--container);margin:0 auto;padding:24px;}
+.header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,0.98);backdrop-filter:blur(4px);border-bottom:1px solid var(--border)}
+.header-inner{max-width:var(--container);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;gap:20px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo .mark{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--brand),#7cc900);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(164,222,2,0.12)}
+.logo .mark svg{width:22px;height:22px;fill:#fff}
+.logo h4{font-family:Poppins,Inter;font-weight:700;font-size:18px;margin:0;color:var(--text)}
+
+/* nav */
+.nav{display:flex;gap:16px;align-items:center}
+.nav a{font-weight:600;padding:8px 10px;border-radius:8px}
+.nav a:hover{background:var(--card-bg)}
+
+/* hero */
+.hero{max-width:var(--container);margin:20px auto;padding:28px;background:var(--card-bg);border-radius:16px;display:flex;gap:24px;align-items:center;box-shadow:var(--shadow)}
+.hero-left{flex:1;min-width:260px}
+.hero h1{font-family:Poppins;font-weight:800;font-size:40px;margin:0 0 8px;color:var(--text);line-height:1.02}
+.hero p{font-size:18px;color:var(--muted);margin:0 0 12px}
+.hero-cta{display:flex;gap:12px}
+.btn-cta{background:var(--cta);color:#fff;border:0;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;font-family:Poppins;box-shadow:0 6px 18px rgba(255,140,66,0.12);transition:transform .14s}
+.btn-cta:hover{transform:translateY(-3px);background:#ff7a18}
+.btn-secondary{background:transparent;border:1px solid var(--border);padding:10px 14px;border-radius:10px;color:var(--text);cursor:pointer}
+
+/* hero image */
+.hero-right{width:420px;max-width:40%}
+.hero-image{border-radius:14px;overflow:hidden;height:220px;background:linear-gradient(180deg,#fff,#f6f5f3);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.hero-image img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* main */
+.main{max-width:var(--container);margin:0 auto;padding:0 24px 80px}
+
+/* filters */
+.filters{display:flex;gap:12px;align-items:center;margin:20px 0;flex-wrap:wrap}
+.filter-btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:transparent;font-weight:600;cursor:pointer}
+.filter-btn.active{background:var(--brand);color:#fff;box-shadow:0 8px 20px rgba(164,222,2,0.12);border-color:transparent}
+
+/* grid & cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.card{background:var(--card-bg);border-radius:12px;box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:10px;height:380px;transition:transform .18s,box-shadow .18s}
+.card:hover{transform:scale(1.03);box-shadow:0 8px 28px rgba(0,0,0,0.08)}
+.photo{height:70%;border-radius:10px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+.photo img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s}
+.info{display:flex;flex-direction:column;gap:6px;flex:1}
+.name{font-family:Poppins;font-weight:600;font-size:16px;color:var(--text)}
+.desc{font-size:13px;color:var(--muted);min-height:34px}
+.price{font-weight:700;color:var(--text);font-size:16px}
+.actions{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.qty-input{width:84px;padding:8px;border-radius:8px;border:1px solid var(--border);text-align:center}
+.unit-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff}
+.add-to-cart{background:var(--brand);color:#fff;border:0;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(164,222,2,0.12);transition:background .12s}
+.add-to-cart:hover{background:var(--cta)}
+
+/* micro animation */
+.checkmark{position:absolute;right:8px;top:-8px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--success);color:#fff;font-weight:700;opacity:0;transform:scale(.6);transition:all .28s}
+
+/* cart panel */
+.cart-panel{position:fixed;right:20px;top:90px;width:360px;background:var(--white);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:14px;z-index:60;border:1px solid var(--border);display:none}
+.cart-panel h4{margin:0 0 10px;font-family:Poppins}
+.cart-items{max-height:420px;overflow:auto;display:flex;flex-direction:column;gap:8px;padding-right:8px}
+.cart-row{display:flex;align-items:center;justify-content:space-between;background:#fbfbfb;padding:10px;border-radius:8px;border:1px solid var(--border)}
+.cart-row .left{display:flex;flex-direction:column}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:800;font-size:16px}
+.cart-actions{display:flex;gap:8px;margin-top:12px}
+.btn{padding:10px;border-radius:12px;border:0;cursor:pointer;font-weight:700}
+.btn-clear{background:#f2f2f2;color:var(--text)}
+.btn-check{background:var(--brand);color:#fff}
+.btn-check:hover{background:var(--cta)}
+
+/* modal checkout */
+.modal { position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:80; }
+.modal .panel { width:820px;max-width:95%;background:var(--card-bg);border-radius:12px;padding:20px;box-shadow:0 12px 36px rgba(0,0,0,0.18); }
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.form-row label{font-weight:600;font-size:14px}
+.form-row input, .form-row select, .form-row textarea {padding:10px;border-radius:8px;border:1px solid #ccc}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+
+/* responsive */
+@media (max-width:980px){
+  .hero{flex-direction:column}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .cart-panel{right:12px;left:12px;width:auto;top:auto;bottom:80px}
+  .modal .panel{width:95%}
 }
-.container {
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-}
-.header {
-  position:sticky;
-  top:0;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-  z-index:10;
-}
-.header-inner {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:16px 32px;
-}
-.logo {
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.logo .mark {
-  width:40px;
-  height:40px;
-  background:linear-gradient(135deg,var(--brand),#85d400);
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.logo h4 {
-  font-family:Poppins;
-  font-weight:700;
-  margin:0;
-}
-.nav a {
-  margin:0 10px;
-  font-weight:600;
-}
-.hero {
-  background:var(--card-bg);
-  border-radius:16px;
-  padding:40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  box-shadow:var(--shadow);
-  margin:30px 0;
-}
-.hero h1 {
-  font-family:Poppins;
-  font-weight:800;
-  font-size:36px;
-  margin:0 0 12px;
-}
-.hero p {
-  color:var(--muted);
-  margin:0 0 20px;
-  font-size:17px;
-}
-.btn-cta {
-  background:var(--cta);
-  color:#fff;
-  border:none;
-  padding:14px 24px;
-  border-radius:12px;
-  font-weight:700;
-  font-family:Poppins;
-  cursor:pointer;
-  transition:.2s;
-}
-.btn-cta:hover { background:#ff7a18; transform:translateY(-3px); }
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:20px;
-}
-.card {
-  background:var(--card-bg);
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  transition:.2s;
-}
-.card:hover { transform:scale(1.03); }
-.card .name { font-family:Poppins;font-weight:600;font-size:16px; }
-.card .desc { font-size:13px;color:var(--muted); }
-.card .price { font-weight:700; }
-.actions { margin-top:10px; display:flex; align-items:center; gap:6px; }
-.add-to-cart {
-  background:var(--brand);
-  color:#fff;
-  border:none;
-  padding:10px 14px;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s;
-}
-.add-to-cart:hover { background:var(--cta); }
-.select-unit {
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:6px;
-  font-size:14px;
-}
-.cart-panel {
-  position:fixed;
-  top:90px;
-  right:20px;
-  width:320px;
-  background:#fff;
-  border-radius:12px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.1);
-  padding:16px;
-  display:none;
-  z-index:20;
-}
-.cart-row {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--border);
-  padding:8px 0;
-}
-.cart-total { font-weight:800; margin-top:10px; display:flex; justify-content:space-between; }
-.btn-checkout {
-  width:100%;
-  margin-top:14px;
-  background:var(--brand);
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  padding:12px;
-  font-weight:700;
-  cursor:pointer;
-}
-.btn-checkout:hover { background:var(--cta); }
-.footer { text-align:center; margin:60px 0 40px; color:var(--muted); }
+.footer{max-width:var(--container);margin:40px auto 80px;padding:24px;text-align:center;color:var(--muted);font-size:14px}
+.fade-in{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
+<!-- Header -->
 <header class="header">
   <div class="header-inner">
-    <div class="logo">
-      <div class="mark"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg></div>
-      <h4>ФермаFresh</h4>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo">
+        <div class="mark" aria-hidden>
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg>
+        </div>
+        <h4>ФермаFresh</h4>
+      </div>
     </div>
-    <nav class="nav">
-      <a href="#">Главная</a><a href="#">Каталог</a><a href="#">Контакты</a>
+    <nav class="nav" aria-label="Меню">
+      <a href="#">Главная</a>
+      <a href="#">Каталог</a>
+      <a href="#">О нас</a>
+      <a href="#">Доставка</a>
+      <a href="#">Контакты</a>
     </nav>
-    <button id="open-cart" style="background:none;border:0;font-weight:700;cursor:pointer;color:var(--brand)">🛒 <span id="cart-count">0</span></button>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button id="open-cart" title="Корзина" style="background:transparent;border:0;cursor:pointer;font-weight:700;color:var(--brand);">🛒 <span id="cart-count">0</span></button>
+    </div>
   </div>
 </header>
 
+<!-- Hero -->
 <section class="hero container">
-  <div>
-    <h1>Свежие продукты прямо с фермы</h1>
-    <p>Быстрая доставка свежих овощей и фруктов — почувствуй вкус природы!</p>
-    <button class="btn-cta" id="view-catalog">Перейти к каталогу</button>
+  <div class="hero-left">
+    <h1>Свежие продукты — прямо к вам домой</h1>
+    <p>Доставим за 60 минут из фермерских хозяйств. Свежесть, которую можно почувствовать.</p>
+    <div class="hero-cta">
+      <button class="btn-cta" id="hero-order">Заказать сейчас</button>
+      <button class="btn-secondary" id="view-catalog">Посмотреть каталог</button>
+    </div>
   </div>
-  <img src="https://images.unsplash.com/photo-1518976024611-6d9b0b0b1f7f?q=80&w=800&auto=format&fit=crop" style="width:40%;border-radius:14px;">
+  <div class="hero-right">
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1518976024611-6d9b0b0b1f7f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=0a9c9e3b9a95f1b8ad1b" alt="Свежие фрукты" />
+    </div>
+  </div>
 </section>
 
-<main class="container">
-  <div class="grid" id="catalog"></div>
+<!-- Main -->
+<main class="main container">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div>
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="fruits">Фрукты</button>
+        <button class="filter-btn" data-filter="vegetables">Овощи</button>
+        <button class="filter-btn" data-filter="sets">Сеты</button>
+        <button class="filter-btn" data-filter="promo">Акции</button>
+      </div>
+    </div>
+    <div style="margin-left:auto" class="small">Показано <span id="shown-count">0</span> товаров</div>
+  </div>
+
+  <div style="margin-top:12px" class="fade-in">
+    <div id="catalog" class="grid"></div>
+  </div>
 </main>
 
-<aside id="cart-panel" class="cart-panel">
-  <h3>Корзина</h3>
-  <div id="cart-items"></div>
-  <div class="cart-total"><span>Итого:</span><span id="cart-sum">0 ₽</span></div>
-  <button class="btn-checkout" id="checkout-btn">Оформить заказ</button>
+<!-- Cart Panel -->
+<aside id="cart-panel" class="cart-panel" aria-hidden="true">
+  <h4>Корзина <small style="color:var(--muted);font-weight:600">(<span id="cart-count-2">0</span>)</small></h4>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-total"><span>Итого</span><span id="cart-sum">0 ₽</span></div>
+  <div class="cart-actions">
+    <button id="clear-cart" class="btn btn-clear">Очистить</button>
+    <button id="goto-checkout" class="btn btn-check">Оформить заказ</button>
+  </div>
 </aside>
 
-<footer class="footer">© ФермаFresh 2025</footer>
+<!-- Modal Checkout -->
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="panel">
+    <h3 style="font-family:Poppins;margin:0 0 8px">Оформление заказа</h3>
+    <div style="display:flex;gap:18px;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px">
+        <div style="font-weight:700;margin-bottom:8px">Состав заказа</div>
+        <div id="modal-order-list" style="max-height:300px;overflow:auto;border:1px solid var(--border);padding:8px;border-radius:8px;background:#fff"></div>
+        <div style="margin-top:10px;font-weight:800;display:flex;justify-content:space-between"><div>Итого</div><div id="modal-total">0 ₽</div></div>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <form id="order-form">
+          <div class="form-row"><label>Имя *</label><input id="cust-name" required></div>
+          <div class="form-row"><label>Телефон *</label><input id="cust-phone" required></div>
+          <div class="form-row"><label>Доп. телефон</label><input id="cust-phone2"></div>
+          <div class="form-row"><label>Город *</label><input id="cust-city" required></div>
+          <div class="form-row"><label>Улица *</label><input id="cust-street" required></div>
+          <div class="form-row" style="display:flex;gap:8px"><div style="flex:1"><label>Дом *</label><input id="cust-house" required></div><div style="flex:1"><label>Подъезд</label><input id="cust-entrance"></div></div>
+          <div class="form-row" style="display:flex;gap:8px"><div style="flex:1"><label>Этаж</label><input id="cust-floor"></div><div style="flex:1"><label>Квартира</label><input id="cust-apartment"></div></div>
+          <div class="form-row"><label>Время доставки *</label>
+            <select id="delivery-time"><option value="asap">Как можно скорее</option><option value="custom">Указать время</option></select>
+            <input type="time" id="custom-time" style="display:none;margin-top:8px"></div>
+          <div class="form-row"><label>Почта для чека</label><input id="cust-email" type="email"></div>
+          <div class="form-row"><label>Способ оплаты *</label><select id="payment-method"><option value="cash">Наличные</option><option value="card">Карта</option><option value="sbp">СБП</option></select></div>
+          <div class="form-actions" style="margin-top:12px">
+            <button type="button" id="close-modal" class="btn btn-clear">Отмена</button>
+            <button type="submit" class="btn btn-check">Подтвердить заказ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">© ФермаFresh — Свежесть, которую можно почувствовать.</footer>
 
 <script>
+/* ========== Данные ассортимента ========== */
 const products = [
-  ["🍎 Яблоко — 100₽/кг", "Яблоко", 100],
-  ["🍌 Банан — 170₽/кг", "Банан", 170],
-  ["🍊 Апельсин — 220₽/кг", "Апельсин", 220],
-  ["🍇 Виноград — 300₽/кг", "Виноград", 300],
-  ["🥔 Картофель — 45₽/кг", "Картофель", 45],
-  ["🥕 Морковь — 50₽/кг", "Морковь", 50],
-  ["🍅 Помидоры — 200₽/кг", "Помидоры", 200],
-  ["🥒 Огурцы — 150₽/кг", "Огурцы", 150],
-  ["🍑 Персик — 350₽/кг", "Персик", 350],
-  ["🍐 Груша — 340₽/кг", "Груша", 340]
+  ["🍉 Арбуз — 40₽/кг", "Арбуз", 40, "fruits"],
+  ["🍐 Груша — 340₽/кг", "Груша", 340, "fruits"],
+  ["🍊 Апельсин — 220₽/кг", "Апельсин", 220, "fruits"],
+  ["🍈 Дыня торпеда Узбекистан — 80₽/кг", "Дыня торпеда Узбекистан", 80, "fruits"],
+  ["🍈 Дыня колхозница — 80₽/кг", "Дыня колхозница", 80, "fruits"],
+  ["🍇 Виноград зеленый (без косточек) — 320₽/кг", "Виноград зеленый (без косточек)", 320, "fruits"],
+  ["🍇 Виноград темный (без косточек) — 320₽/кг", "Виноград темный (без косточек)", 320, "fruits"],
+  ["🍇 Виноград черный (Мерседес) — 300₽/кг", "Виноград черный (Мерседес)", 300, "fruits"],
+  ["🍑 Нектарин Узбекистан красный — 170₽/кг", "Нектарин Узбекистан красный", 170, "fruits"],
+  ["🍑 Нектарин Турция — 350₽/кг", "Нектарин Турция", 350, "fruits"],
+  ["🍑 Нектарин Узбекистан желтый (вкус лимон) — 250₽/кг", "Нектарин Узбекистан желтый (вкус лимон)", 250, "fruits"],
+  ["🍑 Нектарин Узбекистан зеленый — 190₽/кг", "Нектарин Узбекистан зеленый", 190, "fruits"],
+  ["🍌 Банан — 170₽/кг", "Банан", 170, "fruits"],
+  ["🥔 Картофель Чувашия — 45₽/кг", "Картофель Чувашия", 45, "vegetables"],
+  ["🥔 Картофель Краснодар — 45₽/кг", "Картофель Краснодар", 45, "vegetables"],
+  ["🥕 Морковь Волгоград — 45₽/кг", "Морковь Волгоград", 45, "vegetables"],
+  ["🧅 Лук репчатый Волгоград — 45₽/кг", "Лук репчатый Волгоград", 45, "vegetables"],
+  ["🌱 Лук зеленый — 350₽/кг", "Лук зеленый", 350, "vegetables"],
+  ["🌱 Укrop, петрушка — 350₽/кг", "Укроп, петрушка", 350, "vegetables"],
+  ["🌱 Кинза — 440₽/кг", "Кинза", 440, "vegetables"],
+  ["🌱 Базелик — 50₽/пучок", "Базелик (пучок)", 50, "vegetables"],
+  ["🧄 Чеснок Ташкент — 400₽/кг", "Чеснок Ташкент", 400, "vegetables"],
+  ["🫑 Перец болгарский — 130₽/кг", "Перец болгарский", 130, "vegetables"],
+  ["🌶️ Перец чили — 25₽/шт", "Перец чили", 25, "vegetables"],
+  ["🍅 Помидоры Азербайджанские — 220₽/кг", "Помидоры Азербайджанские", 220, "vegetables"],
+  ["🍅 Помидоры Ростовские — 180₽/кг", "Помидоры Ростовские", 180, "vegetables"],
+  ["🍅 Помидоры Волгоград (мелкие) — 80₽/кг", "Помидоры Волгоград (мелкие)", 80, "vegetables"],
+  ["🍅 Помидоры домашние — 240₽/кг", "Помидоры домашние", 240, "vegetables"],
+  ["🍅 Помидоры Астрахань (желтые) — 190₽/кг", "Помидоры Астрахань (желтые)", 190, "vegetables"],
+  ["🥒 Огурцы Московские — 150₽/кг", "Огурцы Московские", 150, "vegetables"],
+  ["🥒 Огурцы Самарские — 80₽/кг", "Огурцы Самарские", 80, "vegetables"],
+  ["🥒 Огурцы домашние — 150₽/кг", "Огурцы домашние", 150, "vegetables"],
+  ["🍑 Слива 4 вида — 190₽/кг - Ташкент; Медовая - 220₽/кг; Желтая - 250₽/кг; Чернослива - 220₽/кг", "Слива 4 вида", 220, "fruits"],
+  ["🍒 Черешня — 580₽/кг", "Черешня", 580, "fruits"],
+  ["🫐 Голубика — 800₽/кг", "Голубика", 800, "fruits"],
+  ["🍑 Абрикос Армения — 240₽/кг", "Абрикос Армения", 240, "fruits"],
+  ["🍑 Абрикос Киргизия — 150₽/кг", "Абрикос Киргизия", 150, "fruits"],
+  ["🍑 Персик Ташкент — 250₽/кг", "Персик Ташкент", 250, "fruits"],
+  ["🍑 Персик Армения — 380₽/кг", "Персик Армения", 380, "fruits"],
+  ["🍑 Персик Турция — 450₽/кг", "Персик Турция", 450, "fruits"],
+  ["🍑 Персик Инжирный — 350₽/кг", "Персик Инжирный", 350, "fruits"],
+  ["🥝 Киви — 450₽/кг", "Киви", 450, "fruits"],
+  ["Кабачок — 55₽/кг", "Кабачок", 55, "vegetables"],
+  ["🍆 Баклажан — 130₽/кг", "Баклажан", 130, "vegetables"],
+  ["🍋 Лимон — 290₽/кг", "Лимон", 290, "fruits"]
 ];
 
-let cart = [];
-const catalog = document.getElementById('catalog');
-const cartPanel = document.getElementById('cart-panel');
-const cartItemsWrap = document.getElementById('cart-items');
-const cartSumEl = document.getElementById('cart-sum');
-const cartCountEl = document.getElementById('cart-count');
+/* ========== State ========== */
+let cart = []; // {id, name, price, qtyKg, total}
+let visibleProducts = products.slice();
+let currentFilter = 'all';
 
-function renderCatalog() {
-  catalog.innerHTML = '';
-  products.forEach((p, idx) => {
-    const [label,name,price] = p;
+/* ========== DOM refs ========== */
+const catalogEl = document.getElementById('catalog');
+const filtersEl = document.getElementById('filters');
+const shownCountEl = document.getElementById('shown-count');
+const cartPanel = document.getElementById('cart-panel');
+const cartItemsEl = document.getElementById('cart-items');
+const cartSumEl = document.getElementById('cart-sum');
+const cartCountTop = document.getElementById('cart-count');
+const cartCountSmall = document.getElementById('cart-count-2');
+const openCartBtn = document.getElementById('open-cart');
+const gotoCheckoutBtn = document.getElementById('goto-checkout');
+const clearCartBtn = document.getElementById('clear-cart');
+const modal = document.getElementById('modal');
+const modalOrderList = document.getElementById('modal-order-list');
+const modalTotal = document.getElementById('modal-total');
+const orderForm = document.getElementById('order-form');
+const deliveryTimeSelect = document.getElementById('delivery-time');
+const customTimeInput = document.getElementById('custom-time');
+const heroOrderBtn = document.getElementById('hero-order');
+const viewCatalogBtn = document.getElementById('view-catalog');
+
+/* ========== Helpers ========== */
+function idify(s){ return s.replace(/\W+/g,'_'); }
+function formatRub(v){ return Math.round(v) + ' ₽'; }
+function displayQty(kg){ if(kg<1) return Math.round(kg*1000) + ' г'; return kg.toFixed(2) + ' кг'; }
+
+/* ========== Render catalog ========== */
+function renderCatalog(list){
+  catalogEl.innerHTML = '';
+  list.forEach((p, idx) => {
+    const [label,name,price,category] = p;
+    const id = idify(name) + '_' + idx;
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'card fade-in';
     card.innerHTML = `
-      <div>
+      <div class="photo"><img data-src="https://via.placeholder.com/600x400?text=${encodeURIComponent(name)}" alt="${name}"></div>
+      <div class="info">
         <div class="name">${label}</div>
         <div class="desc">${name}</div>
-        <div class="price">${price} ₽/кг</div>
-      </div>
-      <div class="actions">
-        <input type="number" min="0.1" step="0.1" value="1" class="qty" style="width:60px;border:1px solid var(--border);border-radius:8px;padding:5px;">
-        <select class="select-unit">
-          <option value="kg">кг</option>
-          <option value="g">гр</option>
-        </select>
-        <button class="add-to-cart" data-idx="${idx}">В корзину</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto">
+          <div class="price">${price} ₽/кг</div>
+          <div class="actions">
+            <input class="qty-input" type="number" min="1" step="1" value="1" title="Кол-во">
+            <select class="unit-select" title="Единица">
+              <option value="kg">кг</option>
+              <option value="g">гр</option>
+            </select>
+            <button class="add-to-cart" data-idx="${idx}">В корзину</button>
+          </div>
+        </div>
       </div>
     `;
-    catalog.appendChild(card);
+    catalogEl.appendChild(card);
+    const img = card.querySelector('img');
+    img.onload = ()=> img.style.opacity = '1';
+    img.src = img.dataset.src;
   });
+  shownCountEl.textContent = list.length;
 }
 
-function formatRub(v) { return Math.round(v) + ' ₽'; }
-
-function addToCart(product, qty, unit) {
+/* ========== Cart logic ========== */
+function addToCart(product, qty, unit){
   const [label,name,price] = product;
-  let finalQty = unit === 'g' ? qty / 1000 : qty;
+  // qty is number entered by user; unit is 'kg' or 'g'
+  let qtyKg = (unit === 'g') ? (qty / 1000) : qty;
+  if(qtyKg <= 0) return;
   const existing = cart.find(i => i.name === name);
-  if(existing){ existing.qty += finalQty; existing.total = existing.qty * price; }
-  else cart.push({ name, price, qty: finalQty, total: finalQty * price });
+  if(existing){
+    existing.qtyKg += qtyKg;
+    existing.total = existing.qtyKg * price;
+  } else {
+    cart.push({ id: idify(name), name, price, qtyKg: qtyKg, total: qtyKg * price });
+  }
   renderCart();
 }
 
-function renderCart() {
-  cartItemsWrap.innerHTML = '';
+function removeFromCart(name){
+  cart = cart.filter(i => i.name !== name);
+  renderCart();
+}
+
+function clearCart(){
+  cart = [];
+  renderCart();
+}
+
+/* render cart panel */
+function renderCart(){
+  cartItemsEl.innerHTML = '';
   let sum = 0;
   cart.forEach(item => {
     sum += item.total;
     const row = document.createElement('div');
     row.className = 'cart-row';
     row.innerHTML = `
-      <div>${item.name} — ${item.qty.toFixed(2)} кг</div>
-      <div>${formatRub(item.total)}</div>
+      <div class="left">
+        <div style="font-weight:700">${item.name}</div>
+        <div class="small" style="color:var(--muted)">${displayQty(item.qtyKg)} • ${formatRub(item.total)}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <button style="background:transparent;border:0;cursor:pointer;color:${'#e74c3c'}" data-remove="${item.name}">✕</button>
+        <div style="font-weight:700">${formatRub(item.total)}</div>
+      </div>
     `;
-    cartItemsWrap.appendChild(row);
+    cartItemsEl.appendChild(row);
   });
   cartSumEl.textContent = formatRub(sum);
-  cartCountEl.textContent = cart.length;
+  cartCountTop.textContent = cart.length;
+  cartCountSmall.textContent = cart.length;
+
+  // attach remove handlers
+  cartItemsEl.querySelectorAll('[data-remove]').forEach(btn => {
+    btn.onclick = ()=> removeFromCart(btn.dataset.remove);
+  });
 }
 
-catalog.addEventListener('click', e => {
+/* ========== Catalog click delegation (add to cart) ========== */
+document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if(!btn) return;
+  const idx = +btn.dataset.idx;
   const card = btn.closest('.card');
-  const qty = parseFloat(card.querySelector('.qty').value) || 1;
-  const unit = card.querySelector('.select-unit').value;
-  addToCart(products[btn.dataset.idx], qty, unit);
+  const qtyInput = card.querySelector('.qty-input');
+  const unitSelect = card.querySelector('.unit-select');
+  const qty = parseFloat(qtyInput.value) || 0;
+  const unit = unitSelect.value;
+  addToCart(products[idx], qty, unit);
+
+  // micro check animation
+  const ck = document.createElement('div');
+  ck.className = 'checkmark';
+  ck.textContent = '✓';
+  card.style.position = 'relative';
+  card.appendChild(ck);
+  setTimeout(()=>{ ck.style.opacity = '1'; ck.style.transform = 'scale(1)'; }, 10);
+  setTimeout(()=>{ ck.style.opacity = '0'; ck.style.transform = 'scale(.6)'; }, 900);
+  setTimeout(()=>{ ck.remove(); }, 1200);
 });
 
-document.getElementById('open-cart').addEventListener('click', () => {
-  cartPanel.style.display = cartPanel.style.display === 'block' ? 'none' : 'block';
+/* ========== Cart panel toggles ========== */
+let cartOpen = false;
+openCartBtn.addEventListener('click', ()=> {
+  cartOpen = !cartOpen;
+  cartPanel.style.display = cartOpen ? 'block' : 'none';
 });
-document.getElementById('checkout-btn').addEventListener('click', () => {
-  if(cart.length === 0) return alert('Корзина пуста!');
-  let msg = 'Ваш заказ:\n\n';
-  cart.forEach(i => msg += `${i.name} — ${i.qty.toFixed(2)} кг — ${formatRub(i.total)}\n`);
-  msg += `\nИтого: ${cartSumEl.textContent}`;
-  alert(msg);
+clearCartBtn.addEventListener('click', ()=> {
+  clearCart();
+  cartPanel.style.display = 'none';
+  cartOpen = false;
 });
 
-renderCatalog();
+/* ========== Filters ========== */
+document.getElementById('filters').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-filter]');
+  if(!b) return;
+  document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const f = b.dataset.filter;
+  currentFilter = f;
+  if(f === 'all') visibleProducts = products.slice();
+  else if(f === 'sets' || f === 'promo') visibleProducts = []; // none now
+  else visibleProducts = products.filter(p => p[3] === f);
+  renderCatalog(visibleProducts);
+});
+
+/* ========== Checkout flow (modal) ========== */
+gotoCheckoutBtn.addEventListener('click', ()=> {
+  if(cart.length === 0){ alert('Корзина пуста — добавьте товары.'); return; }
+  // populate modal order list
+  modalOrderList.innerHTML = '';
+  let sum = 0;
+  cart.forEach(i => {
+    const el = document.createElement('div');
+    el.style.padding = '6px 4px';
+    el.innerHTML = `<div style="font-weight:700">${i.name}</div><div style="color:var(--muted)">${displayQty(i.qtyKg)} • ${formatRub(i.total)}</div>`;
+    modalOrderList.appendChild(el);
+    sum += i.total;
+  });
+  modalTotal.textContent = formatRub(sum);
+  modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden', 'false');
+});
+
+document.getElementById('close-modal').addEventListener('click', ()=> {
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'true');
+});
+
+/* delivery-time toggle */
+deliveryTimeSelect.addEventListener('change', (e) => {
+  customTimeInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
+});
+
+/* order submit */
+orderForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if(cart.length === 0){ alert('Корзина пуста!'); modal.style.display='none'; return; }
+  // collect fields
+  const name = document.getElementById('cust-name').value.trim();
+  const phone = document.getElementById('cust-phone').value.trim();
+  const phone2 = document.getElementById('cust-phone2').value.trim();
+  const city = document.getElementById('cust-city').value.trim();
+  const street = document.getElementById('cust-street').value.trim();
+  const house = document.getElementById('cust-house').value.trim();
+  const entrance = document.getElementById('cust-entrance').value.trim();
+  const floor = document.getElementById('cust-floor').value.trim();
+  const apt = document.getElementById('cust-apartment').value.trim();
+  const time = deliveryTimeSelect.value === 'custom' ? (customTimeInput.value || '—') : 'Как можно скорее';
+  const email = document.getElementById('cust-email').value.trim();
+  const payment = document.getElementById('payment-method').value;
+
+  // build order text
+  let message = '🛒 Ваш заказ:\n\n';
+  cart.forEach(i => {
+    message += `${i.name} — ${displayQty(i.qtyKg)} — ${formatRub(i.total)}\n`;
+  });
+  message += `\nИтого: ${modalTotal.textContent}\n\n`;
+  message += `👤 Имя: ${name}\n📞 Телефон: ${phone}${phone2 ? '\n📞 Доп: ' + phone2 : ''}\n🏠 Адрес: ${city}, ${street}, д.${house}${entrance ? ', подъезд ' + entrance : ''}${floor ? ', этаж ' + floor : ''}${apt ? ', кв. ' + apt : ''}\n⏰ Доставка: ${time}\n✉ Почта: ${email}\n💳 Оплата: ${payment}\n\n(Тестовое оформление — заказ не отправлен на сервер)`;
+
+  alert(message);
+
+  // simulate submit: clear cart, close modal, reset form
+  cart = [];
+  renderCart();
+  orderForm.reset();
+  customTimeInput.style.display = 'none';
+  modal.style.display = 'none';
+});
+
+/* hero / view catalog */
+heroOrderBtn.addEventListener('click', ()=> {
+  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'});
+});
+viewCatalogBtn.addEventListener('click', ()=> {
+  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'});
+});
+
+/* init */
+let visibleProductsList = products.slice();
+renderCatalog(visibleProductsList);
+renderCart();
+
 </script>
 </body>
 </html>
