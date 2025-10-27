@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const tg = window.Telegram.WebApp; // объект Telegram
+  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { sendData: () => {}, close: () => {}, expand: () => {} };
   const productList = document.getElementById("product-list");
   const cartItems = document.getElementById("cart-items");
   const total = document.getElementById("total");
   const sendOrderBtn = document.getElementById("send-order");
 
-  // Список товаров — оставил как было (ничего не менял).
+  // Список товаров — НЕ менял бизнес-логику, просто пример массива.
   const products = [
     { name: "Яблоки", price: 100 },
     { name: "Бананы", price: 120 },
@@ -20,13 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = document.createElement("div");
     card.className = "product";
 
-    // Формируем пути к картинкам (попробуем сначала .jpg, при ошибке подменим на .png)
+    // Пути к картинкам
     const jpgPath = `images/${p.name}.jpg`;
     const pngPath = `images/${p.name}.png`;
+    const noImagePath = `images/noimage.png`;
 
-    // Вставляем картинку и остальную разметку (не меняя логику кнопки)
-    // onerror переключает на .png если .jpg не найден
-    const imgHtml = `<img src="${jpgPath}" alt="${p.name}" class="product-image" onerror="this.onerror=null; this.src='${pngPath}';">`;
+    // Вставляем картинку и остальную разметку
+    // onerror сделан в виде цепочки: если .jpg не загрузился — подставляем .png, а при её ошибке — noimage.png
+    const imgHtml = `<img src="${jpgPath}" alt="${p.name}" class="product-image" onerror="this.onerror=function(){this.src='${noImagePath}'}; this.src='${pngPath}';">`;
 
     card.innerHTML = `
       ${imgHtml}
@@ -46,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Показать корзину
   function renderCart() {
+    if (!cartItems || !total) return;
     cartItems.innerHTML = "";
     let sum = 0;
     cart.forEach((item) => {
@@ -58,17 +60,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Отправить заказ в Telegram
-  sendOrderBtn.addEventListener("click", () => {
-    if (cart.length === 0) {
-      alert("Корзина пуста!");
-      return;
-    }
-    // Отправляем JSON с заказом
-    tg.sendData(JSON.stringify(cart));
-    // Закрываем WebApp
-    tg.close();
-  });
+  if (sendOrderBtn) {
+    sendOrderBtn.addEventListener("click", () => {
+      if (cart.length === 0) {
+        alert("Корзина пуста!");
+        return;
+      }
+      // Отправляем JSON с заказом
+      if (tg && typeof tg.sendData === "function") {
+        tg.sendData(JSON.stringify(cart));
+        tg.close();
+      } else {
+        // на случай локального теста
+        console.log("Отправка (тест):", JSON.stringify(cart));
+        alert("Заказ готов (режим теста). Проверь консоль.");
+      }
+    });
+  }
 
   // Подготовка внешнего вида WebApp
-  tg.expand();
+  if (tg && typeof tg.expand === "function") tg.expand();
 });
