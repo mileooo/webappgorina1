@@ -1,255 +1,304 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Магазин овощей и фруктов</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ФермаFresh — свежие овощи и фрукты</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --main-bg:#FFFFFF;
-  --card-bg:#FAF9F6;
-  --brand-color:#A4DE02;
-  --brand-hover:#FF8C42;
-  --text-main:#2E2E2E;
-  --text-secondary:#666666;
-  --border-color:#E6E6E6;
-  --success:#5CB85C;
-  --error:#E74C3C;
+:root {
+  --white: #fff;
+  --brand: #A4DE02;
+  --cta: #FF8C42;
+  --text: #2E2E2E;
+  --muted: #666;
+  --border: #E6E6E6;
+  --card-bg: #FAF9F6;
+  --shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;}
-body{background:var(--main-bg);color:var(--text-main);padding:16px;}
-h1{text-align:center;margin:16px 0;font-family:Poppins,sans-serif;font-weight:700;font-size:42px;}
-
-.categories, .subcategories{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
-.categories button, .subcategories button{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:0.2s;}
-.categories button.active, .subcategories button.active{background:var(--brand-color);color:#fff;}
-.categories button:hover:not(.active), .subcategories button:hover:not(.active){background:#ddd;}
-
-.wrap{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
-#catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
-.card{background:var(--card-bg);border-radius:12px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;flex-direction:column;gap:12px;transition:transform 0.2s ease;}
-.card:hover{transform:scale(1.03);}
-.img-placeholder{height:180px;background:linear-gradient(90deg,#f0f0f0,#fafafa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#9aa6b2;font-size:14px;}
-.title{font-weight:600;font-size:18px;min-height:50px;}
-.price{color:var(--text-secondary);font-size:16px;}
-.controls{display:flex;gap:8px;align-items:center;margin-top:auto;}
-.qty{display:flex;gap:6px;align-items:center;border-radius:8px;padding:6px;background:#fff;border:1px solid var(--border-color);}
-.qty input[type="number"]{width:70px;border:0;outline:none;text-align:center;font-size:14px;background:transparent;}
-.unit-select{padding:6px 8px;border-radius:8px;border:1px solid var(--border-color);background:white;font-size:14px;}
-.add-btn{background:var(--brand-color);color:white;border:0;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:600;transition:0.2s;}
-.add-btn:hover{background:var(--brand-hover);}
-.cart{position:sticky;top:16px;background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05);max-height:80vh;overflow:auto;}
-.cart h3{text-align:center;margin-bottom:8px;font-family:Poppins,sans-serif;}
-.cart-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
-.cart-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:8px;padding:8px;background:#fff;border:1px solid var(--border-color);}
-.cart-item .left{display:flex;flex-direction:column;gap:4px;font-size:14px;}
-.remove{background:#E74C3C;color:white;border:none;padding:4px 6px;border-radius:6px;cursor:pointer;}
-.total{text-align:right;font-weight:700;margin-top:8px;}
-.cart-actions{display:flex;gap:8px;margin-top:10px;}
-.btn{flex:1;padding:10px;border-radius:12px;border:0;cursor:pointer;font-weight:600;}
-.btn-clear{background:#E74C3C;color:white;}
-.btn-check{background:var(--brand-color);color:white;transition:0.2s;}
-.btn-check:hover{background:var(--brand-hover);}
-
-#checkout-section{display:none;margin-top:20px;}
-#checkout-section.show{display:block;}
-.checkout-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;}
-.checkout-form input, .checkout-form select{padding:8px;border-radius:8px;border:1px solid #ccc;font-size:14px;width:100%;}
-.checkout-form label{font-weight:600;font-size:14px;}
-.checkout-form button{padding:10px;background:var(--brand-color);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:600;transition:0.2s;}
-.checkout-form button:hover{background:var(--brand-hover);}
-
-@media(max-width:980px){.wrap{grid-template-columns:1fr}.cart{position:static;width:100%;}}
+body {
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--white);
+  color:var(--text);
+}
+.container {
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+.header {
+  position:sticky;
+  top:0;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  z-index:10;
+}
+.header-inner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 32px;
+}
+.logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.logo .mark {
+  width:40px;
+  height:40px;
+  background:linear-gradient(135deg,var(--brand),#85d400);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo h4 {
+  font-family:Poppins;
+  font-weight:700;
+  margin:0;
+}
+.nav a {
+  margin:0 10px;
+  font-weight:600;
+}
+.hero {
+  background:var(--card-bg);
+  border-radius:16px;
+  padding:40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:var(--shadow);
+  margin:30px 0;
+}
+.hero h1 {
+  font-family:Poppins;
+  font-weight:800;
+  font-size:36px;
+  margin:0 0 12px;
+}
+.hero p {
+  color:var(--muted);
+  margin:0 0 20px;
+  font-size:17px;
+}
+.btn-cta {
+  background:var(--cta);
+  color:#fff;
+  border:none;
+  padding:14px 24px;
+  border-radius:12px;
+  font-weight:700;
+  font-family:Poppins;
+  cursor:pointer;
+  transition:.2s;
+}
+.btn-cta:hover { background:#ff7a18; transform:translateY(-3px); }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+.card {
+  background:var(--card-bg);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:.2s;
+}
+.card:hover { transform:scale(1.03); }
+.card .name { font-family:Poppins;font-weight:600;font-size:16px; }
+.card .desc { font-size:13px;color:var(--muted); }
+.card .price { font-weight:700; }
+.actions { margin-top:10px; display:flex; align-items:center; gap:6px; }
+.add-to-cart {
+  background:var(--brand);
+  color:#fff;
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+.add-to-cart:hover { background:var(--cta); }
+.select-unit {
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:6px;
+  font-size:14px;
+}
+.cart-panel {
+  position:fixed;
+  top:90px;
+  right:20px;
+  width:320px;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.1);
+  padding:16px;
+  display:none;
+  z-index:20;
+}
+.cart-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+  padding:8px 0;
+}
+.cart-total { font-weight:800; margin-top:10px; display:flex; justify-content:space-between; }
+.btn-checkout {
+  width:100%;
+  margin-top:14px;
+  background:var(--brand);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn-checkout:hover { background:var(--cta); }
+.footer { text-align:center; margin:60px 0 40px; color:var(--muted); }
 </style>
 </head>
 <body>
-
-<h1>🥕 Магазин овощей и фруктов</h1>
-
-<div class="categories" id="category-buttons">
-  <button class="active" data-cat="fruits">Фрукты</button>
-  <button data-cat="vegetables">Овощи</button>
-</div>
-
-<div class="subcategories" id="subcategory-buttons"></div>
-
-<div class="wrap">
-  <div id="catalog-wrap">
-    <div id="catalog"></div>
-  </div>
-
-  <aside class="cart" id="cart">
-    <h3>🛒 Корзина</h3>
-    <div id="cart-list" class="cart-list"></div>
-    <div class="total" id="cart-total">Итого: 0 ₽</div>
-    <div class="cart-actions">
-      <button id="clear-cart" class="btn btn-clear">Очистить</button>
-      <button id="checkout" class="btn btn-check">Оформить заказ</button>
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="mark"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg></div>
+      <h4>ФермаFresh</h4>
     </div>
-  </aside>
-</div>
+    <nav class="nav">
+      <a href="#">Главная</a><a href="#">Каталог</a><a href="#">Контакты</a>
+    </nav>
+    <button id="open-cart" style="background:none;border:0;font-weight:700;cursor:pointer;color:var(--brand)">🛒 <span id="cart-count">0</span></button>
+  </div>
+</header>
 
-<div id="checkout-section">
-  <h2>📦 Оформление заказа</h2>
-  <form class="checkout-form" id="checkout-form">
-    <label>Имя *</label>
-    <input type="text" id="cust-name" required>
-    <label>Телефон *</label>
-    <input type="tel" id="cust-phone" required>
-    <label>Доп. телефон</label>
-    <input type="tel" id="cust-phone2">
-    <label>Город *</label>
-    <input type="text" id="cust-city" required>
-    <label>Улица *</label>
-    <input type="text" id="cust-street" required>
-    <label>Дом *</label>
-    <input type="text" id="cust-house" required>
-    <label>Подъезд</label>
-    <input type="text" id="cust-entrance">
-    <label>Этаж</label>
-    <input type="text" id="cust-floor">
-    <label>Квартира</label>
-    <input type="text" id="cust-apartment">
-    <label>Время доставки *</label>
-    <select id="delivery-time">
-      <option value="asap">Как можно скорее</option>
-      <option value="custom">Указать время</option>
-    </select>
-    <input type="time" id="custom-time" style="display:none;">
-    <label>Почта</label>
-    <input type="email" id="cust-email">
-    <label>Способ оплаты *</label>
-    <select id="payment-method" required>
-      <option value="cash">Наличные</option>
-      <option value="online">Онлайн / карта / СБП</option>
-    </select>
-    <button type="submit">Подтвердить заказ</button>
-  </form>
-</div>
+<section class="hero container">
+  <div>
+    <h1>Свежие продукты прямо с фермы</h1>
+    <p>Быстрая доставка свежих овощей и фруктов — почувствуй вкус природы!</p>
+    <button class="btn-cta" id="view-catalog">Перейти к каталогу</button>
+  </div>
+  <img src="https://images.unsplash.com/photo-1518976024611-6d9b0b0b1f7f?q=80&w=800&auto=format&fit=crop" style="width:40%;border-radius:14px;">
+</section>
+
+<main class="container">
+  <div class="grid" id="catalog"></div>
+</main>
+
+<aside id="cart-panel" class="cart-panel">
+  <h3>Корзина</h3>
+  <div id="cart-items"></div>
+  <div class="cart-total"><span>Итого:</span><span id="cart-sum">0 ₽</span></div>
+  <button class="btn-checkout" id="checkout-btn">Оформить заказ</button>
+</aside>
+
+<footer class="footer">© ФермаFresh 2025</footer>
 
 <script>
-// ======= Товары =======
-const products=[
-  {name:"Арбуз", price:40, category:"fruits", subcategory:"Ягоды"},
-  {name:"Банан", price:170, category:"fruits", subcategory:"Ягоды"},
-  {name:"Дыня торпеда", price:80, category:"fruits", subcategory:"Ягоды"},
-  {name:"Дыня колхозница", price:80, category:"fruits", subcategory:"Ягоды"},
-  {name:"Киви", price:450, category:"fruits", subcategory:"Цитрусовые"},
-  {name:"Груша", price:340, category:"fruits", subcategory:"Косточковые"},
-  {name:"Картофель", price:45, category:"vegetables", subcategory:"Корнеплоды"},
-  {name:"Морковь", price:45, category:"vegetables", subcategory:"Корнеплоды"},
-  {name:"Помидоры", price:220, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Огурцы", price:150, category:"vegetables", subcategory:"Томаты и огурцы"},
-  {name:"Перец болгарский", price:130, category:"vegetables", subcategory:"Перцы"},
-  {name:"Перец чили", price:25, category:"vegetables", subcategory:"Перцы"},
-  {name:"Лук зеленый", price:350, category:"vegetables", subcategory:"Зелень"}
+const products = [
+  ["🍎 Яблоко — 100₽/кг", "Яблоко", 100],
+  ["🍌 Банан — 170₽/кг", "Банан", 170],
+  ["🍊 Апельсин — 220₽/кг", "Апельсин", 220],
+  ["🍇 Виноград — 300₽/кг", "Виноград", 300],
+  ["🥔 Картофель — 45₽/кг", "Картофель", 45],
+  ["🥕 Морковь — 50₽/кг", "Морковь", 50],
+  ["🍅 Помидоры — 200₽/кг", "Помидоры", 200],
+  ["🥒 Огурцы — 150₽/кг", "Огурцы", 150],
+  ["🍑 Персик — 350₽/кг", "Персик", 350],
+  ["🍐 Груша — 340₽/кг", "Груша", 340]
 ];
 
-let cart=[];
-let selectedCategory="fruits";
-let selectedSubcategory=null;
+let cart = [];
+const catalog = document.getElementById('catalog');
+const cartPanel = document.getElementById('cart-panel');
+const cartItemsWrap = document.getElementById('cart-items');
+const cartSumEl = document.getElementById('cart-sum');
+const cartCountEl = document.getElementById('cart-count');
 
-// ======= DOM =======
-const catalogEl=document.getElementById('catalog');
-const cartListEl=document.getElementById('cart-list');
-const cartTotalEl=document.getElementById('cart-total');
-const clearBtn=document.getElementById('clear-cart');
-const checkoutBtn=document.getElementById('checkout');
-const categoryButtons=document.getElementById('category-buttons');
-const subcategoryButtons=document.getElementById('subcategory-buttons');
-const catalogWrap=document.getElementById('catalog-wrap');
-const checkoutSection=document.getElementById('checkout-section');
-const checkoutForm=document.getElementById('checkout-form');
-const deliveryTimeSelect=document.getElementById('delivery-time');
-const customTimeInput=document.getElementById('custom-time');
-
-function rub(v){return Math.round(v)+' ₽';}
-
-// ======= Подкатегории =======
-function renderSubcategories(){
-  subcategoryButtons.innerHTML='';
-  let subs=[];
-  if(selectedCategory==='fruits') subs=["Ягоды","Косточковые","Цитрусовые"];
-  else if(selectedCategory==='vegetables') subs=["Корнеплоды","Томаты и огурцы","Перцы","Зелень"];
-  subs.forEach(sub=>{
-    const btn=document.createElement('button');
-    btn.textContent=sub;
-    btn.className=selectedSubcategory===sub?'active':'';
-    btn.onclick=()=>{selectedSubcategory=sub; renderSubcategories(); renderCatalog();}
-    subcategoryButtons.appendChild(btn);
+function renderCatalog() {
+  catalog.innerHTML = '';
+  products.forEach((p, idx) => {
+    const [label,name,price] = p;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div>
+        <div class="name">${label}</div>
+        <div class="desc">${name}</div>
+        <div class="price">${price} ₽/кг</div>
+      </div>
+      <div class="actions">
+        <input type="number" min="0.1" step="0.1" value="1" class="qty" style="width:60px;border:1px solid var(--border);border-radius:8px;padding:5px;">
+        <select class="select-unit">
+          <option value="kg">кг</option>
+          <option value="g">гр</option>
+        </select>
+        <button class="add-to-cart" data-idx="${idx}">В корзину</button>
+      </div>
+    `;
+    catalog.appendChild(card);
   });
 }
 
-// ======= Каталог =======
-function renderCatalog(){
-  catalogEl.innerHTML='';
-  let filtered=products.filter(p=>p.category===selectedCategory);
-  if(selectedSubcategory) filtered=filtered.filter(p=>p.subcategory===selectedSubcategory);
-  filtered.forEach(prod=>{
-    const id=prod.name.replace(/\s+/g,'_');
-    const card=document.createElement('div'); card.className='card';
-    card.innerHTML=`<div class="img-placeholder">Фото</div>
-      <div class="title">${prod.name}</div>
-      <div class="price">${prod.price} ₽/кг</div>`;
-    const controls=document.createElement('div'); controls.className='controls';
-    const qtyWrap=document.createElement('div'); qtyWrap.className='qty';
-    const qtyInput=document.createElement('input'); qtyInput.type='number'; qtyInput.step='0.1'; qtyInput.min='0.1'; qtyInput.value='1';
-    const unitSelect=document.createElement('select'); unitSelect.className='unit-select';
-    unitSelect.innerHTML=`<option value="kg">кг</option><option value="g">г</option>`;
-    qtyWrap.appendChild(qtyInput); qtyWrap.appendChild(unitSelect);
-    const addBtn=document.createElement('button'); addBtn.className='add-btn'; addBtn.textContent='Добавить';
-    addBtn.onclick=()=>{
-      let qty=parseFloat(qtyInput.value);
-      if(unitSelect.value==='g') qty/=1000;
-      addToCart(prod,qty);
-    }
-    controls.appendChild(qtyWrap); controls.appendChild(addBtn);
-    card.appendChild(controls);
-    catalogEl.appendChild(card);
-  });
-}
+function formatRub(v) { return Math.round(v) + ' ₽'; }
 
-// ======= Корзина =======
-function addToCart(prod,qty){
-  const existing=cart.find(c=>c.name===prod.name);
-  if(existing){existing.qty+=qty; existing.total=existing.qty*prod.price;}
-  else cart.push({name:prod.name,qty,total:qty*prod.price});
+function addToCart(product, qty, unit) {
+  const [label,name,price] = product;
+  let finalQty = unit === 'g' ? qty / 1000 : qty;
+  const existing = cart.find(i => i.name === name);
+  if(existing){ existing.qty += finalQty; existing.total = existing.qty * price; }
+  else cart.push({ name, price, qty: finalQty, total: finalQty * price });
   renderCart();
 }
 
-function renderCart(){
-  cartListEl.innerHTML='';
-  let total=0;
-  cart.forEach(item=>{
-    total+=item.total;
-    const el=document.createElement('div'); el.className='cart-item';
-    el.innerHTML=`<div class="left"><div>${item.name}</div><div>${item.qty.toFixed(2)} кг</div></div>
-      <button class="remove">X</button>`;
-    el.querySelector('.remove').onclick=()=>{cart=cart.filter(c=>c!==item); renderCart();}
-    cartListEl.appendChild(el);
+function renderCart() {
+  cartItemsWrap.innerHTML = '';
+  let sum = 0;
+  cart.forEach(item => {
+    sum += item.total;
+    const row = document.createElement('div');
+    row.className = 'cart-row';
+    row.innerHTML = `
+      <div>${item.name} — ${item.qty.toFixed(2)} кг</div>
+      <div>${formatRub(item.total)}</div>
+    `;
+    cartItemsWrap.appendChild(row);
   });
-  cartTotalEl.textContent='Итого: '+rub(total);
+  cartSumEl.textContent = formatRub(sum);
+  cartCountEl.textContent = cart.length;
 }
 
-// ======= События =======
-clearBtn.onclick=()=>{cart=[]; renderCart();}
-checkoutBtn.onclick=()=>{checkoutSection.classList.toggle('show'); window.scrollTo({top:checkoutSection.offsetTop,behavior:'smooth'});}
-categoryButtons.querySelectorAll('button').forEach(btn=>{btn.onclick=()=>{
-  categoryButtons.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedCategory=btn.dataset.cat;
-  selectedSubcategory=null;
-  renderSubcategories(); renderCatalog();
-}});
+catalog.addEventListener('click', e => {
+  const btn = e.target.closest('.add-to-cart');
+  if(!btn) return;
+  const card = btn.closest('.card');
+  const qty = parseFloat(card.querySelector('.qty').value) || 1;
+  const unit = card.querySelector('.select-unit').value;
+  addToCart(products[btn.dataset.idx], qty, unit);
+});
 
-deliveryTimeSelect.onchange=()=>{customTimeInput.style.display=deliveryTimeSelect.value==='custom'?'block':'none';}
-checkoutForm.onsubmit=(e)=>{e.preventDefault(); alert('Заказ оформлен!'); checkoutForm.reset(); cart=[]; renderCart(); checkoutSection.classList.remove('show');}
+document.getElementById('open-cart').addEventListener('click', () => {
+  cartPanel.style.display = cartPanel.style.display === 'block' ? 'none' : 'block';
+});
+document.getElementById('checkout-btn').addEventListener('click', () => {
+  if(cart.length === 0) return alert('Корзина пуста!');
+  let msg = 'Ваш заказ:\n\n';
+  cart.forEach(i => msg += `${i.name} — ${i.qty.toFixed(2)} кг — ${formatRub(i.total)}\n`);
+  msg += `\nИтого: ${cartSumEl.textContent}`;
+  alert(msg);
+});
 
-// ======= Init =======
-renderSubcategories();
 renderCatalog();
-renderCart();
 </script>
-
 </body>
 </html>
