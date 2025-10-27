@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const total = document.getElementById("total");
   const sendOrderBtn = document.getElementById("send-order");
 
+  // Список товаров — оставил как было (ничего не менял).
   const products = [
     { name: "Яблоки", price: 100 },
     { name: "Бананы", price: 120 },
@@ -18,15 +19,28 @@ document.addEventListener("DOMContentLoaded", () => {
   products.forEach((p) => {
     const card = document.createElement("div");
     card.className = "product";
+
+    // Формируем пути к картинкам (попробуем сначала .jpg, при ошибке подменим на .png)
+    const jpgPath = `images/${p.name}.jpg`;
+    const pngPath = `images/${p.name}.png`;
+
+    // Вставляем картинку и остальную разметку (не меняя логику кнопки)
+    // onerror переключает на .png если .jpg не найден
+    const imgHtml = `<img src="${jpgPath}" alt="${p.name}" class="product-image" onerror="this.onerror=null; this.src='${pngPath}';">`;
+
     card.innerHTML = `
+      ${imgHtml}
       <h3>${p.name}</h3>
       <p>${p.price} ₽</p>
-      <button>Добавить</button>
+      <button type="button">Добавить</button>
     `;
+
+    // Поведение кнопки — как было
     card.querySelector("button").addEventListener("click", () => {
       cart.push(p);
       renderCart();
     });
+
     productList.appendChild(card);
   });
 
@@ -49,10 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Корзина пуста!");
       return;
     }
-
     // Отправляем JSON с заказом
     tg.sendData(JSON.stringify(cart));
-
     // Закрываем WebApp
     tg.close();
   });
