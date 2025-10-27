@@ -9,9 +9,9 @@
 :root{
   --white:#FFFFFF;
   --card-bg:#FAF9F6;
-  --brand:#A4DE02;       /* лайм */
-  --cta:#FF8C42;         /* апельсиново-оранжевый */
-  --text:#2E2E2E;        /* графит */
+  --brand:#A4DE02;
+  --cta:#FF8C42;
+  --text:#2E2E2E;
   --muted:#666666;
   --border:#E6E6E6;
   --success:#5CB85C;
@@ -314,8 +314,14 @@ function renderCatalog(list){
     const id = idify(name) + '_' + idx;
     const card = document.createElement('div');
     card.className = 'card fade-in';
+
+    // Пути к картинкам. Используем encodeURIComponent для корректного URL (пробелы и спецсимволы будут закодированы)
+    const jpgPath = 'images/' + encodeURIComponent(name) + '.jpg';
+    const pngPath = 'images/' + encodeURIComponent(name) + '.png';
+    const noImagePath = 'images/noimage.png';
+
     card.innerHTML = `
-      <div class="photo"><img data-src="https://via.placeholder.com/600x400?text=${encodeURIComponent(name)}" alt="${name}"></div>
+      <div class="photo"><img data-src="${jpgPath}" alt="${name}"></div>
       <div class="info">
         <div class="name">${label}</div>
         <div class="desc">${name}</div>
@@ -333,8 +339,41 @@ function renderCatalog(list){
       </div>
     `;
     catalogEl.appendChild(card);
+
     const img = card.querySelector('img');
-    img.onload = ()=> img.style.opacity = '1';
+
+    // Показываем картинку плавно после загрузки
+    img.onload = ()=> { img.style.opacity = '1'; };
+
+    // onerror: цепочка fallback'ов: .jpg -> .png -> noimage.png
+    img.onerror = function() {
+      try {
+        const cur = this.src || '';
+        // Если текущий src содержит .jpg (или это первый запрос), пробуем .png
+        if (cur.indexOf('.jpg') !== -1 || cur.indexOf(encodeURIComponent(name) + '.jpg') !== -1) {
+          // чтобы не зациклиться, временно отключаем обработчик, затем назначаем новый при установке следующего src
+          this.onerror = null;
+          this.src = pngPath;
+          // не забудем снова установить обработчик для переключения на noimage
+          this.onerror = function() {
+            this.onerror = null;
+            this.src = noImagePath;
+          };
+        } else if (cur.indexOf('.png') !== -1 || cur.indexOf(encodeURIComponent(name) + '.png') !== -1) {
+          this.onerror = null;
+          this.src = noImagePath;
+        } else {
+          // На всякий случай - ставим плейсхолдер
+          this.onerror = null;
+          this.src = noImagePath;
+        }
+      } catch(e) {
+        this.onerror = null;
+        this.src = noImagePath;
+      }
+    };
+
+    // Запуск загрузки (img.dataset.src задан выше)
     img.src = img.dataset.src;
   });
   shownCountEl.textContent = list.length;
@@ -343,7 +382,6 @@ function renderCatalog(list){
 /* ========== Cart logic ========== */
 function addToCart(product, qty, unit){
   const [label,name,price] = product;
-  // qty is number entered by user; unit is 'kg' or 'g'
   let qtyKg = (unit === 'g') ? (qty / 1000) : qty;
   if(qtyKg <= 0) return;
   const existing = cart.find(i => i.name === name);
@@ -448,7 +486,6 @@ document.getElementById('filters').addEventListener('click', (e) => {
 /* ========== Checkout flow (modal) ========== */
 gotoCheckoutBtn.addEventListener('click', ()=> {
   if(cart.length === 0){ alert('Корзина пуста — добавьте товары.'); return; }
-  // populate modal order list
   modalOrderList.innerHTML = '';
   let sum = 0;
   cart.forEach(i => {
@@ -477,7 +514,6 @@ deliveryTimeSelect.addEventListener('change', (e) => {
 orderForm.addEventListener('submit', (e) => {
   e.preventDefault();
   if(cart.length === 0){ alert('Корзина пуста!'); modal.style.display='none'; return; }
-  // collect fields
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   const phone2 = document.getElementById('cust-phone2').value.trim();
@@ -491,7 +527,6 @@ orderForm.addEventListener('submit', (e) => {
   const email = document.getElementById('cust-email').value.trim();
   const payment = document.getElementById('payment-method').value;
 
-  // build order text
   let message = '🛒 Ваш заказ:\n\n';
   cart.forEach(i => {
     message += `${i.name} — ${displayQty(i.qtyKg)} — ${formatRub(i.total)}\n`;
@@ -501,7 +536,6 @@ orderForm.addEventListener('submit', (e) => {
 
   alert(message);
 
-  // simulate submit: clear cart, close modal, reset form
   cart = [];
   renderCart();
   orderForm.reset();
