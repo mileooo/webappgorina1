@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Магазин у дяди Лёши — свежие овощи и фрукты</title>
+<title>Bravo Market — свежие овощи и фрукты</title>
 
 <!-- Montserrat: light (300) + black (900) -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
@@ -19,8 +19,6 @@
   --border:#E6E6E6;
   --shadow: 0 2px 8px rgba(0,0,0,0.05);
   --container:1200px;
-
-  /* accent for duplicate vars used in css files */
   --accent-color: var(--brand);
 }
 
@@ -61,20 +59,36 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 /* grid & cards */
 .main{max-width:var(--container);margin:0 auto;padding:8px 20px 120px}
 .controls{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.card{background:var(--card-bg);border-radius:10px;box-shadow:var(--shadow);padding:8px;display:flex;flex-direction:column;gap:8px;min-height:300px;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{background:var(--card-bg);border-radius:10px;box-shadow:var(--shadow);padding:8px;display:flex;flex-direction:column;gap:8px;min-height:300px;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden;cursor:pointer}
 .card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.06)}
-.photo{height:58%;border-radius:8px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+.photo{height:56%;border-radius:8px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
 .photo img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s;border-radius:6px}
-.info{display:flex;flex-direction:column;gap:6px;flex:1}
+.info{display:flex;flex-direction:column;gap:6px;flex:1;padding:4px}
 .name{font-size:14px;color:var(--text)}
 .desc{font-size:12px;color:var(--muted);min-height:34px;font-weight:300}
 .price{font-size:14px}
 .actions{display:flex;align-items:center;gap:6px;justify-content:space-between}
-.qty-input{width:70px;padding:6px;border-radius:8px;border:1px solid var(--border);text-align:center;font-weight:300;font-size:13px}
+.qty-input{width:68px;padding:6px;border-radius:8px;border:1px solid var(--border);text-align:center;font-weight:300;font-size:13px}
 .unit-select{padding:6px;border-radius:8px;border:1px solid var(--border);background:#fff;font-weight:300;font-size:13px}
-.add-to-cart{background:var(--brand);color:#fff;border:0;padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 6px 12px rgba(164,222,2,0.12);transition:background .12s}
+
+/* ----------------- уменьшенная кнопка "В корзину" ----------------- */
+.add-to-cart{
+  background:var(--brand);
+  color:#fff;
+  border:0;
+  padding:6px 8px;        /* уменьшено */
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 6px 12px rgba(164,222,2,0.12);
+  transition:background .12s, transform .08s;
+  font-size:13px;         /* уменьшен шрифт */
+  white-space:nowrap;
+}
 .add-to-cart:hover{background:var(--cta)}
+/* ----------------------------------------------------------------- */
+
 .reco{margin-top:6px;font-size:12px;color:var(--muted);font-weight:300}
 .custom-btn{background:#fff;border:1px solid var(--border);padding:8px;border-radius:8px;cursor:pointer;font-size:13px}
 
@@ -143,10 +157,17 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .btn-check:hover{background:var(--cta)}
 .cart-close-btn{background:transparent;border:0;font-size:18px;cursor:pointer;color:var(--muted)}
 
-/* modal */
+/* checkout modal (нижняя панель-закрытие) */
 .modal { position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:1001; }
 .modal .panel { width:920px;max-width:95%;background:var(--card-bg);border-radius:12px;padding:18px;box-shadow:0 12px 36px rgba(0,0,0,0.18); }
 .form-row input, .form-row select, .form-row textarea {padding:10px;border-radius:8px;border:1px solid #ccc;font-weight:300}
+
+/* product detail modal */
+.product-modal { position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:1100; }
+.product-modal .panel { width:640px;max-width:94%;background:var(--white);border-radius:12px;padding:18px;box-shadow:0 12px 36px rgba(0,0,0,0.18);color:var(--text) }
+.product-modal h3{margin:0 0 8px;font-size:20px}
+.kbju{background:#f7f8f6;padding:10px;border-radius:8px;border:1px solid var(--border);font-weight:600;margin:8px 0}
+.prod-desc{margin-top:10px;color:var(--muted);line-height:1.4}
 
 /* search fab (мобильный маленький виджет поиска в левом нижнем углу) */
 .search-fab {
@@ -196,7 +217,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   .hero{padding:14px}
   .hero h1{font-size:18px}
   .hero p{font-size:13px}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
   .card{min-height:220px;padding:8px}
   .photo{height:56%}
   .name{font-size:13px}
@@ -225,7 +246,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
         <div class="mark" aria-hidden>
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg>
         </div>
-        <h4>ФермаFresh</h4>
+        <h4>Bravo Market</h4>
       </div>
       <div style="margin-left:10px" class="small">Свежесть, которую можно почувствовать</div>
     </div>
@@ -329,6 +350,19 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   </div>
 </div>
 
+<!-- product detail modal -->
+<div id="product-modal" class="product-modal" aria-hidden="true">
+  <div class="panel">
+    <button id="product-modal-close" style="float:right;background:transparent;border:0;font-size:20px;cursor:pointer">✕</button>
+    <h3 id="pm-name">Название товара</h3>
+    <div id="pm-price" style="font-weight:800;margin-bottom:6px;"></div>
+    <div class="kbju" id="pm-kbju">КБЖУ: —</div>
+    <button id="pm-more" class="custom-btn" style="padding:8px 10px;font-weight:700">Подробнее о товаре</button>
+    <div id="pm-desc" class="prod-desc" style="display:none"></div>
+  </div>
+</div>
+
+<!-- checkout modal (order form) -->
 <div id="modal" class="modal" aria-hidden="true">
   <div class="panel">
     <h3 style="font-family:'Montserrat',Arial;margin:0 0 8px">Оформление заказа</h3>
@@ -360,13 +394,13 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   </div>
 </div>
 
-<footer class="footer">© Магазин у дяди Лёши — Свежесть, которую можно почувствовать.</footer>
+<footer class="footer">© Bravo Market — Свежесть, которую можно почувствовать.</footer>
 
 <script>
 /* ========== Telegram fallback ========== */
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { sendData: () => {}, close: () => {}, expand: () => {} };
 
-/* ========== products — использую массив-формат (можешь редактировать) ========== */
+/* ========== products — исходный массив ========== */
 const products = [
   ["🍉 Арбуз — 40₽/кг", "Арбуз", 40, "fruits"],
   ["🍐 Груша — 340₽/кг", "Груша", 340, "fruits"],
@@ -415,6 +449,191 @@ const products = [
   ["🍋 Лимон — 290₽/кг", "Лимон", 290, "fruits"]
 ];
 
+/* ========== КБЖУ и описания (на 100 г) ========== */
+/* Ключи должны совпадать с именами (getName) из products */
+const kbjuData = {
+  "Арбуз": {
+    kbju: "30 ккал • Б 0.6 г • Ж 0.2 г • У 7.6 г",
+    desc: "💚 Освежающий и богатый ликопином фрукт, помогает выводить токсины и поддерживает водный баланс."
+  },
+  "Груша": {
+    kbju: "57 ккал • Б 0.4 г • Ж 0.4 г • У 15 г",
+    desc: "🍐 Отличный источник клетчатки, поддерживает здоровое пищеварение и снижает уровень холестерина."
+  },
+  "Апельсин": {
+    kbju: "47 ккал • Б 0.9 г • Ж 0.1 г • У 11.8 г",
+    desc: "🍊 Мощный заряд витамина C, укрепляет иммунитет и повышает уровень энергии."
+  },
+  "Дыня торпеда Узбекистан": {
+    kbju: "35 ккал • Б 0.8 г • Ж 0.2 г • У 8 г",
+    desc: "🍈 Освежающая, насыщена калием и витамином C, способствует детоксикации организма."
+  },
+  "Дыня колхозница": {
+    kbju: "36 ккал • Б 0.6 г • Ж 0.3 г • У 8.1 г",
+    desc: "🍈 Поддерживает водный баланс, мягко улучшает обмен веществ."
+  },
+  "Виноград зеленый (без косточек)": {
+    kbju: "69 ккал • Б 0.7 г • Ж 0.2 г • У 18 г",
+    desc: "🍇 Источник антиоксидантов, укрепляет сердце и сосуды."
+  },
+  "Виноград темный (без косточек)": {
+    kbju: "70 ккал • Б 0.6 г • Ж 0.2 г • У 18 г",
+    desc: "🍇 Содержит ресвератрол — мощный антиоксидант для молодости кожи и сосудов."
+  },
+  "Виноград черный (Мерседес)": {
+    kbju: "72 ккал • Б 0.7 г • Ж 0.2 г • У 17 г",
+    desc: "🍇 Благотворно влияет на сердце и иммунную систему."
+  },
+  "Нектарин Узбекистан красный": {
+    kbju: "44 ккал • Б 1.1 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Богат витамином A и антиоксидантами, поддерживает здоровье кожи."
+  },
+  "Нектарин Турция": {
+    kbju: "45 ккал • Б 1 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Улучшает обмен веществ и способствует здоровому пищеварению."
+  },
+  "Нектарин Узбекистан желтый (вкус лимон)": {
+    kbju: "45 ккал • Б 1 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Сочный и ароматный фрукт, укрепляет иммунитет и придаёт энергии."
+  },
+  "Нектарин Узбекистан зеленый": {
+    kbju: "44 ккал • Б 1.1 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Освежает и помогает очищать организм."
+  },
+  "Банан": {
+    kbju: "89 ккал • Б 1.1 г • Ж 0.3 г • У 23 г",
+    desc: "🍌 Источник калия и магния — поддерживает сердце и нервную систему."
+  },
+  "Слива 4 вида": {
+    kbju: "46 ккал • Б 0.7 г • Ж 0.3 г • У 11 г",
+    desc: "🍑 Помогает очищать кишечник, богата антиоксидантами и витамином C."
+  },
+  "Черешня": {
+    kbju: "63 ккал • Б 1.1 г • Ж 0.2 г • У 16 г",
+    desc: "🍒 Укрепляет сосуды, улучшает сон и настроение."
+  },
+  "Голубика": {
+    kbju: "57 ккал • Б 0.7 г • Ж 0.3 г • У 14 г",
+    desc: "🫐 Один из лучших антиоксидантов, улучшает память и зрение."
+  },
+  "Абрикос Армения": {
+    kbju: "48 ккал • Б 1.4 г • Ж 0.4 г • У 11 г",
+    desc: "🍑 Богат бета-каротином, улучшает зрение и состояние кожи."
+  },
+  "Абрикос Киргизия": {
+    kbju: "48 ккал • Б 1.4 г • Ж 0.4 г • У 11 г",
+    desc: "🍑 Поддерживает работу печени и способствует выработке коллагена."
+  },
+  "Персик Ташкент": {
+    kbju: "39 ккал • Б 0.9 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Помогает очищению организма и укрепляет иммунитет."
+  },
+  "Персик Армения": {
+    kbju: "39 ккал • Б 0.9 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Источник витаминов A и E, улучшает состояние кожи и волос."
+  },
+  "Персик Турция": {
+    kbju: "39 ккал • Б 0.9 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Поддерживает обмен веществ и восполняет запасы антиоксидантов."
+  },
+  "Персик Инжирный": {
+    kbju: "40 ккал • Б 0.9 г • Ж 0.3 г • У 10 г",
+    desc: "🍑 Сладкий и нежный, помогает при усталости и стрессах."
+  },
+  "Киви": {
+    kbju: "41 ккал • Б 1.1 г • Ж 0.5 г • У 10 г",
+    desc: "🥝 Содержит больше витамина C, чем апельсин, укрепляет иммунитет и улучшает пищеварение."
+  },
+  "Лимон": {
+    kbju: "29 ккал • Б 1.1 г • Ж 0.3 г • У 9 г",
+    desc: "🍋 Мощный антиоксидант, очищает организм и улучшает обмен веществ."
+  },
+  "Картофель Чувашия": {
+    kbju: "77 ккал • Б 2 г • Ж 0.1 г • У 17 г",
+    desc: "🥔 Источник калия и витамина B6, даёт энергию и поддерживает нервную систему."
+  },
+  "Картофель Краснодар": {
+    kbju: "77 ккал • Б 2 г • Ж 0.1 г • У 17 г",
+    desc: "🥔 Полезен при физических нагрузках, содержит клетчатку и антиоксиданты."
+  },
+  "Морковь Волгоград": {
+    kbju: "41 ккал • Б 0.9 г • Ж 0.2 г • У 10 г",
+    desc: "🥕 Богата бета-каротином, улучшает зрение и укрепляет кожу."
+  },
+  "Лук репчатый Волгоград": {
+    kbju: "40 ккал • Б 1.1 г • Ж 0.1 г • У 9.3 г",
+    desc: "🧅 Повышает иммунитет, обладает противомикробными свойствами."
+  },
+  "Лук зеленый": {
+    kbju: "32 ккал • Б 1.8 г • Ж 0.2 г • У 7.3 г",
+    desc: "🌱 Источник витамина C, железа и кальция, помогает укрепить кости."
+  },
+  "Укроп, петрушка": {
+    kbju: "43 ккал • Б 3 г • Ж 0.4 г • У 8 г",
+    desc: "🌱 Улучшают пищеварение, освежают дыхание и снабжают организм витаминами."
+  },
+  "Кинза": {
+    kbju: "23 ккал • Б 2.1 г • Ж 0.5 г • У 3.7 г",
+    desc: "🌿 Способствует выведению тяжёлых металлов и поддерживает детоксикацию организма."
+  },
+  "Базелик (пучок)": {
+    kbju: "22 ккал • Б 3.2 г • Ж 0.6 г • У 2.6 г",
+    desc: "🌿 Богат эфирными маслами, улучшает настроение и пищеварение."
+  },
+  "Чеснок Ташкент": {
+    kbju: "149 ккал • Б 6.4 г • Ж 0.5 г • У 33 г",
+    desc: "🧄 Мощный природный антибиотик, укрепляет иммунитет и сердце."
+  },
+  "Перец болгарский": {
+    kbju: "27 ккал • Б 1.3 г • Ж 0.2 г • У 6 г",
+    desc: "🫑 Один из лучших источников витамина C, повышает иммунитет и улучшает кожу."
+  },
+  "Перец чили": {
+    kbju: "40 ккал • Б 2 г • Ж 0.4 г • У 9 г",
+    desc: "🌶️ Улучшает обмен веществ и способствует сжиганию калорий."
+  },
+  "Помидоры Азербайджанские": {
+    kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г",
+    desc: "🍅 Богаты ликопином, поддерживают сердце и защищают клетки от старения."
+  },
+  "Помидоры Ростовские": {
+    kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г",
+    desc: "🍅 Отличный источник антиоксидантов и витамина C."
+  },
+  "Помидоры Волгоград (мелкие)": {
+    kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г",
+    desc: "🍅 Улучшают обмен веществ и укрепляют иммунную систему."
+  },
+  "Помидоры домашние": {
+    kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г",
+    desc: "🍅 Содержат натуральный ликопин, защищают клетки от старения."
+  },
+  "Помидоры Астрахань (желтые)": {
+    kbju: "20 ккал • Б 1 г • Ж 0.2 г • У 4 г",
+    desc: "🍅 Мягче по кислотности, подходят для людей с чувствительным желудком."
+  },
+  "Огурцы Московские": {
+    kbju: "15 ккал • Б 0.8 г • Ж 0.1 г • У 3.6 г",
+    desc: "🥒 Состоят на 95 % из воды, очищают организм и улучшают состояние кожи."
+  },
+  "Огурцы Самарские": {
+    kbju: "15 ккал • Б 0.8 г • Ж 0.1 г • У 3.6 г",
+    desc: "🥒 Помогают вывести лишнюю жидкость и тонизируют."
+  },
+  "Огурцы домашние": {
+    kbju: "15 ккал • Б 0.8 г • Ж 0.1 г • У 3.6 г",
+    desc: "🥒 Поддерживают баланс жидкости и электролитов в организме."
+  },
+  "Кабачок": {
+    kbju: "24 ккал • Б 1.5 г • Ж 0.3 г • У 4.6 г",
+    desc: "🥒 Легко усваивается, богат клетчаткой и витаминами группы B."
+  },
+  "Баклажан": {
+    kbju: "25 ккал • Б 1 г • Ж 0.2 г • У 6 г",
+    desc: "🍆 Содержит антиоксиданты, снижает уровень холестерина и поддерживает сердце."
+  }
+};
+
 /* ========== state & refs ========== */
 let cart = [];
 let visibleProducts = products.slice();
@@ -445,7 +664,7 @@ const cartCloseBtn = document.getElementById('cart-close-btn');
 const clearCartBtn = document.getElementById('clear-cart');
 const gotoCheckoutBtn = document.getElementById('goto-checkout');
 
-const modal = document.getElementById('modal');
+const checkoutModal = document.getElementById('modal');
 const modalOrderList = document.getElementById('modal-order-list');
 const modalTotal = document.getElementById('modal-total');
 const orderForm = document.getElementById('order-form');
@@ -457,6 +676,15 @@ const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
 
+/* product modal refs */
+const productModal = document.getElementById('product-modal');
+const pmName = document.getElementById('pm-name');
+const pmPrice = document.getElementById('pm-price');
+const pmKbju = document.getElementById('pm-kbju');
+const pmMore = document.getElementById('pm-more');
+const pmDesc = document.getElementById('pm-desc');
+const pmClose = document.getElementById('product-modal-close');
+
 /* ========= helpers ========= */
 function idify(s){ return String(s).replace(/\W+/g,'_'); }
 function formatRub(v){ return Math.round(v) + ' ₽'; }
@@ -465,11 +693,7 @@ function randInt(max){ return Math.floor(Math.random()*max); }
 
 function transliterate(str){
   if(!str) return '';
-  const map = {
-    'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y',
-    'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f',
-    'х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
-  };
+  const map = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
   return String(str).split('').map(ch=>{
     const lower = ch.toLowerCase();
     if(map[lower] !== undefined) return map[lower];
@@ -478,25 +702,17 @@ function transliterate(str){
     return '';
   }).join('');
 }
-function slugify(name){
-  return transliterate(name).toLowerCase().replace(/[^a-z0-9\-]+/g,'-').replace(/^-+|-+$/g,'');
-}
+function slugify(name){ return transliterate(name).toLowerCase().replace(/[^a-z0-9\-]+/g,'-').replace(/^-+|-+$/g,''); }
 
 function tryLoadImage(imgEl, name){
   if(!imgEl) return;
   const exts = ['.webp','.jpg','.jpeg','.png'];
   const candidates = [];
   const slug = slugify(name || '');
-  if(slug){
-    exts.forEach(ext => candidates.push('images/' + slug + ext));
-  }
+  if(slug){ exts.forEach(ext => candidates.push('images/' + slug + ext)); }
   const encoded = encodeURIComponent(name || '');
-  if(encoded){
-    exts.forEach(ext => candidates.push('images/' + encoded + ext));
-  }
-  if(name && /^[\x00-\x7F]+$/.test(name)){
-    exts.forEach(ext => candidates.push('images/' + name + ext));
-  }
+  if(encoded){ exts.forEach(ext => candidates.push('images/' + encoded + ext)); }
+  if(name && /^[\x00-\x7F]+$/.test(name)){ exts.forEach(ext => candidates.push('images/' + name + ext)); }
   candidates.push('images/noimage.png');
 
   let idx = 0;
@@ -508,23 +724,20 @@ function tryLoadImage(imgEl, name){
     }
     const url = candidates[idx];
     const tester = new Image();
-    tester.onload = () => {
-      imgEl.src = url;
-      imgEl.onload = ()=> imgEl.style.opacity = '1';
-    };
+    tester.onload = () => { imgEl.src = url; imgEl.onload = ()=> imgEl.style.opacity = '1'; };
     tester.onerror = () => { idx++; tryNext(); };
     tester.src = url;
   }
   tryNext();
 }
 
-/* universal getters to support both [label,name,price,cat] and {name,price,category} */
+/* universal getters */
 function getLabel(it){ if(!it) return ''; if(Array.isArray(it)) return it[0]||it[1]||''; return it.label||it.name||''; }
 function getName(it){ if(!it) return ''; if(Array.isArray(it)) return it[1]||it[0]||''; return it.name||it.label||''; }
 function getPrice(it){ if(!it) return 0; if(Array.isArray(it)) return Number(it[2]||0); return Number(it.price||0); }
 function getCategory(it){ if(!it) return ''; if(Array.isArray(it)) return it[3]||''; return it.category||''; }
 
-/* ========== renderCatalog (single authoritative impl) ========== */
+/* ========== renderCatalog ========== */
 function renderCatalog(list){
   if(!catalogEl) return;
   catalogEl.innerHTML = '';
@@ -539,6 +752,11 @@ function renderCatalog(list){
 
     const card = document.createElement('div');
     card.className = 'card fade-in';
+    // attach product data to card for modal lookup
+    card.dataset.prodName = name;
+    card.dataset.prodLabel = label;
+    card.dataset.prodPrice = price;
+
     card.innerHTML = `
       <div class="photo"><img alt="${name}" loading="lazy"></div>
       <div class="info">
@@ -563,6 +781,7 @@ function renderCatalog(list){
     const img = card.querySelector('img');
     tryLoadImage(img, name);
 
+    // recommendations
     const others = products.map((pp,i)=> i !== globalIdx ? pp : null).filter(Boolean);
     const picks = [];
     while(picks.length < 2 && others.length){
@@ -651,7 +870,7 @@ document.addEventListener('click', (e) => {
   const qty = parseFloat(qtyInput.value) || 0;
   const unit = unitSelect.value;
   let qtyKg = unit === 'g' ? qty/1000 : qty;
-  if(qtyKg <= 0) return;
+  if(qtyKg <= 0){ alert('Укажите количество'); return; }
   const source = (visibleProducts && visibleProducts[idxVisible]) || products[idxGlobal] || products[idxVisible];
   const name = getName(source);
   const price = getPrice(source);
@@ -663,6 +882,47 @@ document.addEventListener('click', (e) => {
   setTimeout(()=>{ ck.style.opacity = '1'; ck.style.transform = 'scale(1)'; }, 10);
   setTimeout(()=>{ ck.style.opacity = '0'; ck.style.transform = 'scale(.6)'; }, 900);
   setTimeout(()=>{ ck.remove(); }, 1200);
+});
+
+/* ========== Catalog card click -> product modal ========== */
+/* Open product modal when user clicks on .card but not on controls (add-to-cart, qty, select) */
+catalogEl.addEventListener('click', (e) => {
+  const card = e.target.closest('.card');
+  if(!card) return;
+  // if click on interactive elements - ignore
+  if(e.target.closest('.add-to-cart') || e.target.closest('.qty-input') || e.target.closest('.unit-select')) return;
+
+  const pname = card.dataset.prodName;
+  const plabel = card.dataset.prodLabel;
+  const pprice = card.dataset.prodPrice;
+
+  // fill modal
+  pmName.textContent = plabel || pname;
+  pmPrice.textContent = pprice ? (pprice + ' ₽/кг') : '';
+  const info = kbjuData[pname];
+  if(info){
+    pmKbju.textContent = info.kbju;
+    pmDesc.textContent = info.desc;
+  } else {
+    pmKbju.textContent = 'КБЖУ недоступно';
+    pmDesc.textContent = 'Описание недоступно';
+  }
+  pmDesc.style.display = 'none';
+  pmMore.textContent = 'Подробнее о товаре';
+  productModal.style.display = 'flex';
+  productModal.setAttribute('aria-hidden','false');
+});
+
+/* product modal controls */
+pmMore.addEventListener('click', () => {
+  if(pmDesc.style.display === 'none'){ pmDesc.style.display = 'block'; pmMore.textContent = 'Свернуть'; }
+  else { pmDesc.style.display = 'none'; pmMore.textContent = 'Подробнее о товаре'; }
+});
+pmClose.addEventListener('click', () => { productModal.style.display = 'none'; productModal.setAttribute('aria-hidden','true'); });
+
+/* closing product modal by clicking outside */
+productModal.addEventListener('click', (e) => {
+  if(e.target === productModal){ productModal.style.display = 'none'; productModal.setAttribute('aria-hidden','true'); }
 });
 
 /* ========== Floating cart <-> panel logic ========== */
@@ -739,16 +999,16 @@ if(gotoCheckoutBtn) gotoCheckoutBtn.addEventListener('click', ()=> {
   });
   modalTotal.textContent = formatRub(sum);
   hideCartPanel();
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden','false');
+  checkoutModal.style.display = 'flex';
+  checkoutModal.setAttribute('aria-hidden','false');
 });
-if(closeModalBtn) closeModalBtn.addEventListener('click', ()=> { modal.style.display='none'; modal.setAttribute('aria-hidden','true'); if(!cartPanel.classList.contains('show')) setTimeout(()=> showFloatingCart(),120); });
+if(closeModalBtn) closeModalBtn.addEventListener('click', ()=> { checkoutModal.style.display='none'; checkoutModal.setAttribute('aria-hidden','true'); if(!cartPanel.classList.contains('show')) setTimeout(()=> showFloatingCart(),120); });
 
 if(deliveryTimeSelect) deliveryTimeSelect.addEventListener('change', (e)=> { customTimeInput.style.display = e.target.value === 'custom' ? 'block' : 'none'; });
 
 if(orderForm) orderForm.addEventListener('submit', (e)=> {
   e.preventDefault();
-  if(cart.length === 0){ alert('Корзина пуста!'); modal.style.display='none'; return; }
+  if(cart.length === 0){ alert('Корзина пуста!'); checkoutModal.style.display='none'; return; }
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   const city = document.getElementById('cust-city').value.trim();
@@ -773,7 +1033,7 @@ if(orderForm) orderForm.addEventListener('submit', (e)=> {
   localStorage.setItem('ferma_loyalty', String(cur+points));
   alert('Начислено ' + points + ' баллов. Всего: ' + (cur+points));
 
-  cart = []; renderCart(); orderForm.reset(); customTimeInput.style.display='none'; modal.style.display='none';
+  cart = []; renderCart(); orderForm.reset(); customTimeInput.style.display='none'; checkoutModal.style.display='none';
   setTimeout(()=> showFloatingCart(), 120);
 });
 
