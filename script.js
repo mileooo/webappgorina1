@@ -1,11 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { sendData: () => {}, close: () => {}, expand: () => {} };
-  const productList = document.getElementById("product-list");
-  const cartItems = document.getElementById("cart-items");
-  const total = document.getElementById("total");
-  const sendOrderBtn = document.getElementById("send-order");
+  // Telegram WebApp fallback
+  const tg = window.Telegram && window.Telegram.WebApp
+    ? window.Telegram.WebApp
+    : { sendData: () => {}, close: () => {}, expand: () => {} };
 
-  // Список товаров — НЕ менял бизнес-логику, просто пример массива.
+  // --- Element references (with fallbacks to support different HTML versions) ---
+  const productList = document.getElementById("product-list") || document.getElementById("catalog");
+  const cartItemsList = document.getElementById("cart-items"); // element that lists cart rows
+  const totalEl = document.getElementById("total") || document.getElementById("cart-sum") || document.getElementById("panel-total");
+  const sendOrderBtn = document.getElementById("send-order") || document.getElementById("goto-checkout");
+  const floatingCart = document.getElementById("floating-cart");
+  const cartPanel = document.getElementById("cart-panel");
+  const fcCountEl = document.getElementById("fc-count") || document.getElementById("cart-count") || document.getElementById("cart-count-2");
+  const fcTotalEl = document.getElementById("fc-total") || document.getElementById("cart-total") || document.getElementById("cart-sum");
+  const panelTotalEl = document.getElementById("panel-total") || document.getElementById("cart-sum");
+
+  const filtersWrap = document.getElementById("filters");
+  const searchInput = document.getElementById("search-input");
+  const sortSelect = document.getElementById("sort-select");
+
+  // close button inside cart panel (optional)
+  const cartCloseBtn = document.getElementById("cart-close-btn");
+
+  // --- Data (example) ---
   const products = [
     { name: "Яблоки", price: 100 },
     { name: "Бананы", price: 120 },
@@ -13,107 +30,274 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Огурцы", price: 130 }
   ];
 
+  // Cart state: array of { id, name, price, qty }
   let cart = [];
 
-  // Показать товары
-  products.forEach((p) => {
-    const card = document.createElement("div");
-    card.className = "product";
+  // Visible products (after filters/search/sort)
+  let visibleProducts = products.slice();
+  let currentFilter = "all"; // for compatibility if you have categories
 
-    // Пути к картинкам
-    const jpgPath = `images/${p.name}.jpg`;
-    const pngPath = `images/${p.name}.png`;
-    const noImagePath = `images/noimage.png`;
+  // --- Helpers ---
+  function idify(s){ return (s || '').toString().replace(/\W+/g,'_'); }
+  function formatRub(v){ return Math.round(v) + ' ₽'; }
 
-    // Вставляем картинку и остальную разметку
-    // onerror сделан в виде цепочки: если .jpg не загрузился — подставляем .png, а при её ошибке — noimage.png
-    const imgHtml = `<img src="${jpgPath}" alt="${p.name}" class="product-image" onerror="this.onerror=function(){this.src='${noImagePath}'}; this.src='${pngPath}';">`;
+  // Safe image URL builder: uses encodeURIComponent so filenames with spaces/Cyrillic work
+  function jpgPathFor(name){ return 'images/' + encodeURIComponent(name) + '.jpg'; }
+  function pngPathFor(name){ return 'images/' + encodeURIComponent(name) + '.png'; }
+  const noImage = 'images/noimage.png';
 
-    card.innerHTML = `
-      ${imgHtml}
-      <h3>${p.name}</h3>
-      <p>${p.price} ₽</p>
-      <button type="button">Добавить</button>
-    `;
+  // Try load image with fallback: jpg -> png -> noimage
+  function attachImage(imgEl, name){
+    const jpg = jpgPathFor(name);
+    const png = pngPathFor(name);
+    const tester = new Image();
 
-    // Поведение кнопки — как было
-    card.querySelector("button").addEventListener("click", () => {
-      cart.push(p);
-      renderCart();
+    tester.onload = () => {
+      imgEl.src = jpg;
+      imgEl.style.opacity = '1';
+    };
+    tester.onerror = () => {
+      // try png
+      const tester2 = new Image();
+      tester2.onload = () => {
+        imgEl.src = png;
+        imgEl.style.opacity = '1';
+      };
+      tester2.onerror = () => {
+        imgEl.src = noImage;
+        imgEl.style.opacity = '1';
+      };
+      tester2.src = png;
+    };
+    tester.src = jpg;
+  }
+
+  // --- Render catalog ---
+  function renderCatalog(list){
+    if(!productList) return;
+    productList.innerHTML = '';
+    list.forEach((p, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card product';
+      card.innerHTML = `
+        <div class="photo"><img alt="${p.name}" loading="lazy" class="product-image"></div>
+        <div class="info">
+          <div class="name">${p.name}</div>
+          <div class="price">${p.price} ₽</div>
+          <div class="actions" style="margin-top:8px;display:flex;gap:8px;align-items:center">
+            <input class="qty-input" type="number" min="1" step="1" value="1" style="width:72px;padding:6px;border-radius:8px;border:1px solid #e6e6e6">
+            <select class="unit-select" style="padding:6px;border-radius:8px;border:1px solid #e6e6e6">
+              <option value="kg">кг</option>
+              <option value="g">гр</option>
+            </select>
+            <button class="add-to-cart" data-idx="${idx}" style="background:var(--brand);color:#fff;border:0;padding:8px 10px;border-radius:8px;cursor:pointer">В корзину</button>
+          </div>
+        </div>
+      `;
+      // attach image with fallback
+      const img = card.querySelector('img');
+      attachImage(img, p.name);
+
+      // add event handler for add-to-cart
+      card.querySelector('.add-to-cart').addEventListener('click', (e) => {
+        const qtyInput = card.querySelector('.qty-input');
+        const unitSelect = card.querySelector('.unit-select');
+        const qtyRaw = parseFloat(qtyInput.value) || 0;
+        const unit = unitSelect.value;
+        let qtyKg = unit === 'g' ? qtyRaw / 1000 : qtyRaw;
+        if(qtyKg <= 0) { alert('Укажите количество'); return; }
+        addToCartByProduct(p, qtyKg);
+        // small visual feedback
+        const ck = document.createElement('div'); ck.className='checkmark'; ck.textContent='✓'; card.style.position='relative'; card.appendChild(ck);
+        setTimeout(()=>{ ck.style.opacity='1'; ck.style.transform='scale(1)'; },10);
+        setTimeout(()=>{ ck.style.opacity='0'; ck.style.transform='scale(.6)'; },900);
+        setTimeout(()=>{ ck.remove(); },1200);
+      });
+
+      productList.appendChild(card);
+    });
+    // update shown count if exists
+    const shown = document.getElementById('shown-count');
+    if(shown) shown.textContent = list.length;
+  }
+
+  // --- Cart functions ---
+  function findCartItem(name, components){
+    return cart.find(ci => ci.name === name && JSON.stringify(ci.components || []) === JSON.stringify(components || []));
+  }
+
+  function addToCartByProduct(product, qtyKg){
+    const existing = findCartItem(product.name);
+    if(existing){
+      existing.qty += qtyKg;
+      existing.total = existing.qty * product.price;
+    } else {
+      cart.push({
+        id: idify(product.name) + '_' + Math.random().toString(36).slice(2,7),
+        name: product.name,
+        price: product.price,
+        qty: qtyKg,
+        total: qtyKg * product.price,
+        components: null
+      });
+    }
+    renderCart();
+  }
+
+  function removeFromCart(id){
+    cart = cart.filter(i => i.id !== id);
+    renderCart();
+  }
+
+  function clearCart(){
+    cart = [];
+    renderCart();
+  }
+
+  function renderCart(){
+    if(!cartItemsList) return;
+    cartItemsList.innerHTML = '';
+    let sum = 0;
+    cart.forEach(item => {
+      sum += item.total;
+      const row = document.createElement('div');
+      row.className = 'cart-row';
+      row.innerHTML = `
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+          <div>
+            <div style="font-weight:700">${item.name}</div>
+            <div style="color:#666;font-size:13px">${item.qty < 1 ? Math.round(item.qty*1000)+' г' : item.qty.toFixed(2)+' кг'} • ${formatRub(item.total)}</div>
+          </div>
+          <div style="text-align:right">
+            <button data-remove="${item.id}" style="background:transparent;border:0;cursor:pointer;color:${'#e74c3c'}">✕</button>
+            <div style="font-weight:700;margin-top:6px">${formatRub(item.total)}</div>
+          </div>
+        </div>
+      `;
+      cartItemsList.appendChild(row);
     });
 
-    productList.appendChild(card);
+    // update totals in different UI spots (fallbacks)
+    if(totalEl) totalEl.textContent = formatRub(sum);
+    if(fcTotalEl) fcTotalEl.textContent = formatRub(sum);
+    if(panelTotalEl) panelTotalEl.textContent = formatRub(sum);
+
+    const positions = cart.length;
+    if(fcCountEl) fcCountEl.textContent = positions + ' поз.';
+
+    // attach remove buttons
+    cartItemsList.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', () => removeFromCart(btn.dataset.remove));
+    });
+  }
+
+  // --- Floating cart behavior (hide widget when panel open, and vice versa) ---
+  const hideFloating = () => {
+    if(!floatingCart) return;
+    floatingCart.classList.add('hidden');
+  };
+  const showFloating = () => {
+    if(!floatingCart) return;
+    floatingCart.classList.remove('hidden');
+  };
+  const openCartPanel = () => {
+    if(!cartPanel) return;
+    cartPanel.classList.add('show');
+    cartPanel.setAttribute('aria-hidden','false');
+    hideFloating();
+  };
+  const closeCartPanel = () => {
+    if(!cartPanel) return;
+    cartPanel.classList.remove('show');
+    cartPanel.setAttribute('aria-hidden','true');
+    // small delay to avoid flicker
+    setTimeout(showFloating, 120);
+  };
+
+  if(floatingCart){
+    floatingCart.addEventListener('click', () => {
+      // if panel is closed -> open it and hide widget; if open -> close it and show widget
+      if(!cartPanel || !cartPanel.classList.contains('show')) openCartPanel(); else closeCartPanel();
+    });
+  }
+
+  if(cartCloseBtn){
+    cartCloseBtn.addEventListener('click', () => {
+      closeCartPanel();
+    });
+  }
+
+  // clicking outside panel should close it
+  document.addEventListener('click', (e) => {
+    if(!cartPanel || !cartPanel.classList.contains('show')) return;
+    if(e.target.closest('#cart-panel') || e.target.closest('#floating-cart')) return;
+    closeCartPanel();
   });
 
-  // Показать корзину
-  function renderCart() {
-    if (!cartItems || !total) return;
-    cartItems.innerHTML = "";
-    let sum = 0;
-    cart.forEach((item) => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} — ${item.price} ₽`;
-      cartItems.appendChild(li);
-      sum += item.price;
-    });
-    total.textContent = `Итого: ${sum} ₽`;
-  }
-
-  // Отправить заказ в Telegram
-  if (sendOrderBtn) {
-    sendOrderBtn.addEventListener("click", () => {
-      if (cart.length === 0) {
-        alert("Корзина пуста!");
-        return;
-      }
-      // Отправляем JSON с заказом
-      if (tg && typeof tg.sendData === "function") {
-        tg.sendData(JSON.stringify(cart));
-        tg.close();
-      } else {
-        // на случай локального теста
-        console.log("Отправка (тест):", JSON.stringify(cart));
-        alert("Заказ готов (режим теста). Проверь консоль.");
-      }
+  // --- Filters / Search / Sort ---
+  // If filters present, bind handlers. Buttons should have data-filter attributes.
+  function setActiveFilterBtn(key){
+    if(!filtersWrap) return;
+    filtersWrap.querySelectorAll('.filter-btn').forEach(b => {
+      if(b.dataset.filter === key) b.classList.add('active'); else b.classList.remove('active');
     });
   }
 
-// Элементы корзины
-const floatingCart = document.getElementById('floating-cart');
-const cartPanel = document.getElementById('cart-panel');
-const cartCount = document.getElementById('cart-count');
-const cartTotal = document.getElementById('cart-total');
-const panelTotal = document.getElementById('panel-total');
+  if(filtersWrap){
+    filtersWrap.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if(!btn) return;
+      currentFilter = btn.dataset.filter || 'all';
+      setActiveFilterBtn(currentFilter);
+      applySearchAndSort();
+    });
+  }
 
-// Пример данных корзины (замени на свои данные)
-let cart = [
-  // { name: 'Яблоки', price: 100, qty: 2 }
-];
+  if(searchInput){
+    searchInput.addEventListener('input', () => applySearchAndSort());
+  }
+  if(sortSelect){
+    sortSelect.addEventListener('change', () => applySearchAndSort());
+  }
 
-function updateCart() {
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const count = cart.reduce((sum, item) => sum + item.qty, 0);
-  cartTotal.textContent = `${total} ₽`;
-  panelTotal.textContent = `${total} ₽`;
-  cartCount.textContent = count;
-}
+  function applySearchAndSort(){
+    const q = (searchInput && searchInput.value || '').trim().toLowerCase();
+    // start from category filter
+    let list = (currentFilter === 'all') ? products.slice() : products.filter(p => p.category === currentFilter || (p[3] && p[3] === currentFilter));
+    // search
+    if(q){
+      list = list.filter(p => ( (p.name || p[1] || '').toString().toLowerCase().includes(q) || ((p.label || p[0] || '')).toString().toLowerCase().includes(q) ));
+    }
+    // sort
+    const s = (sortSelect && sortSelect.value) || 'default';
+    if(s === 'price_asc') list.sort((a,b) => (a.price || a[2] || 0) - (b.price || b[2] || 0));
+    else if(s === 'price_desc') list.sort((a,b) => (b.price || b[2] || 0) - (a.price || a[2] || 0));
+    else if(s === 'name_asc') list.sort((a,b) => ( (a.name || a[1] || '')).toString().localeCompare((b.name || b[1] || ''), 'ru'));
+    else if(s === 'name_desc') list.sort((a,b) => ( (b.name || b[1] || '')).toString().localeCompare((a.name || a[1] || ''), 'ru'));
 
-// Открыть/закрыть панель
-floatingCart.addEventListener('click', () => {
-  cartPanel.classList.toggle('show');
-});
+    visibleProducts = list;
+    renderCatalog(visibleProducts);
+  }
 
-// Пример: добавление товара (ты подставишь своё)
-function addToCart(name, price) {
-  const existing = cart.find(i => i.name === name);
-  if (existing) existing.qty++;
-  else cart.push({ name, price, qty: 1 });
-  updateCart();
-}
+  // --- Send order button logic (Telegram or test) ---
+  if(sendOrderBtn){
+    sendOrderBtn.addEventListener('click', () => {
+      if(cart.length === 0){ alert('Корзина пуста!'); return; }
+      const payload = cart.map(i => ({ name: i.name, price: i.price, qty: i.qty, total: i.total }));
+      if(tg && typeof tg.sendData === 'function'){ tg.sendData(JSON.stringify(payload)); tg.close(); }
+      else { console.log('TEST SEND:', payload); alert('Заказ отправлен (режим теста). Проверь консоль.'); }
+    });
+  }
 
-updateCart(); // начальная отрисовка
+  // --- Init ---
+  function init(){
+    if(tg && typeof tg.expand === 'function') tg.expand();
+    visibleProducts = products.slice();
+    renderCatalog(visibleProducts);
+    renderCart();
+    // ensure floating is visible initially if exists
+    showFloating();
+  }
 
-
-  // Подготовка внешнего вида WebApp
-  if (tg && typeof tg.expand === "function") tg.expand();
+  init();
 });

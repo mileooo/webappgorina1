@@ -164,6 +164,7 @@ button,input,select,textarea{font-family:inherit}
 </style>
 </head>
 <body>
+
 <header class="header">
   <div class="header-inner">
     <div style="display:flex;align-items:center;gap:12px">
@@ -189,7 +190,7 @@ button,input,select,textarea{font-family:inherit}
       </div>
 
       <div class="loyalty-badge" id="loyalty-badge" title="Ваши баллы">Баллы: 0</div>
-      <!-- Верхняя иконка корзины убрана (перенесена в плавающий виджет внизу) -->
+      <!-- Верхняя корзина удалена (используется плавающий виджет) -->
     </div>
   </div>
 </header>
@@ -204,8 +205,9 @@ button,input,select,textarea{font-family:inherit}
     </div>
   </div>
   <div class="hero-right" style="min-width:260px">
-    <div class="hero-image" style="height:160px;border-radius:10px">
-      <img src="https://images.unsplash.com/photo-1518976024611-6d9b0b0b1f7f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=0a9c9e3b9a95f1b8ad1b" alt="Свежие фрукты" style="width:100%;height:100%;object-fit:cover;border-radius:8px" />
+    <div class="hero-image" style="height:160px;border-radius:10px;overflow:hidden">
+      <!-- Если у тебя файл "Свежие фрукты.jpg" в папке images, браузер может корректно загрузить его через кодированный URL -->
+      <img src="images/%D0%A1%D0%B2%D0%B5%D0%B6%D0%BD%D1%8B%D0%B5%20%D1%84%D1%80%D1%83%D0%BA%D1%82%D1%8B.jpg" alt="Свежие фрукты" style="width:100%;height:100%;object-fit:cover;border-radius:8px" />
     </div>
   </div>
 </section>
@@ -287,96 +289,72 @@ button,input,select,textarea{font-family:inherit}
 <footer class="footer">© ФермаFresh — Свежесть, которую можно почувствовать.</footer>
 
 <script>
-/* ========== Данные ассортимента ========== */
+/* ========== Telegram WebApp fallback ========== */
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { sendData: () => {}, close: () => {}, expand: () => {} };
+
+/* ========== Данные ассортимента (используем формат предыдущего списка) ==========
+   Формат: [label, name, price, category]
+   (ты можешь заменить / добавлять элементы как в предыдущем примере) */
 const products = [
   ["🍉 Арбуз — 40₽/кг", "Арбуз", 40, "fruits"],
   ["🍐 Груша — 340₽/кг", "Груша", 340, "fruits"],
   ["🍊 Апельсин — 220₽/кг", "Апельсин", 220, "fruits"],
   ["🍈 Дыня торпеда Узбекистан — 80₽/кг", "Дыня торпеда Узбекистан", 80, "fruits"],
-  ["🍈 Дыня колхозница — 80₽/кг", "Дыня колхозница", 80, "fruits"],
   ["🍇 Виноград зеленый (без косточек) — 320₽/кг", "Виноград зеленый (без косточек)", 320, "fruits"],
-  ["🍇 Виноград темный (без косточек) — 320₽/кг", "Виноград темный (без косточек)", 320, "fruits"],
-  ["🍇 Виноград черный (Мерседес) — 300₽/кг", "Виноград черный (Мерседес)", 300, "fruits"],
-  ["🍑 Нектарин Узбекистан красный — 170₽/кг", "Нектарин Узбекистан красный", 170, "fruits"],
-  ["🍑 Нектарин Турция — 350₽/кг", "Нектарин Турция", 350, "fruits"],
-  ["🍑 Нектарин Узбекистан желтый (вкус лимон) — 250₽/кг", "Нектарин Узбекистан желтый (вкус лимон)", 250, "fruits"],
-  ["🍑 Нектарин Узбекистан зеленый — 190₽/кг", "Нектарин Узбекистан зеленый", 190, "fruits"],
   ["🍌 Банан — 170₽/кг", "Банан", 170, "fruits"],
   ["🥔 Картофель Чувашия — 45₽/кг", "Картофель Чувашия", 45, "vegetables"],
-  ["🥔 Картофель Краснодар — 45₽/кг", "Картофель Краснодар", 45, "vegetables"],
   ["🥕 Морковь Волгоград — 45₽/кг", "Морковь Волгоград", 45, "vegetables"],
   ["🧅 Лук репчатый Волгоград — 45₽/кг", "Лук репчатый Волгоград", 45, "vegetables"],
-  ["🌱 Лук зеленый — 350₽/кг", "Лук зеленый", 350, "vegetables"],
-  ["🌱 Укроп, петрушка — 350₽/кг", "Укроп, петрушка", 350, "vegetables"],
-  ["🌱 Кинза — 440₽/кг", "Кинза", 440, "vegetables"],
-  ["🌱 Базелик — 50₽/пучок", "Базелик (пучок)", 50, "vegetables"],
-  ["🧄 Чеснок Ташкент — 400₽/кг", "Чеснок Ташкент", 400, "vegetables"],
-  ["🫑 Перец болгарский — 130₽/кг", "Перец болгарский", 130, "vegetables"],
-  ["🌶️ Перец чили — 25₽/шт", "Перец чили", 25, "vegetables"],
-  ["🍅 Помидоры Азербайджанские — 220₽/кг", "Помидоры Азербайджанские", 220, "vegetables"],
   ["🍅 Помидоры Ростовские — 180₽/кг", "Помидоры Ростовские", 180, "vegetables"],
-  ["🍅 Помидоры Волгоград (мелкие) — 80₽/кг", "Помидоры Волгоград (мелкие)", 80, "vegetables"],
-  ["🍅 Помидоры домашние — 240₽/кг", "Помидоры домашние", 240, "vegetables"],
-  ["🍅 Помидоры Астрахань (желтые) — 190₽/кг", "Помидоры Астрахань (желтые)", 190, "vegetables"],
-  ["🥒 Огурцы Московские — 150₽/кг", "Огурцы Московские", 150, "vegetables"],
-  ["🥒 Огурцы Самарские — 80₽/кг", "Огурцы Самарские", 80, "vegetables"],
-  ["🥒 Огурцы домашние — 150₽/кг", "Огурцы домашние", 150, "vegetables"],
-  ["🍑 Слива 4 вида — 190₽/кг - Ташкент; Медовая - 220₽/кг; Желтая - 250₽/кг; Чернослива - 220₽/кг", "Слива 4 вида", 220, "fruits"],
   ["🍒 Черешня — 580₽/кг", "Черешня", 580, "fruits"],
-  ["🫐 Голубика — 800₽/кг", "Голубика", 800, "fruits"],
-  ["🍑 Абрикос Армения — 240₽/кг", "Абрикос Армения", 240, "fruits"],
-  ["🍑 Абрикос Киргизия — 150₽/кг", "Абрикос Киргизия", 150, "fruits"],
-  ["🍑 Персик Ташкент — 250₽/кг", "Персик Ташкент", 250, "fruits"],
-  ["🍑 Персик Армения — 380₽/кг", "Персик Армения", 380, "fruits"],
-  ["🍑 Персик Турция — 450₽/кг", "Персик Турция", 450, "fruits"],
-  ["🍑 Персик Инжирный — 350₽/кг", "Персик Инжирный", 350, "fruits"],
-  ["🥝 Киви — 450₽/кг", "Киви", 450, "fruits"],
-  ["Кабачок — 55₽/кг", "Кабачок", 55, "vegetables"],
-  ["🍆 Баклажан — 130₽/кг", "Баклажан", 130, "vegetables"],
   ["🍋 Лимон — 290₽/кг", "Лимон", 290, "fruits"]
 ];
 
 /* ========== State ========== */
-let cart = []; // {id, name, price, qtyKg, total, components (optional)}
+let cart = []; // {id,name,price,qtyKg,total,components?}
 let visibleProducts = products.slice();
 let currentFilter = 'all';
 
 /* ========== DOM refs ========== */
 const catalogEl = document.getElementById('catalog');
 const shownCountEl = document.getElementById('shown-count');
+const filtersWrap = document.getElementById('filters');
+const searchInput = document.getElementById('search-input');
+const sortSelect = document.getElementById('sort-select');
+
+const floatingCart = document.getElementById('floating-cart');
+const fcCountEl = document.getElementById('fc-count');
+const fcTotalEl = document.getElementById('fc-total');
+
 const cartPanel = document.getElementById('cart-panel');
 const cartItemsEl = document.getElementById('cart-items');
 const cartSumEl = document.getElementById('cart-sum');
-const fcCountEl = document.getElementById('fc-count');
-const fcTotalEl = document.getElementById('fc-total');
 const cartCountSmall = document.getElementById('cart-count-2');
-const floatingCart = document.getElementById('floating-cart');
-const gotoCheckoutBtn = document.getElementById('goto-checkout');
+const cartCloseBtn = document.getElementById('cart-close-btn');
 const clearCartBtn = document.getElementById('clear-cart');
+const gotoCheckoutBtn = document.getElementById('goto-checkout');
+
 const modal = document.getElementById('modal');
 const modalOrderList = document.getElementById('modal-order-list');
 const modalTotal = document.getElementById('modal-total');
 const orderForm = document.getElementById('order-form');
 const deliveryTimeSelect = document.getElementById('delivery-time');
 const customTimeInput = document.getElementById('custom-time');
+const closeModalBtn = document.getElementById('close-modal');
+
+const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
-const searchInput = document.getElementById('search-input');
-const sortSelect = document.getElementById('sort-select');
-const loyaltyBadge = document.getElementById('loyalty-badge');
-const cartCloseBtn = document.getElementById('cart-close-btn');
-
-const allowedCities = ['Москва','Санкт-Петербург','Казань','Воронеж','Самара']; // пример зон доставки
 
 /* ========== Helpers ========== */
-function idify(s){ return s.replace(/\W+/g,'_'); }
+function idify(s){ return String(s).replace(/\W+/g,'_'); }
 function formatRub(v){ return Math.round(v) + ' ₽'; }
 function displayQty(kg){ if(kg<1) return Math.round(kg*1000) + ' г'; return kg.toFixed(2) + ' кг'; }
 function randInt(max){ return Math.floor(Math.random()*max); }
 
-/* ========== Image loader (webp-first + fallbacks) ========== */
+/* ========== Image loader (webp/jpg/png fallback) ========== */
 function tryLoadImage(imgEl, name){
-  const exts = ['.webp','.jpg','.jpeg','.png','.gif'];
+  const exts = ['.webp','.jpg','.jpeg','.png'];
   const encoded = encodeURIComponent(name);
   const noimage = 'images/noimage.png';
   let idx = 0;
@@ -402,18 +380,13 @@ function tryLoadImage(imgEl, name){
   tryNext();
 }
 
-/* ========== Render catalog with search/sort/recommendations ========== */
+/* ========== Render catalog ========= */
 function renderCatalog(list){
   catalogEl.innerHTML = '';
-  list.forEach((p, idxLocal) => {
-    const [label,name,price,category] = p;
-    // find global index in products array (best-effort)
-    let globalIdx = products.findIndex(pp => pp[1] === name && pp[2] === price && pp[3] === category);
-    if(globalIdx === -1) globalIdx = idxLocal; // fallback
-
+  list.forEach((p, idx) => {
+    const label = p[0], name = p[1], price = p[2], category = p[3];
     const card = document.createElement('div');
     card.className = 'card fade-in';
-
     card.innerHTML = `
       <div class="photo"><img alt="${name}" loading="lazy"></div>
       <div class="info">
@@ -427,10 +400,10 @@ function renderCatalog(list){
               <option value="kg">кг</option>
               <option value="g">гр</option>
             </select>
-            <button class="add-to-cart" data-idx-global="${globalIdx}">В корзину</button>
+            <button class="add-to-cart" data-idx="${idx}" data-global-idx="${idx}">В корзину</button>
           </div>
         </div>
-        <div class="reco small" data-idx="${idxLocal}"></div>
+        <div class="reco small" data-idx="${idx}"></div>
       </div>
     `;
     catalogEl.appendChild(card);
@@ -439,24 +412,22 @@ function renderCatalog(list){
     const img = card.querySelector('img');
     tryLoadImage(img, name);
 
-    // render recommendations (2 случайных, отличных от текущего)
+    // recommendations
     const recoEl = card.querySelector('.reco');
-    const others = products.map((pp,i)=> i !== globalIdx ? pp : null).filter(Boolean);
+    const others = products.map((pp,i)=> i !== idx ? pp : null).filter(Boolean);
     const picks = [];
     while(picks.length < 2 && others.length){
       const k = randInt(others.length);
       picks.push(others.splice(k,1)[0]);
     }
-    if(picks.length){
-      recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>x[1]).join(', ');
-    }
+    if(picks.length) recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>x[1]).join(', ');
   });
   shownCountEl.textContent = list.length;
 }
 
-/* ========== Cart logic (поддерживает обычные товары) ========== */
+/* ========== Cart logic ========= */
 function addToCart(productObj){
-  // productObj: {name, price, qtyKg, components?}
+  // productObj: {name, price, qtyKg}
   const existing = cart.find(i => i.name === productObj.name && JSON.stringify(i.components || []) === JSON.stringify(productObj.components || []));
   if(existing){
     existing.qtyKg += productObj.qtyKg;
@@ -471,7 +442,6 @@ function addToCart(productObj){
       components: productObj.components || null
     });
   }
-  console.log('analytics: add_to_cart', productObj);
   renderCart();
 }
 
@@ -485,7 +455,6 @@ function clearCart(){
   renderCart();
 }
 
-/* render cart panel */
 function renderCart(){
   cartItemsEl.innerHTML = '';
   let sum = 0;
@@ -505,14 +474,13 @@ function renderCart(){
     `;
     cartItemsEl.appendChild(row);
   });
-  cartSumEl.textContent = formatRub(sum);
 
-  // count: number of positions (distinct items)
-  const positionsCount = cart.length;
-  // for floating widget display, show positions and total sum
-  fcCountEl.textContent = positionsCount + ' поз.';
+  cartSumEl.textContent = formatRub(sum);
+  cartCountSmall.textContent = cart.length;
+
+  // floating widget
+  fcCountEl.textContent = cart.length + ' поз.';
   fcTotalEl.textContent = formatRub(sum);
-  cartCountSmall.textContent = positionsCount;
 
   // attach remove handlers
   cartItemsEl.querySelectorAll('[data-remove]').forEach(btn => {
@@ -520,11 +488,11 @@ function renderCart(){
   });
 }
 
-/* ========== Delegation: add to cart from catalog ========== */
+/* ========== Delegation: add to cart from catalog (event delegation) ========= */
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if(!btn) return;
-  const idxGlobal = btn.dataset.idxGlobal !== undefined ? +btn.dataset.idxGlobal : null;
+  const idx = +btn.dataset.idx;
   const card = btn.closest('.card');
   const qtyInput = card.querySelector('.qty-input');
   const unitSelect = card.querySelector('.unit-select');
@@ -532,18 +500,9 @@ document.addEventListener('click', (e) => {
   const unit = unitSelect.value;
   let qtyKg = unit === 'g' ? qty/1000 : qty;
   if(qtyKg <= 0) return;
-
-  // determine product source
-  let product;
-  if(idxGlobal !== null && products[idxGlobal]) {
-    product = products[idxGlobal];
-  } else {
-    // fallback — try to find by name text
-    const name = card.querySelector('.desc')?.textContent?.trim();
-    product = products.find(p => p[1] === name) || products[0];
-  }
-  const name = product[1];
-  const price = product[2];
+  const p = visibleProducts[idx] || products[idx];
+  const name = (p[1] || p.name);
+  const price = (p[2] || p.price);
   addToCart({ name, price, qtyKg });
 
   // tiny check animation
@@ -554,43 +513,28 @@ document.addEventListener('click', (e) => {
   setTimeout(()=>{ ck.remove(); }, 1200);
 });
 
-/* ========== Cart panel toggles via floating widget ========== */
+/* ========== Floating cart <-> panel behavior ========= */
 let cartOpen = false;
 function showCartPanel(){
   cartPanel.classList.add('show');
   cartPanel.setAttribute('aria-hidden','false');
   cartOpen = true;
-  // hide floating widget so it не мешает
   floatingCart.classList.add('hidden');
 }
 function hideCartPanel(){
   cartPanel.classList.remove('show');
   cartPanel.setAttribute('aria-hidden','true');
   cartOpen = false;
-  // show floating widget back, но с маленькой задержкой чтобы не дергалось
   setTimeout(()=> floatingCart.classList.remove('hidden'), 120);
 }
-
 floatingCart.addEventListener('click', ()=> {
-  if(!cartOpen){
-    // open panel and hide widget
-    showCartPanel();
-  } else {
-    // close panel and show widget
-    hideCartPanel();
-  }
+  if(!cartOpen) showCartPanel(); else hideCartPanel();
 });
-
-// close button in panel
-cartCloseBtn.addEventListener('click', ()=> {
-  hideCartPanel();
-});
-
-/* hide panel when clicking outside (on small screens or desktop) */
+cartCloseBtn.addEventListener('click', ()=> hideCartPanel());
+// click outside closes panel
 document.addEventListener('click', (e) => {
   if(!cartPanel.classList.contains('show')) return;
   if(e.target.closest('.cart-panel') || e.target.closest('#floating-cart')) return;
-  // clicked outside
   hideCartPanel();
 });
 
@@ -600,10 +544,41 @@ clearCartBtn.addEventListener('click', ()=> {
   hideCartPanel();
 });
 
-/* ========== Checkout flow (modal) ========== */
+/* ========== Filters / Search / Sort (robust) ========= */
+const filterButtons = Array.from(document.querySelectorAll('#filters .filter-btn'));
+function setActiveFilterButton(filterKey){
+  filterButtons.forEach(btn => {
+    if(btn.dataset.filter === filterKey) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+}
+filtersWrap.addEventListener('click', (e) => {
+  const b = e.target.closest('.filter-btn');
+  if(!b) return;
+  const f = b.dataset.filter;
+  currentFilter = f;
+  setActiveFilterButton(f);
+  applySearchAndSort();
+});
+searchInput.addEventListener('input', ()=> applySearchAndSort());
+sortSelect.addEventListener('change', ()=> applySearchAndSort());
+
+function applySearchAndSort(){
+  const q = (searchInput.value || '').trim().toLowerCase();
+  let list = (currentFilter === 'all') ? products.slice() : products.filter(p => p[3] === currentFilter);
+  if(q) list = list.filter(p => ((p[0] + ' ' + p[1]).toLowerCase().includes(q)));
+  const s = sortSelect.value;
+  if(s === 'price_asc') list.sort((a,b)=> a[2] - b[2]);
+  else if(s === 'price_desc') list.sort((a,b)=> b[2] - a[2]);
+  else if(s === 'name_asc') list.sort((a,b)=> a[1].localeCompare(b[1],'ru'));
+  else if(s === 'name_desc') list.sort((a,b)=> b[1].localeCompare(a[1],'ru'));
+  visibleProducts = list;
+  renderCatalog(visibleProducts);
+}
+
+/* ========== Checkout flow (modal) ========= */
 gotoCheckoutBtn.addEventListener('click', ()=> {
   if(cart.length === 0){ alert('Корзина пуста — добавьте товары.'); return; }
-  // populate modal order list
   modalOrderList.innerHTML = '';
   let sum = 0;
   cart.forEach(i => {
@@ -615,23 +590,17 @@ gotoCheckoutBtn.addEventListener('click', ()=> {
   });
   modalTotal.textContent = formatRub(sum);
 
-  // hide cart panel and floating widget (не мешают оформлению)
   hideCartPanel();
   floatingCart.classList.add('hidden');
 
-  // open modal
   modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden', 'false');
-  console.log('analytics: open_checkout_modal');
+  modal.setAttribute('aria-hidden','false');
 });
 
-document.getElementById('close-modal').addEventListener('click', ()=> {
+closeModalBtn.addEventListener('click', ()=> {
   modal.style.display = 'none';
-  modal.setAttribute('aria-hidden', 'true');
-  // вернуть виджет (если панель не открыта)
-  if(!cartPanel.classList.contains('show')) {
-    setTimeout(()=> floatingCart.classList.remove('hidden'), 120);
-  }
+  modal.setAttribute('aria-hidden','true');
+  if(!cartPanel.classList.contains('show')) setTimeout(()=> floatingCart.classList.remove('hidden'), 120);
 });
 
 /* delivery-time toggle */
@@ -639,7 +608,7 @@ deliveryTimeSelect.addEventListener('change', (e) => {
   customTimeInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
 });
 
-/* order submit */
+/* order submit (local/test + Telegram) */
 orderForm.addEventListener('submit', (e) => {
   e.preventDefault();
   if(cart.length === 0){ alert('Корзина пуста!'); modal.style.display='none'; return; }
@@ -653,38 +622,35 @@ orderForm.addEventListener('submit', (e) => {
   const email = document.getElementById('cust-email').value.trim();
   const payment = document.getElementById('payment-method').value;
 
-  // Проверка зоны доставки (простая)
-  if(!allowedCities.includes(city)){
-    const ok = confirm(`Похоже, доставка в город "${city}" не гарантирована. Продолжить оформление? (Нажми Отмена, чтобы изменить город.)`);
-    if(!ok) return;
-  }
-
-  // build order text
   let message = '🛒 Ваш заказ:\n\n';
   cart.forEach(i => {
     message += `${i.name} — ${displayQty(i.qtyKg)} — ${formatRub(i.total)}\n`;
-    if(i.components && i.components.length){
-      message += `  Состав: ${i.components.map(c=>c.name).join(', ')}\n`;
-    }
   });
   message += `\nИтого: ${modalTotal.textContent}\n\n`;
   message += `👤 Имя: ${name}\n📞 Телефон: ${phone}\n🏠 Адрес: ${city}, ${street}, д.${house}${apt ? ', кв. ' + apt : ''}\n⏰ Доставка: ${time}\n✉ Почта: ${email}\n💳 Оплата: ${payment}\n\n(Тестовое оформление — заказ не отправлен на сервер)`;
 
-  alert(message);
+  // demo: Telegram WebApp send or fallback to console
+  const payload = {
+    customer: { name, phone, city, street, house, apt, time, email, payment },
+    items: cart.map(i => ({ name: i.name, qtyKg: i.qtyKg, price: i.price, total: i.total })),
+    total: cart.reduce((s,i)=> s + i.total, 0)
+  };
 
-  // начисляем баллы — 5% от суммы (округляем вниз)
-  const sum = cart.reduce((s,i)=> s + i.total, 0);
+  if(tg && typeof tg.sendData === 'function'){ tg.sendData(JSON.stringify(payload)); tg.close(); }
+  else { console.log('TEST ORDER PAYLOAD:', payload); alert('Заказ оформлен (тест). Проверь консоль.'); }
+
+  // loyalty example (5% of sum)
+  const sum = payload.total;
   const points = Math.floor(sum * 0.05);
-  addLoyaltyPoints(points);
+  const cur = parseInt(localStorage.getItem('ferma_loyalty') || '0',10);
+  localStorage.setItem('ferma_loyalty', String(cur + points));
+  alert('Начислено ' + points + ' баллов. Всего: ' + (cur + points));
 
-  // логирование и очистка
-  console.log('analytics: order_submitted', {sum, points, items: cart});
   cart = [];
   renderCart();
   orderForm.reset();
   customTimeInput.style.display = 'none';
   modal.style.display = 'none';
-  // вернуть виджет
   setTimeout(()=> floatingCart.classList.remove('hidden'), 120);
 });
 
@@ -692,33 +658,20 @@ orderForm.addEventListener('submit', (e) => {
 heroOrderBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'}));
 viewCatalogBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'}));
 
-/* ========== Loyalty (localStorage) ========== */
-function getLoyalty(){
-  return parseInt(localStorage.getItem('ferma_loyalty') || '0', 10);
-}
-function setLoyalty(v){
-  localStorage.setItem('ferma_loyalty', String(v));
-  loyaltyBadge.textContent = 'Баллы: ' + v;
-}
-function addLoyaltyPoints(v){
-  if(!v || v <= 0) return;
-  const cur = getLoyalty();
-  setLoyalty(cur + v);
-  alert('Начислено ' + v + ' баллов. Всего: ' + (cur + v));
-}
-
 /* ========== Init ========== */
 function init(){
   // load loyalty
-  const l = getLoyalty();
+  const l = parseInt(localStorage.getItem('ferma_loyalty') || '0', 10);
   loyaltyBadge.textContent = 'Баллы: ' + l;
 
   // initial render
   visibleProducts = products.slice();
   renderCatalog(visibleProducts);
   renderCart();
-}
 
+  // expand Telegram WebApp if available
+  if(tg && typeof tg.expand === 'function') tg.expand();
+}
 init();
 </script>
 </body>
