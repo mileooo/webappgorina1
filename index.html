@@ -3,9 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Магазин у Дяди Лёши — свежие овощи и фрукты</title>
-<!-- Montserrat: light (300) + semi-bold (700) + black (900) -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+<title>Магазин у дяди Лёши — свежие овощи и фрукты</title>
+
+<!-- Montserrat: light (300) + black (900) -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --white:#FFFFFF;
@@ -15,21 +17,18 @@
   --text:#2E2E2E;
   --muted:#666666;
   --border:#E6E6E6;
-  --success:#5CB85C;
-  --danger:#E74C3C;
   --shadow: 0 2px 8px rgba(0,0,0,0.05);
   --container:1200px;
 }
 
-/* базовые правила */
-/* основной шрифт — Montserrat Light (300) */
+/* базовые правила — основной текст Montserrat 300 */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--white);color:var(--text);font-family:'Montserrat',Inter,Arial,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+html,body{height:100%;margin:0;background:var(--white);color:var(--text);font-family:'Montserrat',Arial,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-button,input,select,textarea{font-family:'Montserrat',Inter,Arial,sans-serif}
+button,input,select,textarea{font-family:'Montserrat',Arial,sans-serif}
 
-/* Заголовки, главные элементы — Montserrat Black (900) */
-h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-serif;font-weight:900}
+/* заголовки — Montserrat Black (900) */
+h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 
 /* layout */
 .container{max-width:var(--container);margin:0 auto;padding:24px;}
@@ -127,9 +126,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
   transform: translateY(110%);
   transition: transform 0.32s cubic-bezier(.2,.9,.2,1);
 }
-.cart-panel.show {
-  transform: translateY(0);
-}
+.cart-panel.show { transform: translateY(0); }
 .cart-panel h4{margin:0 0 10px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cart-items{max-height:54vh;overflow:auto;display:flex;flex-direction:column;gap:8px;padding-right:8px}
 .cart-row{display:flex;align-items:center;justify-content:space-between;background:#fbfbfb;padding:10px;border-radius:8px;border:1px solid var(--border)}
@@ -140,20 +137,12 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
 .btn-clear{background:#f2f2f2;color:var(--text)}
 .btn-check{background:var(--brand);color:#fff}
 .btn-check:hover{background:var(--cta)}
-
-/* close icon in panel header */
 .cart-close-btn{background:transparent;border:0;font-size:18px;cursor:pointer;color:var(--muted)}
 
-/* modal */
 .modal { position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:1001; }
 .modal .panel { width:920px;max-width:95%;background:var(--card-bg);border-radius:12px;padding:18px;box-shadow:0 12px 36px rgba(0,0,0,0.18); }
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
-.form-row label{font-weight:700;font-size:14px}
 .form-row input, .form-row select, .form-row textarea {padding:10px;border-radius:8px;border:1px solid #ccc;font-weight:300}
-.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
-/* responsive */
 @media (max-width:980px){
   .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
   .cart-panel{right:12px;left:12px;width:calc(100% - 24px);max-width:100%;bottom:0}
@@ -164,12 +153,10 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .small{font-size:13px;color:var(--muted);font-weight:300}
 
-/* tiny checkmark animation */
 .checkmark{position:absolute;right:12px;top:12px;background:var(--success);color:#fff;padding:6px;border-radius:8px;opacity:0;transform:scale(.6);transition:all .4s}
 </style>
 </head>
 <body>
-
 <header class="header">
   <div class="header-inner">
     <div style="display:flex;align-items:center;gap:12px">
@@ -177,7 +164,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
         <div class="mark" aria-hidden>
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg>
         </div>
-        <h4>Магазин у дядя Лёши</h4>
+        <h4>ФермаFresh</h4>
       </div>
       <div style="margin-left:14px" class="small">Свежесть, которую можно почувствовать</div>
     </div>
@@ -195,7 +182,6 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
       </div>
 
       <div class="loyalty-badge" id="loyalty-badge" title="Ваши баллы">Баллы: 0</div>
-      <!-- Верхняя корзина удалена (используется плавающий виджет) -->
     </div>
   </div>
 </header>
@@ -211,8 +197,8 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
   </div>
   <div class="hero-right" style="min-width:260px">
     <div class="hero-image" style="height:160px;border-radius:10px;overflow:hidden">
-      <!-- Если у тебя файл "Свежие фрукты.jpg" в папке images, браузер может корректно загрузить его через кодированный URL -->
-      <img src="images/%D0%A1%D0%B2%D0%B5%D0%B6%D0%BD%D1%8B%D0%B5%20%D1%84%D1%80%D1%83%D0%BA%D1%82%D1%8B.jpg" alt="Свежие фрукты" style="width:100%;height:100%;object-fit:cover;border-radius:8px" />
+      <!-- Рекомендую положить в папку images файл svezhie-frukty.jpg -->
+      <img src="images/svezhie-frukty.jpg" alt="Свежие фрукты" style="width:100%;height:100%;object-fit:cover;border-radius:8px" />
     </div>
   </div>
 </section>
@@ -234,7 +220,6 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
   </div>
 </main>
 
-<!-- Cart Panel (нижняя панель) -->
 <aside id="cart-panel" class="cart-panel" aria-hidden="true">
   <h4>
     <span>Корзина <small style="color:var(--muted);font-weight:600">(<span id="cart-count-2">0</span>)</small></span>
@@ -248,7 +233,6 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
   </div>
 </aside>
 
-<!-- Floating Cart Widget -->
 <div id="floating-cart" class="floating-cart" role="button" aria-label="Открыть корзину">
   <div style="display:flex;align-items:center;gap:10px">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M6 6h15l-1.5 9h-12z" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="10" cy="20" r="1" fill="#fff"></circle><circle cx="18" cy="20" r="1" fill="#fff"></circle></svg>
@@ -259,10 +243,9 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
   </div>
 </div>
 
-<!-- Modal Checkout -->
 <div id="modal" class="modal" aria-hidden="true">
   <div class="panel">
-    <h3 style="font-family:'Montserrat',Inter;margin:0 0 8px">Оформление заказа</h3>
+    <h3 style="font-family:'Montserrat',Arial;margin:0 0 8px">Оформление заказа</h3>
     <div style="display:flex;gap:18px;flex-wrap:wrap">
       <div style="flex:1;min-width:280px">
         <div style="font-weight:700;margin-bottom:8px">Состав заказа</div>
@@ -294,11 +277,10 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-s
 <footer class="footer">© Магазин у дяди Лёши — Свежесть, которую можно почувствовать.</footer>
 
 <script>
-/* ========== Telegram WebApp fallback ========== */
+/* ========== Telegram fallback ========== */
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { sendData: () => {}, close: () => {}, expand: () => {} };
 
-/* ========== Данные ассортимента (используем формат предыдущего списка) ==========
-   Формат: [label, name, price, category] */
+/* ========== products — использую массив-формат (можешь редактировать) ========== */
 const products = [
   ["🍉 Арбуз — 40₽/кг", "Арбуз", 40, "fruits"],
   ["🍐 Груша — 340₽/кг", "Груша", 340, "fruits"],
@@ -345,16 +327,13 @@ const products = [
   ["Кабачок — 55₽/кг", "Кабачок", 55, "vegetables"],
   ["🍆 Баклажан — 130₽/кг", "Баклажан", 130, "vegetables"],
   ["🍋 Лимон — 290₽/кг", "Лимон", 290, "fruits"]
-  ["🥗 Сет «Фермерский» — 550₽","Сет «Фермерский»",550,"sets"],
-  ["🥗 Акция: Ягоды — 300₽","Акция: Ягоды",300,"promo"]
 ];
 
-/* ========== State ========== */
-let cart = []; // {id,name,price,qtyKg,total,components?}
+/* ========== state & refs ========== */
+let cart = [];
 let visibleProducts = products.slice();
 let currentFilter = 'all';
 
-/* ========== DOM refs ========== */
 const catalogEl = document.getElementById('catalog');
 const shownCountEl = document.getElementById('shown-count');
 const filtersWrap = document.getElementById('filters');
@@ -385,45 +364,50 @@ const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
 
-/* ========== Helpers ========== */
+/* ========= helpers ========= */
 function idify(s){ return String(s).replace(/\W+/g,'_'); }
 function formatRub(v){ return Math.round(v) + ' ₽'; }
 function displayQty(kg){ if(kg<1) return Math.round(kg*1000) + ' г'; return kg.toFixed(2) + ' кг'; }
 function randInt(max){ return Math.floor(Math.random()*max); }
 
-/* ========== Image loader (webp/jpg/png fallback) ========== */
+/* image loader */
 function tryLoadImage(imgEl, name){
+  if(!imgEl) return;
   const exts = ['.webp','.jpg','.jpeg','.png'];
   const encoded = encodeURIComponent(name);
   const noimage = 'images/noimage.png';
   let idx = 0;
-
   function tryNext(){
-    if(idx >= exts.length){
-      imgEl.src = noimage;
-      imgEl.onload = ()=> imgEl.style.opacity = '1';
-      return;
-    }
+    if(idx >= exts.length){ imgEl.src = noimage; imgEl.onload = ()=> imgEl.style.opacity = '1'; return; }
     const url = 'images/' + encoded + exts[idx];
     const tester = new Image();
-    tester.onload = () => {
-      imgEl.src = url;
-      imgEl.onload = ()=> imgEl.style.opacity = '1';
-    };
-    tester.onerror = () => {
-      idx++;
-      tryNext();
-    };
+    tester.onload = () => { imgEl.src = url; imgEl.onload = ()=> imgEl.style.opacity = '1'; };
+    tester.onerror = () => { idx++; tryNext(); };
     tester.src = url;
   }
   tryNext();
 }
 
-/* ========== Render catalog ========= */
+/* universal getters to support both [label,name,price,cat] and {name,price,category} */
+function getLabel(it){ if(!it) return ''; if(Array.isArray(it)) return it[0]||it[1]||''; return it.label||it.name||''; }
+function getName(it){ if(!it) return ''; if(Array.isArray(it)) return it[1]||it[0]||''; return it.name||it.label||''; }
+function getPrice(it){ if(!it) return 0; if(Array.isArray(it)) return Number(it[2]||0); return Number(it.price||0); }
+function getCategory(it){ if(!it) return ''; if(Array.isArray(it)) return it[3]||''; return it.category||''; }
+
+/* ========== renderCatalog (single authoritative impl) ========== */
 function renderCatalog(list){
+  if(!catalogEl) return;
   catalogEl.innerHTML = '';
-  list.forEach((p, idx) => {
-    const label = p[0], name = p[1], price = p[2], category = p[3];
+  list.forEach((p, idxVisible) => {
+    const label = getLabel(p);
+    const name = getName(p);
+    const price = getPrice(p);
+    const category = getCategory(p);
+
+    // find global index by fingerprint (name+price+category)
+    let globalIdx = products.findIndex(pp => getName(pp) === name && getPrice(pp) === price && String(getCategory(pp)) === String(category));
+    if(globalIdx === -1) globalIdx = idxVisible;
+
     const card = document.createElement('div');
     card.className = 'card fade-in';
     card.innerHTML = `
@@ -439,35 +423,34 @@ function renderCatalog(list){
               <option value="kg">кг</option>
               <option value="g">гр</option>
             </select>
-            <button class="add-to-cart" data-idx="${idx}" data-global-idx="${idx}">В корзину</button>
+            <button class="add-to-cart" data-idx="${idxVisible}" data-global-idx="${globalIdx}">В корзину</button>
           </div>
         </div>
-        <div class="reco small" data-idx="${idx}"></div>
+        <div class="reco small" data-idx="${idxVisible}"></div>
       </div>
     `;
     catalogEl.appendChild(card);
 
-    // load image with fallbacks
+    // load image (uses name)
     const img = card.querySelector('img');
     tryLoadImage(img, name);
 
-    // recommendations
-    const recoEl = card.querySelector('.reco');
-    const others = products.map((pp,i)=> i !== idx ? pp : null).filter(Boolean);
+    // recommendations (2 случайных)
+    const others = products.map((pp,i)=> i !== globalIdx ? pp : null).filter(Boolean);
     const picks = [];
     while(picks.length < 2 && others.length){
       const k = randInt(others.length);
       picks.push(others.splice(k,1)[0]);
     }
-    if(picks.length) recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>x[1]).join(', ');
+    const recoEl = card.querySelector('.reco');
+    if(picks.length) recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>getName(x)).join(', ');
   });
-  shownCountEl.textContent = list.length;
+  if(shownCountEl) shownCountEl.textContent = list.length;
 }
 
-/* ========== Cart logic ========= */
+/* ========== Cart logic ========== */
 function addToCart(productObj){
-  // productObj: {name, price, qtyKg}
-  const existing = cart.find(i => i.name === productObj.name && JSON.stringify(i.components || []) === JSON.stringify(productObj.components || []));
+  const existing = cart.find(i => i.name === productObj.name && JSON.stringify(i.components||[]) === JSON.stringify(productObj.components||[]));
   if(existing){
     existing.qtyKg += productObj.qtyKg;
     existing.total = existing.qtyKg * existing.price;
@@ -483,18 +466,11 @@ function addToCart(productObj){
   }
   renderCart();
 }
-
-function removeFromCart(id){
-  cart = cart.filter(i => i.id !== id);
-  renderCart();
-}
-
-function clearCart(){
-  cart = [];
-  renderCart();
-}
+function removeFromCart(id){ cart = cart.filter(i => i.id !== id); renderCart(); }
+function clearCart(){ cart = []; renderCart(); }
 
 function renderCart(){
+  if(!cartItemsEl) return;
   cartItemsEl.innerHTML = '';
   let sum = 0;
   cart.forEach(item => {
@@ -514,24 +490,21 @@ function renderCart(){
     cartItemsEl.appendChild(row);
   });
 
-  cartSumEl.textContent = formatRub(sum);
-  cartCountSmall.textContent = cart.length;
+  if(cartSumEl) cartSumEl.textContent = formatRub(sum);
+  if(cartCountSmall) cartCountSmall.textContent = cart.length;
+  if(fcCountEl) fcCountEl.textContent = cart.length + ' поз.';
+  if(fcTotalEl) fcTotalEl.textContent = formatRub(sum);
 
-  // floating widget
-  fcCountEl.textContent = cart.length + ' поз.';
-  fcTotalEl.textContent = formatRub(sum);
-
-  // attach remove handlers
-  cartItemsEl.querySelectorAll('[data-remove]').forEach(btn => {
-    btn.onclick = ()=> removeFromCart(btn.dataset.remove);
-  });
+  // remove handlers
+  cartItemsEl.querySelectorAll('[data-remove]').forEach(btn => { btn.onclick = ()=> removeFromCart(btn.dataset.remove); });
 }
 
-/* ========== Delegation: add to cart from catalog (event delegation) ========= */
+/* ========== Delegation: add to cart from catalog ========== */
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if(!btn) return;
-  const idx = +btn.dataset.idx;
+  const idxVisible = +btn.dataset.idx;
+  const idxGlobal = btn.dataset.globalIdx !== undefined ? +btn.dataset.globalIdx : null;
   const card = btn.closest('.card');
   const qtyInput = card.querySelector('.qty-input');
   const unitSelect = card.querySelector('.unit-select');
@@ -539,116 +512,80 @@ document.addEventListener('click', (e) => {
   const unit = unitSelect.value;
   let qtyKg = unit === 'g' ? qty/1000 : qty;
   if(qtyKg <= 0) return;
-  const p = visibleProducts[idx] || products[idx];
-  const name = (p[1] || p.name);
-  const price = (p[2] || p.price);
+  const source = (visibleProducts && visibleProducts[idxVisible]) || products[idxGlobal] || products[idxVisible];
+  const name = getName(source);
+  const price = getPrice(source);
   addToCart({ name, price, qtyKg });
 
-  // tiny check animation
+  // check animation
   const ck = document.createElement('div'); ck.className = 'checkmark'; ck.textContent = '✓';
-  const c = btn.closest('.card'); c.style.position = 'relative'; c.appendChild(ck);
+  const c = card; c.style.position = 'relative'; c.appendChild(ck);
   setTimeout(()=>{ ck.style.opacity = '1'; ck.style.transform = 'scale(1)'; }, 10);
   setTimeout(()=>{ ck.style.opacity = '0'; ck.style.transform = 'scale(.6)'; }, 900);
   setTimeout(()=>{ ck.remove(); }, 1200);
 });
 
-/* ========== Floating cart <-> panel behavior ========= */
+/* ========== Floating cart <-> panel logic ========== */
 let cartOpen = false;
-function showCartPanel(){
-  cartPanel.classList.add('show');
-  cartPanel.setAttribute('aria-hidden','false');
-  cartOpen = true;
-  floatingCart.classList.add('hidden');
-}
-function hideCartPanel(){
-  cartPanel.classList.remove('show');
-  cartPanel.setAttribute('aria-hidden','true');
-  cartOpen = false;
-  setTimeout(()=> floatingCart.classList.remove('hidden'), 120);
-}
-floatingCart.addEventListener('click', ()=> {
-  if(!cartOpen) showCartPanel(); else hideCartPanel();
-});
-cartCloseBtn.addEventListener('click', ()=> hideCartPanel());
-// click outside closes panel
-document.addEventListener('click', (e) => {
-  if(!cartPanel.classList.contains('show')) return;
-  if(e.target.closest('.cart-panel') || e.target.closest('#floating-cart')) return;
-  hideCartPanel();
-});
+function showCartPanel(){ cartPanel.classList.add('show'); cartPanel.setAttribute('aria-hidden','false'); cartOpen = true; floatingCart.classList.add('hidden'); }
+function hideCartPanel(){ cartPanel.classList.remove('show'); cartPanel.setAttribute('aria-hidden','true'); cartOpen = false; setTimeout(()=> floatingCart.classList.remove('hidden'), 120); }
+if(floatingCart) floatingCart.addEventListener('click', ()=> { if(!cartOpen) showCartPanel(); else hideCartPanel(); });
+if(cartCloseBtn) cartCloseBtn.addEventListener('click', ()=> hideCartPanel());
+document.addEventListener('click', (e)=> { if(!cartPanel.classList.contains('show')) return; if(e.target.closest('#cart-panel') || e.target.closest('#floating-cart')) return; hideCartPanel(); });
 
-/* clear cart */
-clearCartBtn.addEventListener('click', ()=> {
-  clearCart();
-  hideCartPanel();
-});
+if(clearCartBtn) clearCartBtn.addEventListener('click', ()=> { clearCart(); hideCartPanel(); });
 
-/* ========== Filters / Search / Sort (robust) ========= */
-const filterButtons = Array.from(document.querySelectorAll('#filters .filter-btn'));
-function setActiveFilterButton(filterKey){
-  filterButtons.forEach(btn => {
-    if(btn.dataset.filter === filterKey) btn.classList.add('active');
-    else btn.classList.remove('active');
-  });
-}
-filtersWrap.addEventListener('click', (e) => {
-  const b = e.target.closest('.filter-btn');
-  if(!b) return;
-  const f = b.dataset.filter;
-  currentFilter = f;
-  setActiveFilterButton(f);
-  applySearchAndSort();
-});
-searchInput.addEventListener('input', ()=> applySearchAndSort());
-sortSelect.addEventListener('change', ()=> applySearchAndSort());
-
+/* ========== Filters / Search / Sort (universal) ========== */
 function applySearchAndSort(){
-  const q = (searchInput.value || '').trim().toLowerCase();
-  let list = (currentFilter === 'all') ? products.slice() : products.filter(p => p[3] === currentFilter);
-  if(q) list = list.filter(p => ((p[0] + ' ' + p[1]).toLowerCase().includes(q)));
-  const s = sortSelect.value;
-  if(s === 'price_asc') list.sort((a,b)=> a[2] - b[2]);
-  else if(s === 'price_desc') list.sort((a,b)=> b[2] - a[2]);
-  else if(s === 'name_asc') list.sort((a,b)=> a[1].localeCompare(b[1],'ru'));
-  else if(s === 'name_desc') list.sort((a,b)=> b[1].localeCompare(a[1],'ru'));
+  const q = (searchInput && searchInput.value || '').trim().toLowerCase();
+  let list = (currentFilter === 'all' || !currentFilter) ? products.slice() : products.filter(p => String(getCategory(p)) === String(currentFilter));
+  if(q){
+    list = list.filter(p => ( (getLabel(p) + ' ' + getName(p)).toLowerCase().indexOf(q) !== -1 ));
+  }
+  const s = (sortSelect && sortSelect.value) || 'default';
+  if(s === 'price_asc') list.sort((a,b)=> getPrice(a) - getPrice(b));
+  else if(s === 'price_desc') list.sort((a,b)=> getPrice(b) - getPrice(a));
+  else if(s === 'name_asc') list.sort((a,b)=> String(getName(a)).localeCompare(String(getName(b)),'ru'));
+  else if(s === 'name_desc') list.sort((a,b)=> String(getName(b)).localeCompare(String(getName(a)),'ru'));
   visibleProducts = list;
   renderCatalog(visibleProducts);
 }
 
-/* ========== Checkout flow (modal) ========= */
-gotoCheckoutBtn.addEventListener('click', ()=> {
+if(filtersWrap){
+  filtersWrap.addEventListener('click', (e)=> {
+    const b = e.target.closest('.filter-btn');
+    if(!b) return;
+    const f = b.dataset.filter || 'all';
+    currentFilter = f;
+    document.querySelectorAll('#filters .filter-btn').forEach(x=> x.classList.toggle('active', x === b));
+    applySearchAndSort();
+  });
+}
+if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort());
+if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());
+
+/* ========== Checkout / modal ========= */
+if(gotoCheckoutBtn) gotoCheckoutBtn.addEventListener('click', ()=> {
   if(cart.length === 0){ alert('Корзина пуста — добавьте товары.'); return; }
   modalOrderList.innerHTML = '';
   let sum = 0;
   cart.forEach(i => {
-    const el = document.createElement('div');
-    el.style.padding = '6px 4px';
-    el.innerHTML = `<div style="font-weight:700">${i.name}${i.components ? ' (Custom)' : ''}</div><div style="color:var(--muted)">${displayQty(i.qtyKg)} • ${formatRub(i.total)}</div>`;
+    const el = document.createElement('div'); el.style.padding='6px 4px';
+    el.innerHTML = `<div style="font-weight:700">${i.name}</div><div style="color:var(--muted)">${displayQty(i.qtyKg)} • ${formatRub(i.total)}</div>`;
     modalOrderList.appendChild(el);
     sum += i.total;
   });
   modalTotal.textContent = formatRub(sum);
-
   hideCartPanel();
   floatingCart.classList.add('hidden');
-
   modal.style.display = 'flex';
   modal.setAttribute('aria-hidden','false');
 });
+if(closeModalBtn) closeModalBtn.addEventListener('click', ()=> { modal.style.display='none'; modal.setAttribute('aria-hidden','true'); if(!cartPanel.classList.contains('show')) setTimeout(()=> floatingCart.classList.remove('hidden'),120); });
 
-closeModalBtn.addEventListener('click', ()=> {
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden','true');
-  if(!cartPanel.classList.contains('show')) setTimeout(()=> floatingCart.classList.remove('hidden'), 120);
-});
+if(deliveryTimeSelect) deliveryTimeSelect.addEventListener('change', (e)=> { customTimeInput.style.display = e.target.value === 'custom' ? 'block' : 'none'; });
 
-/* delivery-time toggle */
-deliveryTimeSelect.addEventListener('change', (e) => {
-  customTimeInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
-});
-
-/* order submit (local/test + Telegram) */
-orderForm.addEventListener('submit', (e) => {
+if(orderForm) orderForm.addEventListener('submit', (e)=> {
   e.preventDefault();
   if(cart.length === 0){ alert('Корзина пуста!'); modal.style.display='none'; return; }
   const name = document.getElementById('cust-name').value.trim();
@@ -661,57 +598,41 @@ orderForm.addEventListener('submit', (e) => {
   const email = document.getElementById('cust-email').value.trim();
   const payment = document.getElementById('payment-method').value;
 
-  let message = '🛒 Ваш заказ:\n\n';
-  cart.forEach(i => {
-    message += `${i.name} — ${displayQty(i.qtyKg)} — ${formatRub(i.total)}\n`;
-  });
-  message += `\nИтого: ${modalTotal.textContent}\n\n`;
-  message += `👤 Имя: ${name}\n📞 Телефон: ${phone}\n🏠 Адрес: ${city}, ${street}, д.${house}${apt ? ', кв. ' + apt : ''}\n⏰ Доставка: ${time}\n✉ Почта: ${email}\n💳 Оплата: ${payment}\n\n(Тестовое оформление — заказ не отправлен на сервер)`;
-
-  // demo: Telegram WebApp send or fallback to console
   const payload = {
     customer: { name, phone, city, street, house, apt, time, email, payment },
-    items: cart.map(i => ({ name: i.name, qtyKg: i.qtyKg, price: i.price, total: i.total })),
-    total: cart.reduce((s,i)=> s + i.total, 0)
+    items: cart.map(i=>({name:i.name,qtyKg:i.qtyKg,price:i.price,total:i.total})),
+    total: cart.reduce((s,i)=> s+i.total,0)
   };
 
   if(tg && typeof tg.sendData === 'function'){ tg.sendData(JSON.stringify(payload)); tg.close(); }
-  else { console.log('TEST ORDER PAYLOAD:', payload); alert('Заказ оформлен (тест). Проверь консоль.'); }
+  else { console.log('TEST ORDER:', payload); alert('Заказ оформлен (тест). Проверь консоль.'); }
 
-  // loyalty example (5% of sum)
-  const sum = payload.total;
-  const points = Math.floor(sum * 0.05);
-  const cur = parseInt(localStorage.getItem('ferma_loyalty') || '0',10);
-  localStorage.setItem('ferma_loyalty', String(cur + points));
-  alert('Начислено ' + points + ' баллов. Всего: ' + (cur + points));
+  const points = Math.floor(payload.total*0.05);
+  const cur = parseInt(localStorage.getItem('ferma_loyalty')||'0',10);
+  localStorage.setItem('ferma_loyalty', String(cur+points));
+  alert('Начислено ' + points + ' баллов. Всего: ' + (cur+points));
 
-  cart = [];
-  renderCart();
-  orderForm.reset();
-  customTimeInput.style.display = 'none';
-  modal.style.display = 'none';
+  cart = []; renderCart(); orderForm.reset(); customTimeInput.style.display='none'; modal.style.display='none';
   setTimeout(()=> floatingCart.classList.remove('hidden'), 120);
 });
 
-/* hero / view catalog scroll */
-heroOrderBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'}));
-viewCatalogBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth'}));
+/* hero buttons */
+if(heroOrderBtn) heroOrderBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior:'smooth'}));
+if(viewCatalogBtn) viewCatalogBtn.addEventListener('click', ()=> window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior:'smooth'}));
 
-/* ========== Init ========== */
+/* ========== init ========== */
 function init(){
-  // load loyalty
-  const l = parseInt(localStorage.getItem('ferma_loyalty') || '0', 10);
-  loyaltyBadge.textContent = 'Баллы: ' + l;
+  // attach loyalty
+  const l = parseInt(localStorage.getItem('ferma_loyalty')||'0',10);
+  if(loyaltyBadge) loyaltyBadge.textContent = 'Баллы: ' + l;
 
-  // initial render
   visibleProducts = products.slice();
   renderCatalog(visibleProducts);
   renderCart();
-
-  // expand Telegram WebApp if available
   if(tg && typeof tg.expand === 'function') tg.expand();
 }
 init();
+
 </script>
 </body>
 </html>
