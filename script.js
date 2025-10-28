@@ -234,50 +234,115 @@ document.addEventListener("DOMContentLoaded", () => {
     closeCartPanel();
   });
 
-  // --- Filters / Search / Sort ---
-  // If filters present, bind handlers. Buttons should have data-filter attributes.
-  function setActiveFilterBtn(key){
-    if(!filtersWrap) return;
-    filtersWrap.querySelectorAll('.filter-btn').forEach(b => {
-      if(b.dataset.filter === key) b.classList.add('active'); else b.classList.remove('active');
+/* ====== REPLACE: renderCatalog + filters/search/sort ====== */
+
+/* render catalog: now sets data-global-idx (index in original products array) */
+function renderCatalog(list){
+  if(!catalogEl) return;
+  catalogEl.innerHTML = '';
+
+  list.forEach((p, idxVisible) => {
+    const label = p[0], name = p[1], price = p[2], category = p[3];
+
+    // find global index in original products (best-effort)
+    let globalIdx = products.findIndex(pp => {
+      // compare name+price+category as fingerprint
+      return String(pp[1]) === String(name) && Number(pp[2]) === Number(price) && String(pp[3]) === String(category);
     });
-  }
+    if(globalIdx === -1) globalIdx = idxVisible; // fallback
 
-  if(filtersWrap){
-    filtersWrap.addEventListener('click', (e) => {
-      const btn = e.target.closest('.filter-btn');
-      if(!btn) return;
-      currentFilter = btn.dataset.filter || 'all';
-      setActiveFilterBtn(currentFilter);
-      applySearchAndSort();
-    });
-  }
+    const card = document.createElement('div');
+    card.className = 'card fade-in';
+    card.innerHTML = `
+      <div class="photo"><img alt="${name}" loading="lazy"></div>
+      <div class="info">
+        <div class="name">${label}</div>
+        <div class="desc">${name}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto">
+          <div class="price">${price} ₽/кг</div>
+          <div class="actions">
+            <input class="qty-input" type="number" min="1" step="1" value="1" title="Кол-во">
+            <select class="unit-select" title="Единица">
+              <option value="kg">кг</option>
+              <option value="g">гр</option>
+            </select>
+            <!-- data-idx: index inside visible list; data-global-idx: index inside original products array -->
+            <button class="add-to-cart" data-idx="${idxVisible}" data-global-idx="${globalIdx}">В корзину</button>
+          </div>
+        </div>
+        <div class="reco small" data-idx="${idxVisible}"></div>
+      </div>
+    `;
+    catalogEl.appendChild(card);
 
-  if(searchInput){
-    searchInput.addEventListener('input', () => applySearchAndSort());
-  }
-  if(sortSelect){
-    sortSelect.addEventListener('change', () => applySearchAndSort());
-  }
+    // load image with fallbacks
+    const img = card.querySelector('img');
+    tryLoadImage(img, name);
 
-  function applySearchAndSort(){
-    const q = (searchInput && searchInput.value || '').trim().toLowerCase();
-    // start from category filter
-    let list = (currentFilter === 'all') ? products.slice() : products.filter(p => p.category === currentFilter || (p[3] && p[3] === currentFilter));
-    // search
-    if(q){
-      list = list.filter(p => ( (p.name || p[1] || '').toString().toLowerCase().includes(q) || ((p.label || p[0] || '')).toString().toLowerCase().includes(q) ));
+    // render 2 random recommendations (same behaviour as before)
+    const recoEl = card.querySelector('.reco');
+    const others = products.map((pp,i)=> i !== globalIdx ? pp : null).filter(Boolean);
+    const picks = [];
+    while(picks.length < 2 && others.length){
+      const k = randInt(others.length);
+      picks.push(others.splice(k,1)[0]);
     }
-    // sort
-    const s = (sortSelect && sortSelect.value) || 'default';
-    if(s === 'price_asc') list.sort((a,b) => (a.price || a[2] || 0) - (b.price || b[2] || 0));
-    else if(s === 'price_desc') list.sort((a,b) => (b.price || b[2] || 0) - (a.price || a[2] || 0));
-    else if(s === 'name_asc') list.sort((a,b) => ( (a.name || a[1] || '')).toString().localeCompare((b.name || b[1] || ''), 'ru'));
-    else if(s === 'name_desc') list.sort((a,b) => ( (b.name || b[1] || '')).toString().localeCompare((a.name || a[1] || ''), 'ru'));
+    if(picks.length) recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>x[1]).join(', ');
+  });
 
-    visibleProducts = list;
-    renderCatalog(visibleProducts);
+  if(shownCountEl) shownCountEl.textContent = list.length;
+}
+
+/* Robust filters / search / sort implementation */
+function applySearchAndSort(){
+  if(!Array.isArray(products)) return;
+  const q = (searchInput && searchInput.value || '').trim().toLowerCase();
+
+  // start from original products, then apply category filter
+  let list = (currentFilter === 'all') ? products.slice() : products.filter(p => String(p[3]) === String(currentFilter));
+
+  // search by label (p[0]) or name (p[1])
+  if(q){
+    list = list.filter(p => {
+      const hay = ((p[0] || '') + ' ' + (p[1] || '')).toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
   }
+
+  // sort
+  const s = (sortSelect && sortSelect.value) || 'default';
+  if(s === 'price_asc') list.sort((a,b)=> (Number(a[2])||0) - (Number(b[2])||0));
+  else if(s === 'price_desc') list.sort((a,b)=> (Number(b[2])||0) - (Number(a[2])||0));
+  else if(s === 'name_asc') list.sort((a,b)=> String(a[1]||'').localeCompare(String(b[1]||''),'ru'));
+  else if(s === 'name_desc') list.sort((a,b)=> String(b[1]||'').localeCompare(String(a[1]||''),'ru'));
+
+  visibleProducts = list;
+  renderCatalog(visibleProducts);
+}
+
+/* Attach event listeners only if elements exist */
+if(filtersWrap){
+  filtersWrap.addEventListener('click', (e) => {
+    const b = e.target.closest('.filter-btn');
+    if(!b) return;
+    const f = b.dataset.filter || 'all';
+    currentFilter = f;
+    // visual active state
+    document.querySelectorAll('#filters .filter-btn').forEach(x => x.classList.toggle('active', x === b));
+    applySearchAndSort();
+  });
+}
+
+if(searchInput){
+  searchInput.addEventListener('input', () => applySearchAndSort());
+}
+
+if(sortSelect){
+  sortSelect.addEventListener('change', () => applySearchAndSort());
+}
+
+/* ====== END REPLACEMENT ====== */
+
 
   // --- Send order button logic (Telegram or test) ---
   if(sendOrderBtn){
