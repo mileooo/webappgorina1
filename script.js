@@ -78,6 +78,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+// Элементы корзины
+const floatingCart = document.getElementById('floating-cart');
+const cartPanel = document.getElementById('cart-panel');
+const cartCount = document.getElementById('cart-count');
+const cartTotal = document.getElementById('cart-total');
+const panelTotal = document.getElementById('panel-total');
+
+// Пример данных корзины (замени на свои данные)
+let cart = [
+  // { name: 'Яблоки', price: 100, qty: 2 }
+];
+
+function updateCart() {
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  cartTotal.textContent = `${total} ₽`;
+  panelTotal.textContent = `${total} ₽`;
+  cartCount.textContent = count;
+}
+
+// Открыть/закрыть панель
+floatingCart.addEventListener('click', () => {
+  cartPanel.classList.toggle('show');
+});
+
+// Пример: добавление товара (ты подставишь своё)
+function addToCart(name, price) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) existing.qty++;
+  else cart.push({ name, price, qty: 1 });
+  updateCart();
+}
+
+updateCart(); // начальная отрисовка
+
+
   // Подготовка внешнего вида WebApp
   if (tg && typeof tg.expand === "function") tg.expand();
 });
