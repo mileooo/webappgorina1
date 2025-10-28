@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ФермаFresh — свежие овощи и фрукты</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Магазин у Дяди Лёши — свежие овощи и фрукты</title>
+<!-- Montserrat: light (300) + semi-bold (700) + black (900) -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --white:#FFFFFF;
@@ -21,10 +22,14 @@
 }
 
 /* базовые правила */
+/* основной шрифт — Montserrat Light (300) */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--white);color:var(--text);font-family:Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+html,body{height:100%;margin:0;background:var(--white);color:var(--text);font-family:'Montserrat',Inter,Arial,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-button,input,select,textarea{font-family:inherit}
+button,input,select,textarea{font-family:'Montserrat',Inter,Arial,sans-serif}
+
+/* Заголовки, главные элементы — Montserrat Black (900) */
+h1,h2,h3,h4,h5,.logo h4,.name,.price{font-family:'Montserrat',Inter,Arial,sans-serif;font-weight:900}
 
 /* layout */
 .container{max-width:var(--container);margin:0 auto;padding:24px;}
@@ -33,22 +38,22 @@ button,input,select,textarea{font-family:inherit}
 .logo{display:flex;align-items:center;gap:12px}
 .logo .mark{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--brand),#7cc900);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(164,222,2,0.12)}
 .logo .mark svg{width:22px;height:22px;fill:#fff}
-.logo h4{font-family:Poppins,Inter;font-weight:700;font-size:18px;margin:0;color:var(--text)}
+.logo h4{font-size:18px;margin:0;color:var(--text)}
 .header-right{display:flex;align-items:center;gap:12px}
 
 /* мелкие элементы шапки */
 .search-wrap{display:flex;align-items:center;gap:8px;background:#fff;padding:6px;border-radius:12px;border:1px solid var(--border)}
-.search-wrap input{border:0;outline:0;padding:8px 10px;width:320px;border-radius:8px}
-.sort-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff}
+.search-wrap input{border:0;outline:0;padding:8px 10px;width:320px;border-radius:8px;font-weight:300}
+.sort-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff;font-weight:300}
 .loyalty-badge{background:linear-gradient(180deg,#fff,#f4fff0);padding:8px 12px;border-radius:999px;border:1px solid rgba(164,222,2,0.12);font-weight:700;color:#2e2e2e}
 
 /* hero */
 .hero{max-width:var(--container);margin:20px auto;padding:20px;background:var(--card-bg);border-radius:12px;display:flex;gap:16px;align-items:center;box-shadow:var(--shadow)}
 .hero-left{flex:1;min-width:220px}
-.hero h1{font-family:Poppins;font-weight:800;font-size:32px;margin:0 0 6px;color:var(--text);line-height:1.02}
-.hero p{font-size:15px;color:var(--muted);margin:0 0 8px}
+.hero h1{font-size:32px;margin:0 0 6px;color:var(--text);line-height:1.02}
+.hero p{font-size:15px;color:var(--muted);margin:0 0 8px;font-weight:300}
 .hero-cta{display:flex;gap:10px}
-.btn-cta{background:var(--cta);color:#fff;border:0;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-family:Poppins;box-shadow:0 6px 18px rgba(255,140,66,0.12);transition:transform .14s}
+.btn-cta{background:var(--cta);color:#fff;border:0;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(255,140,66,0.12);transition:transform .14s}
 .btn-secondary{background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer}
 
 /* grid & cards */
@@ -60,15 +65,15 @@ button,input,select,textarea{font-family:inherit}
 .photo{height:62%;border-radius:8px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
 .photo img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s;border-radius:6px}
 .info{display:flex;flex-direction:column;gap:6px;flex:1}
-.name{font-family:Poppins;font-weight:600;font-size:15px;color:var(--text)}
-.desc{font-size:13px;color:var(--muted);min-height:34px}
-.price{font-weight:800;color:var(--text);font-size:16px}
+.name{font-size:15px;color:var(--text)}
+.desc{font-size:13px;color:var(--muted);min-height:34px;font-weight:300}
+.price{font-size:16px}
 .actions{display:flex;align-items:center;gap:8px;justify-content:space-between}
-.qty-input{width:78px;padding:8px;border-radius:8px;border:1px solid var(--border);text-align:center}
-.unit-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff}
+.qty-input{width:78px;padding:8px;border-radius:8px;border:1px solid var(--border);text-align:center;font-weight:300}
+.unit-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff;font-weight:300}
 .add-to-cart{background:var(--brand);color:#fff;border:0;padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 6px 12px rgba(164,222,2,0.12);transition:background .12s}
 .add-to-cart:hover{background:var(--cta)}
-.reco{margin-top:6px;font-size:13px;color:var(--muted)}
+.reco{margin-top:6px;font-size:13px;color:var(--muted);font-weight:300}
 .custom-btn{background:#fff;border:1px solid var(--border);padding:8px;border-radius:8px;cursor:pointer}
 
 /* floating cart widget (внизу) */
@@ -93,8 +98,8 @@ button,input,select,textarea{font-family:inherit}
 }
 .floating-cart:hover{ transform:scale(1.03); }
 .floating-cart .fc-info{display:flex;flex-direction:column;align-items:flex-start;line-height:1}
-.floating-cart .fc-count{font-size:14px}
-.floating-cart .fc-total{font-size:14px;font-weight:800}
+.floating-cart .fc-count{font-size:14px;font-weight:700}
+.floating-cart .fc-total{font-size:14px;font-weight:900}
 
 /* hidden state for floating cart (smooth exit) */
 .floating-cart.hidden {
@@ -125,11 +130,11 @@ button,input,select,textarea{font-family:inherit}
 .cart-panel.show {
   transform: translateY(0);
 }
-.cart-panel h4{margin:0 0 10px;font-family:Poppins;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cart-panel h4{margin:0 0 10px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cart-items{max-height:54vh;overflow:auto;display:flex;flex-direction:column;gap:8px;padding-right:8px}
 .cart-row{display:flex;align-items:center;justify-content:space-between;background:#fbfbfb;padding:10px;border-radius:8px;border:1px solid var(--border)}
 .cart-row .left{display:flex;flex-direction:column}
-.cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:800;font-size:16px}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:900;font-size:16px}
 .cart-actions{display:flex;gap:8px;margin-top:12px}
 .btn{padding:10px;border-radius:12px;border:0;cursor:pointer;font-weight:700}
 .btn-clear{background:#f2f2f2;color:var(--text)}
@@ -144,8 +149,8 @@ button,input,select,textarea{font-family:inherit}
 .modal .panel { width:920px;max-width:95%;background:var(--card-bg);border-radius:12px;padding:18px;box-shadow:0 12px 36px rgba(0,0,0,0.18); }
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
-.form-row label{font-weight:600;font-size:14px}
-.form-row input, .form-row select, .form-row textarea {padding:10px;border-radius:8px;border:1px solid #ccc}
+.form-row label{font-weight:700;font-size:14px}
+.form-row input, .form-row select, .form-row textarea {padding:10px;border-radius:8px;border:1px solid #ccc;font-weight:300}
 .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
 /* responsive */
@@ -157,7 +162,7 @@ button,input,select,textarea{font-family:inherit}
 .footer{max-width:var(--container);margin:40px auto 80px;padding:24px;text-align:center;color:var(--muted);font-size:14px}
 .fade-in{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.small{font-size:13px;color:var(--muted)}
+.small{font-size:13px;color:var(--muted);font-weight:300}
 
 /* tiny checkmark animation */
 .checkmark{position:absolute;right:12px;top:12px;background:var(--success);color:#fff;padding:6px;border-radius:8px;opacity:0;transform:scale(.6);transition:all .4s}
@@ -172,7 +177,7 @@ button,input,select,textarea{font-family:inherit}
         <div class="mark" aria-hidden>
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg>
         </div>
-        <h4>ФермаFresh</h4>
+        <h4>Магазин у дядя Лёши</h4>
       </div>
       <div style="margin-left:14px" class="small">Свежесть, которую можно почувствовать</div>
     </div>
@@ -257,7 +262,7 @@ button,input,select,textarea{font-family:inherit}
 <!-- Modal Checkout -->
 <div id="modal" class="modal" aria-hidden="true">
   <div class="panel">
-    <h3 style="font-family:Poppins;margin:0 0 8px">Оформление заказа</h3>
+    <h3 style="font-family:'Montserrat',Inter;margin:0 0 8px">Оформление заказа</h3>
     <div style="display:flex;gap:18px;flex-wrap:wrap">
       <div style="flex:1;min-width:280px">
         <div style="font-weight:700;margin-bottom:8px">Состав заказа</div>
@@ -286,28 +291,62 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </div>
 
-<footer class="footer">© ФермаFresh — Свежесть, которую можно почувствовать.</footer>
+<footer class="footer">© Магазин у дяди Лёши — Свежесть, которую можно почувствовать.</footer>
 
 <script>
 /* ========== Telegram WebApp fallback ========== */
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { sendData: () => {}, close: () => {}, expand: () => {} };
 
 /* ========== Данные ассортимента (используем формат предыдущего списка) ==========
-   Формат: [label, name, price, category]
-   (ты можешь заменить / добавлять элементы как в предыдущем примере) */
+   Формат: [label, name, price, category] */
 const products = [
   ["🍉 Арбуз — 40₽/кг", "Арбуз", 40, "fruits"],
   ["🍐 Груша — 340₽/кг", "Груша", 340, "fruits"],
   ["🍊 Апельсин — 220₽/кг", "Апельсин", 220, "fruits"],
   ["🍈 Дыня торпеда Узбекистан — 80₽/кг", "Дыня торпеда Узбекистан", 80, "fruits"],
+  ["🍈 Дыня колхозница — 80₽/кг", "Дыня колхозница", 80, "fruits"],
   ["🍇 Виноград зеленый (без косточек) — 320₽/кг", "Виноград зеленый (без косточек)", 320, "fruits"],
+  ["🍇 Виноград темный (без косточек) — 320₽/кг", "Виноград темный (без косточек)", 320, "fruits"],
+  ["🍇 Виноград черный (Мерседес) — 300₽/кг", "Виноград черный (Мерседес)", 300, "fruits"],
+  ["🍑 Нектарин Узбекистан красный — 170₽/кг", "Нектарин Узбекистан красный", 170, "fruits"],
+  ["🍑 Нектарин Турция — 350₽/кг", "Нектарин Турция", 350, "fruits"],
+  ["🍑 Нектарин Узбекистан желтый (вкус лимон) — 250₽/кг", "Нектарин Узбекистан желтый (вкус лимон)", 250, "fruits"],
+  ["🍑 Нектарин Узбекистан зеленый — 190₽/кг", "Нектарин Узбекистан зеленый", 190, "fruits"],
   ["🍌 Банан — 170₽/кг", "Банан", 170, "fruits"],
   ["🥔 Картофель Чувашия — 45₽/кг", "Картофель Чувашия", 45, "vegetables"],
+  ["🥔 Картофель Краснодар — 45₽/кг", "Картофель Краснодар", 45, "vegetables"],
   ["🥕 Морковь Волгоград — 45₽/кг", "Морковь Волгоград", 45, "vegetables"],
   ["🧅 Лук репчатый Волгоград — 45₽/кг", "Лук репчатый Волгоград", 45, "vegetables"],
+  ["🌱 Лук зеленый — 350₽/кг", "Лук зеленый", 350, "vegetables"],
+  ["🌱 Укроп, петрушка — 350₽/кг", "Укроп, петрушка", 350, "vegetables"],
+  ["🌱 Кинза — 440₽/кг", "Кинза", 440, "vegetables"],
+  ["🌱 Базелик — 50₽/пучок", "Базелик (пучок)", 50, "vegetables"],
+  ["🧄 Чеснок Ташкент — 400₽/кг", "Чеснок Ташкент", 400, "vegetables"],
+  ["🫑 Перец болгарский — 130₽/кг", "Перец болгарский", 130, "vegetables"],
+  ["🌶️ Перец чили — 25₽/шт", "Перец чили", 25, "vegetables"],
+  ["🍅 Помидоры Азербайджанские — 220₽/кг", "Помидоры Азербайджанские", 220, "vegetables"],
   ["🍅 Помидоры Ростовские — 180₽/кг", "Помидоры Ростовские", 180, "vegetables"],
+  ["🍅 Помидоры Волгоград (мелкие) — 80₽/кг", "Помидоры Волгоград (мелкие)", 80, "vegetables"],
+  ["🍅 Помидоры домашние — 240₽/кг", "Помидоры домашние", 240, "vegetables"],
+  ["🍅 Помидоры Астрахань (желтые) — 190₽/кг", "Помидоры Астрахань (желтые)", 190, "vegetables"],
+  ["🥒 Огурцы Московские — 150₽/кг", "Огурцы Московские", 150, "vegetables"],
+  ["🥒 Огурцы Самарские — 80₽/кг", "Огурцы Самарские", 80, "vegetables"],
+  ["🥒 Огурцы домашние — 150₽/кг", "Огурцы домашние", 150, "vegetables"],
+  ["🍑 Слива 4 вида — 190₽/кг - Ташкент; Медовая - 220₽/кг; Желтая - 250₽/кг; Чернослива - 220₽/кг", "Слива 4 вида", 220, "fruits"],
   ["🍒 Черешня — 580₽/кг", "Черешня", 580, "fruits"],
+  ["🫐 Голубика — 800₽/кг", "Голубика", 800, "fruits"],
+  ["🍑 Абрикос Армения — 240₽/кг", "Абрикос Армения", 240, "fruits"],
+  ["🍑 Абрикос Киргизия — 150₽/кг", "Абрикос Киргизия", 150, "fruits"],
+  ["🍑 Персик Ташкент — 250₽/кг", "Персик Ташкент", 250, "fruits"],
+  ["🍑 Персик Армения — 380₽/кг", "Персик Армения", 380, "fruits"],
+  ["🍑 Персик Турция — 450₽/кг", "Персик Турция", 450, "fruits"],
+  ["🍑 Персик Инжирный — 350₽/кг", "Персик Инжирный", 350, "fruits"],
+  ["🥝 Киви — 450₽/кг", "Киви", 450, "fruits"],
+  ["Кабачок — 55₽/кг", "Кабачок", 55, "vegetables"],
+  ["🍆 Баклажан — 130₽/кг", "Баклажан", 130, "vegetables"],
   ["🍋 Лимон — 290₽/кг", "Лимон", 290, "fruits"]
+  ["🥗 Сет «Фермерский» — 550₽","Сет «Фермерский»",550,"sets"],
+  ["🥗 Акция: Ягоды — 300₽","Акция: Ягоды",300,"promo"]
 ];
 
 /* ========== State ========== */
