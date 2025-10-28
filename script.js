@@ -234,20 +234,49 @@ document.addEventListener("DOMContentLoaded", () => {
     closeCartPanel();
   });
 
-/* ====== REPLACE: renderCatalog + filters/search/sort ====== */
+/* ====== REPLACEMENT START: универсальный renderCatalog + filters/search/sort ====== */
 
-/* render catalog: now sets data-global-idx (index in original products array) */
+/* вспомогательные геттеры — работают и для форматов:
+   - массив: [label, name, price, category]
+   - объект: { label?, name, price, category? }
+*/
+function getLabel(item){
+  if(!item) return '';
+  if(Array.isArray(item)) return item[0] || item[1] || '';
+  return item.label || item.name || '';
+}
+function getName(item){
+  if(!item) return '';
+  if(Array.isArray(item)) return item[1] || item[0] || '';
+  return item.name || item.label || '';
+}
+function getPrice(item){
+  if(!item) return 0;
+  if(Array.isArray(item)) return Number(item[2] || 0);
+  return Number(item.price || 0);
+}
+function getCategory(item){
+  if(!item) return '';
+  if(Array.isArray(item)) return item[3] || '';
+  return item.category || '';
+}
+
+/* render catalog: выставляет data-global-idx (индекс в оригинальном products) */
 function renderCatalog(list){
   if(!catalogEl) return;
   catalogEl.innerHTML = '';
 
   list.forEach((p, idxVisible) => {
-    const label = p[0], name = p[1], price = p[2], category = p[3];
+    const label = getLabel(p);
+    const name = getName(p);
+    const price = getPrice(p);
+    const category = getCategory(p);
 
-    // find global index in original products (best-effort)
+    // Найти индекс в оригинальном массиве products (по fingerprint)
     let globalIdx = products.findIndex(pp => {
-      // compare name+price+category as fingerprint
-      return String(pp[1]) === String(name) && Number(pp[2]) === Number(price) && String(pp[3]) === String(category);
+      return String(getName(pp)) === String(name)
+        && Number(getPrice(pp)) === Number(price)
+        && String(getCategory(pp)) === String(category);
     });
     if(globalIdx === -1) globalIdx = idxVisible; // fallback
 
@@ -266,7 +295,6 @@ function renderCatalog(list){
               <option value="kg">кг</option>
               <option value="g">гр</option>
             </select>
-            <!-- data-idx: index inside visible list; data-global-idx: index inside original products array -->
             <button class="add-to-cart" data-idx="${idxVisible}" data-global-idx="${globalIdx}">В корзину</button>
           </div>
         </div>
@@ -275,11 +303,11 @@ function renderCatalog(list){
     `;
     catalogEl.appendChild(card);
 
-    // load image with fallbacks
+    // load image (works с именем товара)
     const img = card.querySelector('img');
     tryLoadImage(img, name);
 
-    // render 2 random recommendations (same behaviour as before)
+    // рекомендации (2 случайных)
     const recoEl = card.querySelector('.reco');
     const others = products.map((pp,i)=> i !== globalIdx ? pp : null).filter(Boolean);
     const picks = [];
@@ -287,61 +315,60 @@ function renderCatalog(list){
       const k = randInt(others.length);
       picks.push(others.splice(k,1)[0]);
     }
-    if(picks.length) recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>x[1]).join(', ');
+    if(picks.length) recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>getName(x)).join(', ');
   });
 
   if(shownCountEl) shownCountEl.textContent = list.length;
 }
 
-/* Robust filters / search / sort implementation */
+/* applySearchAndSort: универсальная фильтрация/поиск/сортировка */
 function applySearchAndSort(){
   if(!Array.isArray(products)) return;
   const q = (searchInput && searchInput.value || '').trim().toLowerCase();
 
-  // start from original products, then apply category filter
-  let list = (currentFilter === 'all') ? products.slice() : products.filter(p => String(p[3]) === String(currentFilter));
+  // start from original products (so filtering is stable)
+  let list = (currentFilter === 'all' || !currentFilter) ? products.slice() : products.filter(p => String(getCategory(p)) === String(currentFilter));
 
-  // search by label (p[0]) or name (p[1])
+  // search: ищем по label и name
   if(q){
     list = list.filter(p => {
-      const hay = ((p[0] || '') + ' ' + (p[1] || '')).toLowerCase();
+      const hay = ( (getLabel(p) || '') + ' ' + (getName(p) || '') ).toLowerCase();
       return hay.indexOf(q) !== -1;
     });
   }
 
   // sort
   const s = (sortSelect && sortSelect.value) || 'default';
-  if(s === 'price_asc') list.sort((a,b)=> (Number(a[2])||0) - (Number(b[2])||0));
-  else if(s === 'price_desc') list.sort((a,b)=> (Number(b[2])||0) - (Number(a[2])||0));
-  else if(s === 'name_asc') list.sort((a,b)=> String(a[1]||'').localeCompare(String(b[1]||''),'ru'));
-  else if(s === 'name_desc') list.sort((a,b)=> String(b[1]||'').localeCompare(String(a[1]||''),'ru'));
+  if(s === 'price_asc') list.sort((a,b)=> getPrice(a) - getPrice(b));
+  else if(s === 'price_desc') list.sort((a,b)=> getPrice(b) - getPrice(a));
+  else if(s === 'name_asc') list.sort((a,b)=> String(getName(a)).localeCompare(String(getName(b)),'ru'));
+  else if(s === 'name_desc') list.sort((a,b)=> String(getName(b)).localeCompare(String(getName(a)),'ru'));
 
   visibleProducts = list;
   renderCatalog(visibleProducts);
 }
 
-/* Attach event listeners only if elements exist */
+/* Подключаем слушатели (только если элементы есть) */
 if(filtersWrap){
   filtersWrap.addEventListener('click', (e) => {
     const b = e.target.closest('.filter-btn');
     if(!b) return;
     const f = b.dataset.filter || 'all';
     currentFilter = f;
-    // visual active state
+    // визуальная активация
     document.querySelectorAll('#filters .filter-btn').forEach(x => x.classList.toggle('active', x === b));
     applySearchAndSort();
   });
 }
-
 if(searchInput){
-  searchInput.addEventListener('input', () => applySearchAndSort());
+  searchInput.addEventListener('input', ()=> applySearchAndSort());
 }
-
 if(sortSelect){
-  sortSelect.addEventListener('change', () => applySearchAndSort());
+  sortSelect.addEventListener('change', ()=> applySearchAndSort());
 }
 
-/* ====== END REPLACEMENT ====== */
+/* ====== REPLACEMENT END ====== */
+
 
 
   // --- Send order button logic (Telegram or test) ---
