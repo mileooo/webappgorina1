@@ -370,23 +370,73 @@ function formatRub(v){ return Math.round(v) + ' ₽'; }
 function displayQty(kg){ if(kg<1) return Math.round(kg*1000) + ' г'; return kg.toFixed(2) + ' кг'; }
 function randInt(max){ return Math.floor(Math.random()*max); }
 
-/* image loader */
+/* Умная загрузка изображений: пытается slugified (ascii) имена, затем закодированное имя, затем noimage */
+function transliterate(str){
+  if(!str) return '';
+  const map = {
+    'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y',
+    'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f',
+    'х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
+  };
+  return String(str).split('').map(ch=>{
+    const lower = ch.toLowerCase();
+    if(map[lower] !== undefined){
+      // keep case-insensitive ASCII - no uppercase handling needed for filenames
+      return map[lower];
+    }
+    // keep latin letters and digits
+    if(/[a-z0-9]/i.test(ch)) return ch;
+    // replace spaces and other chars with dash
+    if(/\s/.test(ch)) return '-';
+    return '';
+  }).join('');
+}
+function slugify(name){
+  return transliterate(name).toLowerCase().replace(/[^a-z0-9\-]+/g,'-').replace(/^-+|-+$/g,'');
+}
+
 function tryLoadImage(imgEl, name){
   if(!imgEl) return;
   const exts = ['.webp','.jpg','.jpeg','.png'];
-  const encoded = encodeURIComponent(name);
-  const noimage = 'images/noimage.png';
+  const candidates = [];
+  const slug = slugify(name || '');
+  if(slug){
+    exts.forEach(ext => candidates.push('images/' + slug + ext)); // images/svezhie-frukty.jpg etc
+  }
+  // try encoded original name too (handles some servers)
+  const encoded = encodeURIComponent(name || '');
+  if(encoded){
+    exts.forEach(ext => candidates.push('images/' + encoded + ext));
+  }
+  // finally try just basename (no encoding) - useful if name already ascii
+  if(name && /^[\x00-\x7F]+$/.test(name)){
+    exts.forEach(ext => candidates.push('images/' + name + ext));
+  }
+  // fallback image
+  candidates.push('images/noimage.png');
+
   let idx = 0;
   function tryNext(){
-    if(idx >= exts.length){ imgEl.src = noimage; imgEl.onload = ()=> imgEl.style.opacity = '1'; return; }
-    const url = 'images/' + encoded + exts[idx];
+    if(idx >= candidates.length){
+      imgEl.src = 'images/noimage.png';
+      imgEl.onload = ()=> imgEl.style.opacity = '1';
+      return;
+    }
+    const url = candidates[idx];
     const tester = new Image();
-    tester.onload = () => { imgEl.src = url; imgEl.onload = ()=> imgEl.style.opacity = '1'; };
-    tester.onerror = () => { idx++; tryNext(); };
+    tester.onload = () => {
+      imgEl.src = url;
+      imgEl.onload = ()=> imgEl.style.opacity = '1';
+    };
+    tester.onerror = () => {
+      idx++;
+      tryNext();
+    };
     tester.src = url;
   }
   tryNext();
 }
+
 
 /* universal getters to support both [label,name,price,cat] and {name,price,category} */
 function getLabel(it){ if(!it) return ''; if(Array.isArray(it)) return it[0]||it[1]||''; return it.label||it.name||''; }
