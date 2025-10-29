@@ -26,7 +26,7 @@ async def cmd_start(message: types.Message):
         resize_keyboard=True
     )
     await message.answer(
-        "Привет! Добро пожаловать в 🍏 Fresh Market!\n\n"
+        "Привет! Добро пожаловать в 🍏 Bravo Market!\n\n"
         "Нажми кнопку ниже, чтобы открыть магазин 👇",
         reply_markup=webapp_kb
     )
