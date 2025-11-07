@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "Арбуз",
+    "price": 40,
+    "category": "fruits",
+    "img": "images/arbuz.jpg"
+  }
+]
