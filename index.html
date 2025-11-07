@@ -1,1 +1,110 @@
-<html><body>Bravo Market</body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bravo Market</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <div class="logo">
+        <div class="mark">🍏</div>
+        <h4>Bravo Market</h4>
+      </div>
+      <div class="header-right">
+        <div class="loyalty-badge" id="loyalty-badge">Баллы: 0</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero container">
+    <div>
+      <h1>Свежие продукты — прямо к вам</h1>
+      <p>Быстрая доставка. Честные цены. Классные фрукты и овощи.</p>
+      <div class="hero-cta">
+        <button class="btn-cta" id="hero-order">Заказать сейчас</button>
+        <button class="btn-secondary" id="view-catalog">Посмотреть каталог</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="main container">
+    <div class="controls">
+      <div class="pills" id="filters">
+        <button class="pill active" data-filter="all">Все</button>
+        <button class="pill" data-filter="fruits">Фрукты</button>
+        <button class="pill" data-filter="vegetables">Овощи</button>
+        <button class="pill" data-filter="sets">Сеты</button>
+        <button class="pill" data-filter="promo">Акции</button>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <input id="search-input" placeholder="Поиск..." />
+        <select id="sort-select" class="sort-select">
+          <option value="default">Сорт</option>
+          <option value="price_asc">Цена ↑</option>
+          <option value="price_desc">Цена ↓</option>
+          <option value="name_asc">A → Я</option>
+          <option value="name_desc">Я → A</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" id="catalog"></div>
+  </main>
+
+  <aside id="cart-panel" class="cart-panel">
+    <h4 style="margin-top:0;display:flex;justify-content:space-between;align-items:center">
+      <span>Корзина (<span id="cart-count-2">0</span>)</span>
+      <button id="cart-close-btn" class="btn-secondary">✕</button>
+    </h4>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-total"><span>Итого</span><span id="cart-sum">0 ₽</span></div>
+    <div class="cart-actions">
+      <button id="clear-cart" class="btn-secondary">Очистить</button>
+      <button id="goto-checkout" class="btn-cta">Оформить</button>
+    </div>
+  </aside>
+
+  <div id="floating-cart" class="floating-cart" role="button">
+    <div class="fc-info">
+      <div class="fc-count" id="fc-count">0 поз.</div>
+      <div class="fc-total" id="fc-total">0 ₽</div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="panel">
+      <h3>Оформление заказа</h3>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:220px">
+          <div style="font-weight:700;margin-bottom:8px">Состав заказа</div>
+          <div id="modal-order-list" style="max-height:300px;overflow:auto;border:1px solid var(--border);padding:8px;border-radius:8px;background:#fff"></div>
+          <div style="margin-top:10px;font-weight:800;display:flex;justify-content:space-between"><div>Итого</div><div id="modal-total">0 ₽</div></div>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <form id="order-form">
+            <div class="form-row"><label>Имя *</label><input id="cust-name" required></div>
+            <div class="form-row"><label>Телефон *</label><input id="cust-phone" required></div>
+            <div class="form-row"><label>Город *</label><input id="cust-city" required></div>
+            <div class="form-row"><label>Улица *</label><input id="cust-street" required></div>
+            <div class="form-row" style="display:flex;gap:8px"><div style="flex:1"><label>Дом *</label><input id="cust-house" required></div><div style="flex:1"><label>Квартира</label><input id="cust-apartment"></div></div>
+            <div class="form-row"><label>Время доставки *</label>
+              <select id="delivery-time"><option value="asap">Как можно скорее</option><option value="custom">Указать время</option></select>
+              <input type="time" id="custom-time" style="display:none;margin-top:8px"></div>
+            <div class="form-row"><label>Почта для чека</label><input id="cust-email" type="email"></div>
+            <div class="form-row"><label>Способ оплаты *</label><select id="payment-method"><option value="cash">Наличные</option><option value="card">Карта</option></select></div>
+            <div class="form-actions" style="margin-top:12px">
+              <button type="button" id="close-modal" class="btn-secondary">Отмена</button>
+              <button type="submit" class="btn-cta">Подтвердить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
