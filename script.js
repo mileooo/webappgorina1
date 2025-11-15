@@ -191,19 +191,6 @@ deliveryTimeSelect.addEventListener('change', (e) => {
   }
 });
 
-
-  // Показываем input "указать время" если выбран custom
-  customTimeInput.style.display = val === 'custom' ? 'block' : 'none';
-
-  // Обновляем подсказку / текст
-  deliveryTimeHint.textContent = describeDeliveryTime(val, customTimeInput.value);
-
-  // Если есть отображаемая строка в итоговом блоке — тоже обновляем
-  if (checkoutTimeDisplay) {
-    checkoutTimeDisplay.textContent = describeDeliveryTime(val, customTimeInput.value);
-  }
-});
-
 // 🔥 Реагируем на ввод пользовательского времени
 customTimeInput.addEventListener('input', () => {
   const val = customTimeInput.value;
@@ -214,7 +201,6 @@ customTimeInput.addEventListener('input', () => {
     checkoutTimeDisplay.textContent = describeDeliveryTime('custom', val);
   }
 });
-
 
 /* ========== simple user system (localStorage) ========== */
 function getStoredUser(){ try { return JSON.parse(localStorage.getItem('bm_user')||'null'); } catch(e){ return null; } }
