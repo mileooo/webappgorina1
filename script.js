@@ -1,561 +1,784 @@
-// ===============================
-// ДАННЫЕ ТОВАРОВ
-// ===============================
+/* ================== CONFIG ==================
+ Replace ADMIN_WEBHOOK_URL with your server endpoint to receive order notifications.
+ For Telegram login within WebApp the code tries to use window.Telegram.WebApp.initDataUnsafe
+=============================================*/
+const ADMIN_WEBHOOK_URL = ""; // <-- PUT YOUR ADMIN WEBHOOK URL HERE (POST)
 
+/* Telegram fallback object (WebApp) */
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+
+/* ========== Products (array format) ========== */
 const products = [
-  {
-    id: 1,
-    name: "Бананы",
-    category: "fruits",
-    price: 120,
-    kbju: "К: 95 / Б: 1.5 / Ж: 0.3 / У: 21",
-    desc: "Свежие сладкие бананы прямо из Эквадора. Отлично подходят как перекус.",
-    img: "images/banan.jpg",
-  },
-  {
-    id: 2,
-    name: "Яблоки",
-    category: "fruits",
-    price: 130,
-    kbju: "К: 52 / Б: 0.3 / Ж: 0.2 / У: 14",
-    desc: "Сочные и ароматные яблоки с насыщенным вкусом.",
-    img: "images/yabloko.jpg",
-  },
-  {
-    id: 3,
-    name: "Апельсины",
-    category: "fruits",
-    price: 150,
-    kbju: "К: 47 / Б: 0.9 / Ж: 0.1 / У: 12",
-    desc: "Спелые апельсины, наполненные витаминами.",
-    img: "images/apelsin.jpg",
-  },
-  {
-    id: 4,
-    name: "Помидоры",
-    category: "vegetables",
-    price: 180,
-    kbju: "К: 18 / Б: 0.9 / Ж: 0.2 / У: 3.9",
-    desc: "Сладкие томаты, идеальны для салатов и приготовления блюд.",
-    img: "images/pomidory.jpg",
-  },
-  {
-    id: 5,
-    name: "Огурцы",
-    category: "vegetables",
-    price: 90,
-    kbju: "К: 16 / Б: 0.8 / Ж: 0.1 / У: 2.5",
-    desc: "Хрустящие свежие огурцы прямо с фермы.",
-    img: "images/ogurcy.jpg",
-  },
+  ["🍉 Арбуз — 40₽/кг", "Арбуз", 40, "fruits"],
+  ["🍐 Груша — 340₽/кг", "Груша", 340, "fruits"],
+  ["🍊 Апельсин — 220₽/кг", "Апельсин", 220, "fruits"],
+  ["🍈 Дыня торпеда Узбекистан — 80₽/кг", "Дыня торпеда Узбекистан", 80, "fruits"],
+  ["🍈 Дыня колхозница — 80₽/кг", "Дыня колхозница", 80, "fruits"],
+  ["🍇 Виноград зеленый (без косточек) — 320₽/кг", "Виноград зеленый (без косточек)", 320, "fruits"],
+  ["🍇 Виноград темный (без косточек) — 320₽/кг", "Виноград темный (без косточек)", 320, "fruits"],
+  ["🍇 Виноград черный (Мерседес) — 300₽/кг", "Виноград черный (Мерседес)", 300, "fruits"],
+  ["🍑 Нектарин Узбекистан красный — 170₽/кг", "Нектарин Узбекистан красный", 170, "fruits"],
+  ["🍑 Нектарин Турция — 350₽/кг", "Нектарин Турция", 350, "fruits"],
+  ["🍑 Нектарин Узбекистан желтый (вкус лимон) — 250₽/кг", "Нектарин Узбекистан желтый (вкус лимон)", 250, "fruits"],
+  ["🍑 Нектарин Узбекистан зеленый — 190₽/кг", "Нектарин Узбекистан зеленый", 190, "fruits"],
+  ["🍌 Банан — 170₽/кг", "Банан", 170, "fruits"],
+  ["🥔 Картофель Чувашия — 45₽/кг", "Картофель Чувашия", 45, "vegetables"],
+  ["🥔 Картофель Краснодар — 45₽/кг", "Картофель Краснодар", 45, "vegetables"],
+  ["🥕 Морковь Волгоград — 45₽/кг", "Морковь Волгоград", 45, "vegetables"],
+  ["🧅 Лук репчатый Волгоград — 45₽/кг", "Лук репчатый Волгоград", 45, "vegetables"],
+  ["🌱 Лук зеленый — 350₽/кг", "Лук зеленый", 350, "vegetables"],
+  ["🌱 Укроп, петрушка — 350₽/кг", "Укроп, петрушка", 350, "vegetables"],
+  ["🌱 Кинза — 440₽/кг", "Кинза", 440, "vegetables"],
+  ["🌱 Базелик — 50₽/пучок", "Базелик (пучок)", 50, "vegetables"],
+  ["🧄 Чеснок Ташкент — 400₽/кг", "Чеснок Ташкент", 400, "vegetables"],
+  ["🫑 Перец болгарский — 130₽/кг", "Перец болгарский", 130, "vegetables"],
+  ["🌶️ Перец чили — 25₽/шт", "Перец чили", 25, "vegetables"],
+  ["🍅 Помидоры Азербайджанские — 220₽/кг", "Помидоры Азербайджанские", 220, "vegetables"],
+  ["🍅 Помидоры Ростовские — 180₽/кг", "Помидоры Ростовские", 180, "vegetables"],
+  ["🍅 Помидоры Волгоград (мелкие) — 80₽/кг", "Помидоры Волгоград (мелкие)", 80, "vegetables"],
+  ["🍅 Помидоры домашние — 240₽/кг", "Помидоры домашние", 240, "vegetables"],
+  ["🍅 Помидоры Астрахань (желтые) — 190₽/кг", "Помидоры Астрахань (желтые)", 190, "vegetables"],
+  ["🥒 Огурцы Московские — 150₽/кг", "Огурцы Московские", 150, "vegetables"],
+  ["🥒 Огурцы Самарские — 80₽/кг", "Огурцы Самарские", 80, "vegetables"],
+  ["🥒 Огурцы домашние — 150₽/кг", "Огурцы домашние", 150, "vegetables"],
+  ["🍑 Слива 4 вида — 190₽/кг - Ташкент; Медовая - 220₽/кг; Желтая - 250₽/кг; Чернослива - 220₽/кг", "Слива 4 вида", 220, "fruits"],
+  ["🍒 Черешня — 580₽/кг", "Черешня", 580, "fruits"],
+  ["🫐 Голубика — 800₽/кг", "Голубика", 800, "fruits"],
+  ["🍑 Абрикос Армения — 240₽/кг", "Абрикос Армения", 240, "fruits"],
+  ["🍑 Абрикос Киргизия — 150₽/кг", "Абрикос Киргизия", 150, "fruits"],
+  ["🍑 Персик Ташкент — 250₽/кг", "Персик Ташкент", 250, "fruits"],
+  ["🍑 Персик Армения — 380₽/кг", "Персик Армения", 380, "fruits"],
+  ["🍑 Персик Турция — 450₽/кг", "Персик Турция", 450, "fruits"],
+  ["🍑 Персик Инжирный — 350₽/кг", "Персик Инжирный", 350, "fruits"],
+  ["🥝 Киви — 450₽/кг", "Киви", 450, "fruits"],
+  ["Кабачок — 55₽/кг", "Кабачок", 55, "vegetables"],
+  ["🍆 Баклажан — 130₽/кг", "Баклажан", 130, "vegetables"],
+  ["🍋 Лимон — 290₽/кг", "Лимон", 290, "fruits"]
 ];
 
-// ===============================
-// ЭЛЕМЕНТЫ DOM
-// ===============================
+/* KBJU and descriptions */
+const kbjuData = {
+  "Арбуз": { kbju: "30 ккал • Б 0.6 г • Ж 0.2 г • У 7.6 г", desc: "💚 Освежающий и богатый ликопином фрукт, помогает выводить токсины и поддерживает водный баланс." },
+  "Груша": { kbju: "57 ккал • Б 0.4 г • Ж 0.4 г • У 15 г", desc: "🍐 Отличный источник клетчатки, поддерживает здоровое пищеварение и снижает уровень холестерина." },
+  "Апельсин": { kbju: "47 ккал • Б 0.9 г • Ж 0.1 г • У 11.8 г", desc: "🍊 Мощный заряд витамина C, укрепляет иммунитет и повышает уровень энергии." },
+  "Дыня торпеда Узбекистан": { kbju: "35 ккал • Б 0.8 г • Ж 0.2 г • У 8 г", desc: "🍈 Освежающая, насыщена калием и витамином C, способствует детоксикации организма." },
+  "Дыня колхозница": { kbju: "36 ккал • Б 0.6 г • Ж 0.3 г • У 8.1 г", desc: "🍈 Поддерживает водный баланс, мягко улучшает обмен веществ." },
+  "Виноград зеленый (без косточек)": { kbju: "69 ккал • Б 0.7 г • Ж 0.2 г • У 18 г", desc: "🍇 Источник антиоксидантов, укрепляет сердце и сосуды." },
+  "Виноград темный (без косточек)": { kbju: "70 ккал • Б 0.6 г • Ж 0.2 г • У 18 г", desc: "🍇 Содержит ресвератрол — мощный антиоксидант для молодости кожи и сосудов." },
+  "Виноград черный (Мерседес)": { kbju: "72 ккал • Б 0.7 г • Ж 0.2 г • У 17 г", desc: "🍇 Благотворно влияет на сердце и иммунную систему." },
+  "Нектарин Узбекистан красный": { kbju: "44 ккал • Б 1.1 г • Ж 0.3 г • У 10 г", desc: "🍑 Богат витамином A и антиоксидантами, поддерживает здоровье кожи." },
+  "Нектарин Турция": { kbju: "45 ккал • Б 1 г • Ж 0.3 г • У 10 г", desc: "🍑 Улучшает обмен веществ и способствует здоровому пищеварению." },
+  "Нектарин Узбекистан желтый (вкус лимон)": { kbju: "45 ккал • Б 1 г • Ж 0.3 г • У 10 г", desc: "🍑 Сочный и ароматный фрукт, укрепляет иммунитет и придаёт энергии." },
+  "Нектарин Узбекистан зеленый": { kbju: "44 ккал • Б 1.1 г • Ж 0.3 г • У 10 г", desc: "🍑 Освежает и помогает очищать организм." },
+  "Банан": { kbju: "89 ккал • Б 1.1 г • Ж 0.3 г • У 23 г", desc: "🍌 Источник калия и магния — поддерживает сердце и нервную систему." },
+  "Слива 4 вида": { kbju: "46 ккал • Б 0.7 г • Ж 0.3 г • У 11 г", desc: "🍑 Помогает очищать кишечник, богата антиоксидантами и витамином C." },
+  "Черешня": { kbju: "63 ккал • Б 1.1 г • Ж 0.2 г • У 16 г", desc: "🍒 Укрепляет сосуды, улучшает сон и настроение." },
+  "Голубика": { kbju: "57 ккал • Б 0.7 г • Ж 0.3 г • У 14 г", desc: "🫐 Один из лучших антиоксидантов, улучшает память и зрение." },
+  "Абрикос Армения": { kbju: "48 ккал • Б 1.4 г • Ж 0.4 г • У 11 г", desc: "🍑 Богат бета-каротином, улучшает зрение и состояние кожи." },
+  "Абрикос Киргизия": { kbju: "48 ккал • Б 1.4 г • Ж 0.4 г • У 11 г", desc: "🍑 Поддерживает работу печени и способствует выработке коллагена." },
+  "Персик Ташкент": { kbju: "39 ккал • Б 0.9 г • Ж 0.3 г • У 10 г", desc: "🍑 Помогает очищению организма и укрепляет иммунитет." },
+  "Персик Армения": { kbju: "39 ккал • Б 0.9 г • Ж 0.3 г • У 10 г", desc: "🍑 Источник витаминов A и E, улучшает состояние кожи и волос." },
+  "Персик Турция": { kbju: "39 ккал • Б 0.9 г • Ж 0.3 г • У 10 г", desc: "🍑 Поддерживает обмен веществ и восполняет запасы антиоксидантов." },
+  "Персик Инжирный": { kbju: "40 ккал • Б 0.9 г • Ж 0.3 г • У 10 г", desc: "🍑 Сладкий и нежный, помогает при усталости и стрессах." },
+  "Киви": { kbju: "41 ккал • Б 1.1 г • Ж 0.5 г • У 10 г", desc: "🥝 Содержит больше витамина C, чем апельсин, укрепляет иммунитет и улучшает пищеварение." },
+  "Лимон": { kbju: "29 ккал • Б 1.1 г • Ж 0.3 г • У 9 г", desc: "🍋 Мощный антиоксидант, очищает организм и улучшает обмен веществ." },
+  "Картофель Чувашия": { kbju: "77 ккал • Б 2 г • Ж 0.1 г • У 17 г", desc: "🥔 Источник калия и витамина B6, даёт энергию и поддерживает нервную систему." },
+  "Картофель Краснодар": { kbju: "77 ккал • Б 2 г • Ж 0.1 г • У 17 г", desc: "🥔 Полезен при физических нагрузках, содержит клетчатку и антиоксиданты." },
+  "Морковь Волгоград": { kbju: "41 ккал • Б 0.9 г • Ж 0.2 г • У 10 г", desc: "🥕 Богата бета-каротином, улучшает зрение и укрепляет кожу." },
+  "Лук репчатый Волгоград": { kbju: "40 ккал • Б 1.1 г • Ж 0.1 г • У 9.3 г", desc: "🧅 Повышает иммунитет, обладает противомикробными свойствами." },
+  "Лук зеленый": { kbju: "32 ккал • Б 1.8 г • Ж 0.2 г • У 7.3 г", desc: "🌱 Источник витамина C, железа и кальция, помогает укрепить кости." },
+  "Укроп, петрушка": { kbju: "43 ккал • Б 3 г • Ж 0.4 г • У 8 г", desc: "🌱 Улучшают пищеварение, освежают дыхание и снабжают организм витаминами." },
+  "Кинза": { kbju: "23 ккал • Б 2.1 г • Ж 0.5 г • У 3.7 г", desc: "🌿 Способствует выведению тяжёлых металлов и поддерживает детоксикацию организма." },
+  "Базелик (пучок)": { kbju: "22 ккал • Б 3.2 г • Ж 0.6 г • У 2.6 г", desc: "🌿 Богат эфирными маслами, улучшает настроение и пищеварение." },
+  "Чеснок Ташкент": { kbju: "149 ккал • Б 6.4 г • Ж 0.5 г • У 33 г", desc: "🧄 Мощный природный антибиотик, укрепляет иммунитет и сердце." },
+  "Перец болгарский": { kbju: "27 ккал • Б 1.3 г • Ж 0.2 г • У 6 г", desc: "🫑 Один из лучших источников витамина C, повышает иммунитет и улучшает кожу." },
+  "Перец чили": { kbju: "40 ккал • Б 2 г • Ж 0.4 г • У 9 г", desc: "🌶️ Улучшает обмен веществ и способствует сжиганию калорий." },
+  "Помидоры Азербайджанские": { kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г", desc: "🍅 Богаты ликопином, поддерживают сердце и защищают клетки от старения." },
+  "Помидоры Ростовские": { kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г", desc: "🍅 Отличный источник антиоксидантов и витамина C." },
+  "Помидоры Волгоград (мелкие)": { kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г", desc: "🍅 Улучшают обмен веществ и укрепляют иммунную систему." },
+  "Помидоры домашние": { kbju: "18 ккал • Б 0.9 г • Ж 0.2 г • У 3.9 г", desc: "🍅 Содержат натуральный ликопин, защищают клетки от старения." },
+  "Помидоры Астрахань (желтые)": { kbju: "20 ккал • Б 1 г • Ж 0.2 г • У 4 г", desc: "🍅 Мягче по кислотности, подходят для людей с чувствительным желудком." },
+  "Огурцы Московские": { kbju: "15 ккал • Б 0.8 г • Ж 0.1 г • У 3.6 г", desc: "🥒 Состоят на 95 % из воды, очищают организм и улучшают состояние кожи." },
+  "Огурцы Самарские": { kbju: "15 ккал • Б 0.8 г • Ж 0.1 г • У 3.6 г", desc: "🥒 Помогают вывести лишнюю жидкость и тонизируют." },
+  "Огурцы домашние": { kbju: "15 ккал • Б 0.8 г • Ж 0.1 г • У 3.6 г", desc: "🥒 Поддерживают баланс жидкости и электролитов в организме." },
+  "Кабачок": { kbju: "24 ккал • Б 1.5 г • Ж 0.3 г • У 4.6 г", desc: "🥒 Легко усваивается, богат клетчаткой и витаминами группы B." },
+  "Баклажан": { kbju: "25 ккал • Б 1 г • Ж 0.2 г • У 6 г", desc: "🍆 Содержит антиоксиданты, снижает уровень холестерина и поддерживает сердце." }
+};
 
-const catalogEl = document.getElementById("catalog");
-const searchInput = document.getElementById("search-input");
-const mobileSearchInput = document.getElementById("mobile-search-input");
-const sortSelect = document.getElementById("sort-select");
-const mobileSort = document.getElementById("mobile-sort");
-const shownCountEl = document.getElementById("shown-count");
-
-const cartPanel = document.getElementById("cart-panel");
-const floatingCart = document.getElementById("floating-cart");
-const cartItemsEl = document.getElementById("cart-items");
-
+/* ========== state & refs ========== */
 let cart = [];
-let currentFilter = "all";
-let currentSearch = "";
-let currentSort = "default";
+let visibleProducts = products.slice();
+let currentFilter = 'all';
 
-// ===============================
-// ОТОБРАЖЕНИЕ ТОВАРОВ
-// ===============================
+const catalogEl = document.getElementById('catalog');
+const shownCountEl = document.getElementById('shown-count');
+const filtersWrap = document.getElementById('filters');
+const searchInput = document.getElementById('search-input');
+const sortSelect = document.getElementById('sort-select');
 
-function renderProducts() {
-  catalogEl.innerHTML = "";
+const mobileSearchInput = document.getElementById('mobile-search-input');
+const mobileSort = document.getElementById('mobile-sort');
+const searchPanel = document.getElementById('search-panel');
+const fabOpen = document.getElementById('fab-open');
+const closeSearchPanelBtn = document.getElementById('close-search-panel');
 
-  let list = [...products];
+const floatingCart = document.getElementById('floating-cart');
+const fcCountEl = document.getElementById('fc-count');
+const fcTotalEl = document.getElementById('fc-total');
 
-  // фильтр
-  if (currentFilter !== "all") {
-    list = list.filter((p) => p.category === currentFilter);
+const cartPanel = document.getElementById('cart-panel');
+const cartItemsEl = document.getElementById('cart-items');
+const cartSumEl = document.getElementById('cart-sum');
+const cartCountSmall = document.getElementById('cart-count-2');
+const cartCloseBtn = document.getElementById('cart-close-btn');
+const clearCartBtn = document.getElementById('clear-cart');
+const gotoCheckoutBtn = document.getElementById('goto-checkout');
+
+const checkoutModal = document.getElementById('modal');
+const modalOrderList = document.getElementById('modal-order-list');
+const modalTotal = document.getElementById('modal-total');
+const orderForm = document.getElementById('order-form');
+const deliveryTimeSelect = document.getElementById('delivery-time');
+const customTimeInput = document.getElementById('custom-time');
+const closeModalBtn = document.getElementById('close-modal');
+
+const loyaltyBadge = document.getElementById('loyalty-badge');
+const heroOrderBtn = document.getElementById('hero-order');
+const viewCatalogBtn = document.getElementById('view-catalog');
+
+const userAreaBtn = document.getElementById('user-area');
+const uaName = document.getElementById('ua-name');
+
+const productModal = document.getElementById('product-modal');
+const pmImg = document.getElementById('pm-img');
+const pmName = document.getElementById('pm-name');
+const pmPrice = document.getElementById('pm-price');
+const pmKbju = document.getElementById('pm-kbju');
+const pmMore = document.getElementById('pm-more');
+const pmDesc = document.getElementById('pm-desc');
+const pmClose = document.getElementById('product-modal-close');
+const pmQty = document.getElementById('pm-qty');
+const pmUnit = document.getElementById('pm-unit');
+const pmAdd = document.getElementById('pm-add');
+
+const authModal = document.getElementById('auth-modal');
+const authTg = document.getElementById('auth-tg');
+const authClose = document.getElementById('auth-close');
+const authPhone = document.getElementById('auth-phone');
+const authPhoneBtn = document.getElementById('auth-phone-btn');
+
+/* ========== simple user system (localStorage) ========== */
+function getStoredUser(){ try { return JSON.parse(localStorage.getItem('bm_user')||'null'); } catch(e){ return null; } }
+function storeUser(u){ localStorage.setItem('bm_user', JSON.stringify(u)); }
+function clearUser(){ localStorage.removeItem('bm_user'); localStorage.removeItem('bm_loyalty'); updateUserUI(); }
+
+function getLoyalty(){ return parseInt(localStorage.getItem('bm_loyalty')||'0',10); }
+function setLoyalty(n){ localStorage.setItem('bm_loyalty', String(n)); updateUserUI(); }
+function addLoyalty(n){ const cur = getLoyalty(); setLoyalty(cur + n); }
+
+function updateUserUI(){
+  const u = getStoredUser();
+  if(u){
+    uaName.textContent = u.name || (u.phone || 'Пользователь');
+    loyaltyBadge.textContent = 'Баллы: ' + getLoyalty();
+  } else {
+    uaName.textContent = 'Войти';
+    loyaltyBadge.textContent = 'Баллы: 0';
   }
+}
 
-  // поиск
-  if (currentSearch.trim() !== "") {
-    const q = currentSearch.toLowerCase();
-    list = list.filter((p) => p.name.toLowerCase().includes(q));
+/* Try to auto-login from Telegram WebApp if available */
+function tryTelegramLogin(){
+  if(tg && tg.initDataUnsafe && tg.initDataUnsafe.user){
+    const tu = tg.initDataUnsafe.user;
+    const user = {
+      id: 'tg_' + (tu.id||Math.random().toString(36).slice(2,8)),
+      name: (tu.first_name || '') + (tu.last_name ? ' '+tu.last_name : ''),
+      tgUser: tu
+    };
+    storeUser(user);
+    if(!localStorage.getItem('bm_loyalty')) localStorage.setItem('bm_loyalty','0');
+    updateUserUI();
+    return true;
   }
+  return false;
+}
 
-  // сортировка
-  if (currentSort === "price_asc") list.sort((a, b) => a.price - b.price);
-  if (currentSort === "price_desc") list.sort((a, b) => b.price - a.price);
-  if (currentSort === "name_asc") list.sort((a, b) => a.name.localeCompare(b.name));
-  if (currentSort === "name_desc") list.sort((a, b) => b.name.localeCompare(a.name));
+/* Auth UI wiring */
+userAreaBtn.addEventListener('click', ()=> {
+  authModal.style.display = 'flex';
+  authModal.setAttribute('aria-hidden','false');
+});
+authClose.addEventListener('click', ()=> {
+  authModal.style.display='none';
+  authModal.setAttribute('aria-hidden','true');
+});
 
-  shownCountEl.textContent = list.length;
+authTg.addEventListener('click', ()=> {
+  if(tryTelegramLogin()){
+    alert('Вход через Telegram выполнен.');
+    authModal.style.display='none';
+  } else {
+    alert('Telegram WebApp не доступен. Откройте мини-приложение через Telegram для этой функции.');
+  }
+  updateUserUI();
+});
 
-  list.forEach((p) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.dataset.id = p.id;
+authPhoneBtn.addEventListener('click', ()=> {
+  const phone = (authPhone.value || '').trim();
+  if(!phone){ alert('Введите номер телефона'); return; }
+  const user = { id: 'phone_' + phone.replace(/\D/g,''), name: phone, phone };
+  storeUser(user);
+  if(!localStorage.getItem('bm_loyalty')) localStorage.setItem('bm_loyalty','0');
+  authModal.style.display='none';
+  updateUserUI();
+  alert('Вход выполнен как ' + phone + ' (тестовый режим).');
+});
+
+/* ========== helpers ========= */
+function idify(s){ return String(s).replace(/\W+/g,'_'); }
+function formatRub(v){ return Math.round(v) + ' ₽'; }
+function displayQty(kg){ if(kg<1) return Math.round(kg*1000) + ' г'; return kg.toFixed(2) + ' кг'; }
+function randInt(max){ return Math.floor(Math.random()*max); }
+
+/* transliteration & slug for images */
+function transliterate(str){
+  if(!str) return '';
+  const map = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
+  return String(str).split('').map(ch=>{
+    const lower = ch.toLowerCase();
+    if(map[lower] !== undefined) return map[lower];
+    if(/[a-z0-9]/i.test(ch)) return ch;
+    if(/\s/.test(ch)) return '-';
+    return '';
+  }).join('');
+}
+function slugify(name){
+  return transliterate(name).toLowerCase()
+    .replace(/[^a-z0-9\-]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+
+function tryLoadImage(imgEl, name){
+  if(!imgEl) return;
+  const exts = ['.webp','.jpg','.jpeg','.png'];
+  const candidates = [];
+  const slug = slugify(name || '');
+  if(slug){
+    exts.forEach(ext => candidates.push('images/' + slug + ext));
+  }
+  const encoded = encodeURIComponent(name || '');
+  if(encoded){
+    exts.forEach(ext => candidates.push('images/' + encoded + ext));
+  }
+  if(name && /^[\x00-\x7F]+$/.test(name)){
+    exts.forEach(ext => candidates.push('images/' + name + ext));
+  }
+  candidates.push('images/noimage.png');
+
+  let idx = 0;
+  function tryNext(){
+    if(idx >= candidates.length){
+      imgEl.src = 'images/noimage.png';
+      imgEl.onload = ()=> imgEl.style.opacity = '1';
+      return;
+    }
+    const url = candidates[idx];
+    const tester = new Image();
+    tester.onload = () => {
+      imgEl.src = url;
+      imgEl.onload = ()=> imgEl.style.opacity = '1';
+    };
+    tester.onerror = () => {
+      idx++;
+      tryNext();
+    };
+    tester.src = url;
+  }
+  tryNext();
+}
+
+/* getters for both array and object product formats */
+function getLabel(it){
+  if(!it) return '';
+  if(Array.isArray(it)) return it[0]||it[1]||'';
+  return it.label||it.name||'';
+}
+function getName(it){
+  if(!it) return '';
+  if(Array.isArray(it)) return it[1]||it[0]||'';
+  return it.name||it.label||'';
+}
+function getPrice(it){
+  if(!it) return 0;
+  if(Array.isArray(it)) return Number(it[2]||0);
+  return Number(it.price||0);
+}
+function getCategory(it){
+  if(!it) return '';
+  if(Array.isArray(it)) return it[3]||'';
+  return it.category||'';
+}
+
+/* ========== renderCatalog ========== */
+function renderCatalog(list){
+  if(!catalogEl) return;
+  catalogEl.innerHTML = '';
+  list.forEach((p, idxVisible) => {
+    const label = getLabel(p);
+    const name = getName(p);
+    const price = getPrice(p);
+    const category = getCategory(p);
+
+    let globalIdx = products.findIndex(pp =>
+      getName(pp) === name &&
+      getPrice(pp) === price &&
+      String(getCategory(pp)) === String(category)
+    );
+    if(globalIdx === -1) globalIdx = idxVisible;
+
+    const card = document.createElement('div');
+    card.className = 'card fade-in';
+    card.dataset.prodName = name;
+    card.dataset.prodLabel = label;
+    card.dataset.prodPrice = price;
 
     card.innerHTML = `
-      <div class="photo">
-        <img src="${p.img}" alt="${p.name}">
-      </div>
+      <div class="photo"><img alt="${name}" loading="lazy"></div>
       <div class="info">
-        <div class="name">${p.name}</div>
-        <div class="desc">${p.desc}</div>
-        <div class="price">${p.price} ₽</div>
+        <div class="name">${label}</div>
+        <div class="desc">${name}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;gap:8px">
+          <div class="price">${price} ₽/кг</div>
+          <div class="actions" style="min-width:120px">
+            <input class="qty-input" type="number" min="1" step="1" value="1" title="Кол-во">
+            <select class="unit-select" title="Единица">
+              <option value="kg">кг</option>
+              <option value="g">гр</option>
+            </select>
+            <button class="add-to-cart" data-idx="${idxVisible}" data-global-idx="${globalIdx}">+</button>
+          </div>
+        </div>
+        <div class="reco small" data-idx="${idxVisible}"></div>
       </div>
     `;
-
-    card.onclick = () => openProductModal(p.id);
     catalogEl.appendChild(card);
+
+    const img = card.querySelector('img');
+    tryLoadImage(img, name);
+
+    const others = products.map((pp,i)=> i !== globalIdx ? pp : null).filter(Boolean);
+    const picks = [];
+    while(picks.length < 2 && others.length){
+      const k = randInt(others.length);
+      picks.push(others.splice(k,1)[0]);
+    }
+    const recoEl = card.querySelector('.reco');
+    if(picks.length) recoEl.textContent = 'Рекомендуем: ' + picks.map(x=>getName(x)).join(', ');
   });
+  if(shownCountEl) shownCountEl.textContent = list.length;
 }
 
-renderProducts();
-// ===============================
-// ПРОДУКТОВЫЙ МОДАЛ
-// ===============================
-
-const productModal = document.getElementById("product-modal");
-const pmImg = document.getElementById("pm-img");
-const pmName = document.getElementById("pm-name");
-const pmPrice = document.getElementById("pm-price");
-const pmKbju = document.getElementById("pm-kbju");
-const pmDesc = document.getElementById("pm-desc");
-const pmMore = document.getElementById("pm-more");
-const pmQty = document.getElementById("pm-qty");
-const pmUnit = document.getElementById("pm-unit");
-const pmAdd = document.getElementById("pm-add");
-const pmClose = document.getElementById("product-modal-close");
-
-let openedProduct = null;
-
-// открыть модал
-function openProductModal(id) {
-  const p = products.find((x) => x.id === id);
-  if (!p) return;
-
-  openedProduct = p;
-
-  pmImg.src = p.img;
-  pmName.textContent = p.name;
-  pmPrice.textContent = p.price + " ₽/кг";
-  pmKbju.textContent = p.kbju;
-  pmDesc.textContent = p.desc;
-
-  pmQty.value = 1;
-  pmUnit.value = "kg";
-
-  pmDesc.style.display = "none";
-  pmMore.textContent = "Подробнее о товаре";
-
-  productModal.style.display = "flex";
-  productModal.setAttribute("aria-hidden", "false");
-}
-
-// закрытие модала
-pmClose.onclick = () => closeProductModal();
-productModal.onclick = (e) => {
-  if (e.target === productModal) closeProductModal();
-};
-
-function closeProductModal() {
-  productModal.style.display = "none";
-  productModal.setAttribute("aria-hidden", "true");
-}
-
-// показать/скрыть описание
-pmMore.onclick = () => {
-  if (pmDesc.style.display === "none") {
-    pmDesc.style.display = "block";
-    pmMore.textContent = "Свернуть";
-  } else {
-    pmDesc.style.display = "none";
-    pmMore.textContent = "Подробнее о товаре";
-  }
-};
-
-// добавление в корзину из модального окна
-pmAdd.onclick = () => {
-  if (!openedProduct) return;
-
-  const qty = parseFloat(pmQty.value) || 1;
-  let qtyKg = pmUnit.value === "g" ? qty / 1000 : qty;
-
-  addToCart({
-    id: openedProduct.id,
-    name: openedProduct.name,
-    price: openedProduct.price,
-    qtyKg,
-  });
-
-  closeProductModal();
-};
-
-// ===============================
-// КОРЗИНА
-// ===============================
-
-const fcCountEl = document.getElementById("fc-count");
-const fcTotalEl = document.getElementById("fc-total");
-const cartSumEl = document.getElementById("cart-sum");
-const cartCountSmall = document.getElementById("cart-count-2");
-
-function addToCart(item) {
-  const exists = cart.find((x) => x.id === item.id);
-  if (exists) {
-    exists.qtyKg += item.qtyKg;
+/* ========== Cart logic ========== */
+function addToCart(productObj){
+  const existing = cart.find(i =>
+    i.name === productObj.name &&
+    JSON.stringify(i.components||[]) === JSON.stringify(productObj.components||[])
+  );
+  if(existing){
+    existing.qtyKg += productObj.qtyKg;
+    existing.total = existing.qtyKg * existing.price;
   } else {
     cart.push({
-      ...item,
-      realId: Date.now() + "_" + Math.random().toString(36).slice(2)
+      id: idify(productObj.name) + '_' + Math.random().toString(36).slice(2,8),
+      name: productObj.name,
+      price: productObj.price,
+      qtyKg: productObj.qtyKg,
+      total: productObj.qtyKg * productObj.price,
+      components: productObj.components || null
     });
   }
-
-  renderCart();
-  showFloatingCart();
-}
-
-function removeFromCart(realId) {
-  cart = cart.filter((x) => x.realId !== realId);
   renderCart();
 }
-
-function clearCart() {
+function removeFromCart(id){
+  cart = cart.filter(i => i.id !== id);
+  renderCart();
+}
+function clearCart(){
   cart = [];
   renderCart();
-  hideFloatingCart();
 }
 
-function renderCart() {
-  cartItemsEl.innerHTML = "";
-
-  let total = 0;
-
-  cart.forEach((item) => {
-    const row = document.createElement("div");
-    row.className = "cart-row";
-
-    const subtotal = item.qtyKg * item.price;
-    total += subtotal;
-
+function renderCart(){
+  if(!cartItemsEl) return;
+  cartItemsEl.innerHTML = '';
+  let sum = 0;
+  cart.forEach(item => {
+    sum += item.total;
+    const row = document.createElement('div');
+    row.className = 'cart-row';
     row.innerHTML = `
-      <div>
-        <div style="font-weight:700">${item.name}</div>
-        <div class="small">${(item.qtyKg < 1 ? (item.qtyKg*1000) + " г" : item.qtyKg + " кг")} • ${subtotal} ₽</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div>
+          <div style="font-weight:700">${item.name}${item.components ? ' (Custom)' : ''}</div>
+          <div class="small" style="color:var(--muted)">${displayQty(item.qtyKg)} • ${formatRub(item.total)}</div>
+        </div>
       </div>
-
-      <button style="background:transparent;border:0;color:#d00;font-size:18px;cursor:pointer" 
-              onclick="removeFromCart('${item.realId}')">
-        ✕
-      </button>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <button style="background:transparent;border:0;cursor:pointer;color:#e74c3c" data-remove="${item.id}">✕</button>
+        <div style="font-weight:700">${formatRub(item.total)}</div>
+      </div>
     `;
-
     cartItemsEl.appendChild(row);
   });
 
-  cartSumEl.textContent = total + " ₽";
-  cartCountSmall.textContent = cart.length;
-  fcCountEl.textContent = cart.length + " поз.";
-  fcTotalEl.textContent = total + " ₽";
+  if(cartSumEl) cartSumEl.textContent = formatRub(sum);
+  if(cartCountSmall) cartCountSmall.textContent = cart.length;
+  if(fcCountEl) fcCountEl.textContent = cart.length + ' поз.';
+  if(fcTotalEl) fcTotalEl.textContent = formatRub(sum);
+
+  if(cart.length > 0) showFloatingCart();
+  else hideFloatingCart();
+
+  cartItemsEl.querySelectorAll('[data-remove]').forEach(btn => {
+    btn.onclick = ()=> removeFromCart(btn.dataset.remove);
+  });
 }
 
-// ===============================
-// ПЛАВАЮЩАЯ КОРЗИНА
-// ===============================
-
-function showFloatingCart() {
-  floatingCart.classList.add("visible");
+/* floating cart helpers */
+function showFloatingCart(){
+  if(!floatingCart) return;
+  floatingCart.classList.add('visible');
+}
+function hideFloatingCart(){
+  if(!floatingCart) return;
+  floatingCart.classList.remove('visible');
 }
 
-function hideFloatingCart() {
-  floatingCart.classList.remove("visible");
-}
+/* ========== Delegation: add to cart from catalog ========== */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.add-to-cart');
+  if(!btn) return;
+  const idxVisible = +btn.dataset.idx;
+  const idxGlobal = btn.dataset.globalIdx !== undefined ? +btn.dataset.globalIdx : null;
+  const card = btn.closest('.card');
+  const qtyInput = card.querySelector('.qty-input');
+  const unitSelect = card.querySelector('.unit-select');
+  const qty = parseFloat(qtyInput.value) || 0;
+  const unit = unitSelect.value;
+  let qtyKg = unit === 'g' ? qty/1000 : qty;
+  if(qtyKg <= 0){ alert('Укажите количество'); return; }
+  const source = (visibleProducts && visibleProducts[idxVisible]) || products[idxGlobal] || products[idxVisible];
+  const name = getName(source);
+  const price = getPrice(source);
 
-floatingCart.onclick = () => {
-  cartPanel.classList.add("show");
-  cartPanel.setAttribute("aria-hidden", "false");
-  hideFloatingCart();
-};
+  addToCart({ name, price, qtyKg });
 
-document.getElementById("cart-close-btn").onclick = () => {
-  cartPanel.classList.remove("show");
-  cartPanel.setAttribute("aria-hidden", "true");
-  showFloatingCart();
-};
-
-document.getElementById("clear-cart").onclick = () => {
-  clearCart();
-  cartPanel.classList.remove("show");
-  cartPanel.setAttribute("aria-hidden", "true");
-  hideFloatingCart();
-};
-// ===============================
-// ПОИСК / СОРТИРОВКА / ФИЛЬТРЫ
-// ===============================
-
-// кнопки фильтров
-document.getElementById("filters").addEventListener("click", (e) => {
-  const pill = e.target.closest(".pill");
-  if (!pill) return;
-
-  document.querySelectorAll("#filters .pill").forEach((x) =>
-    x.classList.remove("active")
-  );
-  pill.classList.add("active");
-
-  currentFilter = pill.dataset.filter || "all";
-  renderProducts();
+  const ck = document.createElement('div');
+  ck.className = 'checkmark';
+  ck.textContent = '✓';
+  const c = card;
+  c.style.position = 'relative';
+  ck.style.position = 'absolute';
+  ck.style.right = '8px';
+  ck.style.top = '8px';
+  ck.style.background = 'rgba(0,0,0,0.7)';
+  ck.style.color = '#fff';
+  ck.style.borderRadius = '999px';
+  ck.style.width = '22px';
+  ck.style.height = '22px';
+  ck.style.display = 'flex';
+  ck.style.alignItems = 'center';
+  ck.style.justifyContent = 'center';
+  ck.style.fontSize = '14px';
+  ck.style.opacity = '0';
+  ck.style.transform = 'scale(.6)';
+  ck.style.transition = 'all .25s ease';
+  c.appendChild(ck);
+  setTimeout(()=>{ ck.style.opacity = '1'; ck.style.transform = 'scale(1)'; }, 10);
+  setTimeout(()=>{ ck.style.opacity = '0'; ck.style.transform = 'scale(.6)'; }, 900);
+  setTimeout(()=>{ ck.remove(); }, 1200);
 });
 
-// поиск в хедере
-searchInput.oninput = () => {
-  currentSearch = searchInput.value.trim();
-  renderProducts();
-};
+/* catalog card click -> open product modal (ignore clicks on interactive elements) */
+catalogEl.addEventListener('click', (e) => {
+  const card = e.target.closest('.card');
+  if(!card) return;
+  if(e.target.closest('.add-to-cart') || e.target.closest('.qty-input') || e.target.closest('.unit-select')) return;
+  const pname = card.dataset.prodName;
+  const plabel = card.dataset.prodLabel;
+  const pprice = card.dataset.prodPrice;
 
-// поиск на мобиле
-mobileSearchInput.oninput = () => {
-  searchInput.value = mobileSearchInput.value;
-  currentSearch = mobileSearchInput.value.trim();
-  renderProducts();
-};
-
-// сортировка
-sortSelect.onchange = () => {
-  currentSort = sortSelect.value;
-  renderProducts();
-};
-
-mobileSort.onchange = () => {
-  sortSelect.value = mobileSort.value;
-  currentSort = mobileSort.value;
-  renderProducts();
-};
-
-// ===============================
-// МОБИЛЬНАЯ ПАНЕЛЬ ПОИСКА
-// ===============================
-
-const searchPanel = document.getElementById("search-panel");
-const fabOpen = document.getElementById("fab-open");
-const closeSearchPanelBtn = document.getElementById("close-search-panel");
-
-fabOpen.onclick = () => {
-  searchPanel.classList.toggle("open");
-  mobileSearchInput.focus();
-};
-
-closeSearchPanelBtn.onclick = () => {
-  searchPanel.classList.remove("open");
-};
-
-// ===============================
-// ОФОРМЛЕНИЕ ЗАКАЗА
-// ===============================
-
-const checkoutModal = document.getElementById("modal");
-const modalOrderList = document.getElementById("modal-order-list");
-const modalTotal = document.getElementById("modal-total");
-const orderForm = document.getElementById("order-form");
-const deliveryTimeSelect = document.getElementById("delivery-time");
-const customTimeInput = document.getElementById("custom-time");
-
-document.getElementById("goto-checkout").onclick = () => {
-  if (cart.length === 0) {
-    alert("Корзина пуста!");
-    return;
-  }
-
-  modalOrderList.innerHTML = "";
-  let total = 0;
-
-  cart.forEach((i) => {
-    const row = document.createElement("div");
-    row.style.padding = "6px 4px";
-
-    const subtotal = i.qtyKg * i.price;
-    total += subtotal;
-
-    row.innerHTML = `
-      <div style="font-weight:700">${i.name}</div>
-      <div style="color:#666">${(i.qtyKg < 1 ? (i.qtyKg*1000) + " г" : i.qtyKg + " кг")} • ${subtotal} ₽</div>
-    `;
-    modalOrderList.appendChild(row);
-  });
-
-  modalTotal.textContent = total + " ₽";
-
-  cartPanel.classList.remove("show");
-  checkoutModal.style.display = "flex";
-  checkoutModal.setAttribute("aria-hidden", "false");
-};
-
-document.getElementById("close-modal").onclick = () => {
-  checkoutModal.style.display = "none";
-  checkoutModal.setAttribute("aria-hidden", "true");
-};
-
-deliveryTimeSelect.onchange = () => {
-  if (deliveryTimeSelect.value === "custom") {
-    customTimeInput.style.display = "block";
+  pmName.textContent = plabel || pname;
+  pmPrice.textContent = pprice ? (pprice + ' ₽/кг') : '';
+  const info = kbjuData[pname];
+  if(info){
+    pmKbju.textContent = info.kbju;
+    pmDesc.textContent = info.desc;
   } else {
-    customTimeInput.style.display = "none";
+    pmKbju.textContent = 'КБЖУ недоступно';
+    pmDesc.textContent = 'Описание недоступно';
   }
-};
+  pmDesc.style.display = 'none';
+  pmMore.textContent = 'Подробнее о товаре';
 
-orderForm.onsubmit = (e) => {
-  e.preventDefault();
+  tryLoadImage(pmImg, pname);
 
-  if (cart.length === 0) {
-    alert("Корзина пуста!");
+  pmQty.value = 1;
+  pmUnit.value = 'kg';
+
+  productModal.style.display = 'flex';
+  productModal.setAttribute('aria-hidden','false');
+});
+
+/* product modal interactions */
+pmMore.addEventListener('click', () => {
+  if(pmDesc.style.display === 'none'){
+    pmDesc.style.display = 'block';
+    pmMore.textContent = 'Свернуть';
+  } else {
+    pmDesc.style.display = 'none';
+    pmMore.textContent = 'Подробнее о товаре';
+  }
+});
+pmClose.addEventListener('click', () => {
+  productModal.style.display = 'none';
+  productModal.setAttribute('aria-hidden','true');
+});
+productModal.addEventListener('click', (e) => {
+  if(e.target === productModal){
+    productModal.style.display = 'none';
+    productModal.setAttribute('aria-hidden','true');
+  }
+});
+
+/* add to cart from modal */
+pmAdd.addEventListener('click', () => {
+  const name = pmName.textContent || '';
+  const priceText = pmPrice.textContent || '';
+  const price = Number((priceText.match(/([\d\.]+)/) || [0,0])[1]) || 0;
+  const qtyRaw = parseFloat(pmQty.value) || 0;
+  const unit = pmUnit.value;
+  let qtyKg = unit === 'g' ? qtyRaw/1000 : qtyRaw;
+  if(qtyKg <= 0){ alert('Укажите количество'); return; }
+
+  addToCart({ name, price, qtyKg });
+
+  productModal.style.display = 'none';
+  productModal.setAttribute('aria-hidden','true');
+});
+
+/* floating cart <-> panel logic */
+let cartOpen = false;
+function showCartPanel(){
+  cartPanel.classList.add('show');
+  cartPanel.setAttribute('aria-hidden','false');
+  cartOpen = true;
+  hideFloatingCart();
+}
+function hideCartPanel(){
+  cartPanel.classList.remove('show');
+  cartPanel.setAttribute('aria-hidden','true');
+  cartOpen = false;
+  setTimeout(()=> showFloatingCart(), 120);
+}
+if(floatingCart) floatingCart.addEventListener('click', ()=>{
+  if(!cartOpen) showCartPanel();
+  else hideCartPanel();
+});
+if(cartCloseBtn) cartCloseBtn.addEventListener('click', ()=> hideCartPanel());
+document.addEventListener('click', (e)=> {
+  if(!cartPanel.classList.contains('show')) return;
+  if(e.target.closest('#cart-panel') || e.target.closest('#floating-cart')) return;
+  hideCartPanel();
+});
+if(clearCartBtn) clearCartBtn.addEventListener('click', ()=>{
+  clearCart();
+  hideCartPanel();
+});
+
+/* ========== Filters / Search / Sort ========== */
+function applySearchAndSort(){
+  const q = (searchInput && searchInput.value || '').trim().toLowerCase();
+  let list = (currentFilter === 'all' || !currentFilter)
+    ? products.slice()
+    : products.filter(p => String(getCategory(p)) === String(currentFilter));
+  if(q){
+    list = list.filter(p =>
+      ( (getLabel(p) + ' ' + getName(p)).toLowerCase().indexOf(q) !== -1 )
+    );
+  }
+  const s = (sortSelect && sortSelect.value) || 'default';
+  if(s === 'price_asc') list.sort((a,b)=> getPrice(a) - getPrice(b));
+  else if(s === 'price_desc') list.sort((a,b)=> getPrice(b) - getPrice(a));
+  else if(s === 'name_asc') list.sort((a,b)=> String(getName(a)).localeCompare(String(getName(b)),'ru'));
+  else if(s === 'name_desc') list.sort((a,b)=> String(getName(b)).localeCompare(String(getName(a)),'ru'));
+  visibleProducts = list;
+  renderCatalog(visibleProducts);
+}
+
+filtersWrap.addEventListener('click', (e)=> {
+  const b = e.target.closest('.pill');
+  if(!b) return;
+  const f = b.dataset.filter || 'all';
+  currentFilter = f;
+  document.querySelectorAll('#filters .pill').forEach(x=>
+    x.classList.toggle('active', x === b)
+  );
+  applySearchAndSort();
+});
+
+if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort());
+if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());
+
+/* mobile search wiring */
+if(fabOpen){
+  fabOpen.addEventListener('click', ()=>{
+    if(searchPanel){
+      searchPanel.classList.toggle('open');
+      mobileSearchInput && mobileSearchInput.focus();
+    }
+  });
+}
+if(closeSearchPanelBtn){
+  closeSearchPanelBtn.addEventListener('click', ()=>{
+    if(searchPanel) searchPanel.classList.remove('open');
+  });
+}
+if(mobileSearchInput){
+  mobileSearchInput.addEventListener('input', ()=>{
+    if(searchInput) searchInput.value = mobileSearchInput.value;
+    applySearchAndSort();
+  });
+}
+if(mobileSort){
+  mobileSort.addEventListener('change', ()=>{
+    if(sortSelect) sortSelect.value = mobileSort.value;
+    applySearchAndSort();
+  });
+}
+
+/* ========== Checkout / order sending ========== */
+function sendOrderToAdmin(payload){
+  if(!ADMIN_WEBHOOK_URL){
+    console.log('ADMIN WEBHOOK not set — order payload:', payload);
+    return Promise.resolve({ ok: false, reason: 'no_webhook' });
+  }
+  return fetch(ADMIN_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(r=>r.json()).catch(err => {
+    console.error('sendOrderToAdmin error', err);
+    return { ok:false, error: String(err) };
+  });
+}
+
+if(gotoCheckoutBtn) gotoCheckoutBtn.addEventListener('click', ()=>{
+  if(cart.length === 0){
+    alert('Корзина пуста — добавьте товары.');
     return;
   }
+  modalOrderList.innerHTML = '';
+  let sum = 0;
+  cart.forEach(i => {
+    const el = document.createElement('div');
+    el.style.padding='6px 4px';
+    el.innerHTML = `
+      <div style="font-weight:700">${i.name}</div>
+      <div style="color:var(--muted)">${displayQty(i.qtyKg)} • ${formatRub(i.total)}</div>
+    `;
+    modalOrderList.appendChild(el);
+    sum += i.total;
+  });
+  modalTotal.textContent = formatRub(sum);
+  hideCartPanel();
+  checkoutModal.style.display = 'flex';
+  checkoutModal.setAttribute('aria-hidden','false');
+});
+
+if(closeModalBtn) closeModalBtn.addEventListener('click', ()=>{
+  checkoutModal.style.display='none';
+  checkoutModal.setAttribute('aria-hidden','true');
+  if(!cartPanel.classList.contains('show')){
+    setTimeout(()=> showFloatingCart(),120);
+  }
+});
+
+if(deliveryTimeSelect) deliveryTimeSelect.addEventListener('change', (e)=>{
+  customTimeInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
+});
+
+if(orderForm) orderForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  if(cart.length === 0){
+    alert('Корзина пуста!');
+    checkoutModal.style.display='none';
+    return;
+  }
+
+  const name = document.getElementById('cust-name').value.trim();
+  const phone = document.getElementById('cust-phone').value.trim();
+  const city = document.getElementById('cust-city').value.trim();
+  const street = document.getElementById('cust-street').value.trim();
+  const house = document.getElementById('cust-house').value.trim();
+  const apt = document.getElementById('cust-apartment').value.trim();
+  const time = deliveryTimeSelect.value === 'custom'
+    ? (customTimeInput.value || '—')
+    : 'Как можно скорее';
+  const email = document.getElementById('cust-email').value.trim();
+  const payment = document.getElementById('payment-method').value;
 
   const payload = {
-    name: document.getElementById("cust-name").value.trim(),
-    phone: document.getElementById("cust-phone").value.trim(),
-    city: document.getElementById("cust-city").value.trim(),
-    street: document.getElementById("cust-street").value.trim(),
-    house: document.getElementById("cust-house").value.trim(),
-    apt: document.getElementById("cust-apartment").value.trim(),
-    time:
-      deliveryTimeSelect.value === "custom"
-        ? customTimeInput.value
-        : "Как можно скорее",
-    email: document.getElementById("cust-email").value.trim(),
-    payment: document.getElementById("payment-method").value,
-    items: cart,
-    total: cart.reduce((s, i) => s + i.qtyKg * i.price, 0),
+    source: 'BravoMarketMiniApp',
+    customer: { name, phone, city, street, house, apt, time, email, payment },
+    items: cart.map(i=>({name:i.name,qtyKg:i.qtyKg,price:i.price,total:i.total})),
+    total: cart.reduce((s,i)=> s+i.total,0),
     timestamp: new Date().toISOString(),
+    user: getStoredUser() || null
   };
 
-  console.log("ORDER SENT:", payload);
+  sendOrderToAdmin(payload).then(resp=>{
+    console.log('admin response', resp);
+  });
 
-  alert("Заказ успешно оформлен! (тестовый режим)");
+  const user = getStoredUser();
+  if(user){
+    const points = Math.floor(payload.total*0.05);
+    const cur = getLoyalty();
+    setLoyalty(cur + points);
+    alert('Заказ отправлен. Начислено ' + points + ' баллов. Всего: ' + (cur+points));
+  } else {
+    alert('Заказ отправлен (тест). Чтобы получать баллы и скидки — войдите в аккаунт.');
+  }
 
   cart = [];
   renderCart();
-
   orderForm.reset();
-  customTimeInput.style.display = "none";
-  checkoutModal.style.display = "none";
-};
-// ===============================
-// АВТОРИЗАЦИЯ / ПОЛЬЗОВАТЕЛЬ
-// ===============================
+  customTimeInput.style.display='none';
+  checkoutModal.style.display='none';
+  setTimeout(()=> showFloatingCart(), 120);
+});
 
-const authModal = document.getElementById("auth-modal");
-const authClose = document.getElementById("auth-close");
-const authPhone = document.getElementById("auth-phone");
-const authPhoneBtn = document.getElementById("auth-phone-btn");
-const userAreaBtn = document.getElementById("user-area");
-const uaName = document.getElementById("ua-name");
-const loyaltyBadge = document.getElementById("loyalty-badge");
+/* hero buttons */
+if(heroOrderBtn) heroOrderBtn.addEventListener('click', ()=>{
+  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior:'smooth'});
+});
+if(viewCatalogBtn) viewCatalogBtn.addEventListener('click', ()=>{
+  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior:'smooth'});
+});
 
-function getStoredUser() {
-  try {
-    return JSON.parse(localStorage.getItem("bm_user") || "null");
-  } catch {
-    return null;
-  }
-}
-
-function storeUser(u) {
-  localStorage.setItem("bm_user", JSON.stringify(u));
-}
-
-function getLoyalty() {
-  return parseInt(localStorage.getItem("bm_loyalty") || "0", 10);
-}
-
-function setLoyalty(n) {
-  localStorage.setItem("bm_loyalty", String(n));
-  updateUserUI();
-}
-
-function updateUserUI() {
-  const u = getStoredUser();
-
-  if (u) {
-    uaName.textContent = u.name || u.phone || "Пользователь";
-    loyaltyBadge.textContent = "Баллы: " + getLoyalty();
-  } else {
-    uaName.textContent = "Войти";
-    loyaltyBadge.textContent = "Баллы: 0";
-  }
-}
-
-userAreaBtn.onclick = () => {
-  authModal.style.display = "flex";
-  authModal.setAttribute("aria-hidden", "false");
-};
-
-authClose.onclick = () => {
-  authModal.style.display = "none";
-  authModal.setAttribute("aria-hidden", "true");
-};
-
-authPhoneBtn.onclick = () => {
-  const phone = authPhone.value.trim();
-  if (!phone) {
-    alert("Введите номер телефона");
-    return;
-  }
-
-  const user = {
-    id: "phone_" + phone.replace(/\D/g, ""),
-    name: phone,
-    phone,
-  };
-
-  storeUser(user);
-
-  if (!localStorage.getItem("bm_loyalty")) {
-    localStorage.setItem("bm_loyalty", "0");
-  }
-
-  authModal.style.display = "none";
+/* ========== init ========== */
+function init(){
+  tryTelegramLogin();
   updateUserUI();
 
-  alert("Вход выполнен: " + phone + " (тестовый режим)");
-};
-
-// ===============================
-// HERO-КНОПКИ
-// ===============================
-
-document.getElementById("hero-order").onclick = () => {
-  window.scrollTo({
-    top: document.querySelector(".main").offsetTop - 20,
-    behavior: "smooth",
-  });
-};
-
-document.getElementById("view-catalog").onclick = () => {
-  window.scrollTo({
-    top: document.querySelector(".main").offsetTop - 20,
-    behavior: "smooth",
-  });
-};
-
-// ===============================
-// ИНИЦИАЛИЗАЦИЯ
-// ===============================
-
-function init() {
-  updateUserUI();
-  renderProducts();
+  visibleProducts = products.slice();
+  renderCatalog(visibleProducts);
   renderCart();
-  hideFloatingCart();
-}
 
+  hideFloatingCart();
+
+  if(tg && typeof tg.expand === 'function') tg.expand();
+}
 init();
