@@ -174,6 +174,24 @@ const authPhoneBtn = document.getElementById('auth-phone-btn');
 deliveryTimeSelect.addEventListener('change', (e) => {
   const val = e.target.value;
 
+  const row = document.getElementById('custom-time-row');
+
+  if (val === 'custom') {
+    row.style.display = 'block';
+    customTimeInput.style.display = 'block';
+  } else {
+    row.style.display = 'none';
+    customTimeInput.style.display = 'none';
+  }
+
+  deliveryTimeHint.textContent = describeDeliveryTime(val, customTimeInput.value);
+
+  if (checkoutTimeDisplay) {
+    checkoutTimeDisplay.textContent = describeDeliveryTime(val, customTimeInput.value);
+  }
+});
+
+
   // Показываем input "указать время" если выбран custom
   customTimeInput.style.display = val === 'custom' ? 'block' : 'none';
 
