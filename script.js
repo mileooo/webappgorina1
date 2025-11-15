@@ -134,13 +134,13 @@ const cartCloseBtn = document.getElementById('cart-close-btn');
 const clearCartBtn = document.getElementById('clear-cart');
 const gotoCheckoutBtn = document.getElementById('goto-checkout');
 
-const checkoutModal = document.getElementById('modal');
+const checkoutOverlay = document.getElementById('checkout-overlay');
 const modalOrderList = document.getElementById('modal-order-list');
 const modalTotal = document.getElementById('modal-total');
-const orderForm = document.getElementById('order-form');
 const deliveryTimeSelect = document.getElementById('delivery-time');
 const customTimeInput = document.getElementById('custom-time');
 const closeModalBtn = document.getElementById('close-modal');
+const checkoutSubmitBtn = document.getElementById('checkout-submit');
 
 const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
@@ -674,40 +674,113 @@ function sendOrderToAdmin(payload){
   });
 }
 
-if(gotoCheckoutBtn) gotoCheckoutBtn.addEventListener('click', ()=>{
-  if(cart.length === 0){
+if (gotoCheckoutBtn) gotoCheckoutBtn.addEventListener('click', () => {
+  if (cart.length === 0) {
     alert('Корзина пуста — добавьте товары.');
     return;
   }
+
+  // наполняем список товаров
   modalOrderList.innerHTML = '';
   let sum = 0;
   cart.forEach(i => {
-    const el = document.createElement('div');
-    el.style.padding='6px 4px';
-    el.innerHTML = `
-      <div style="font-weight:700">${i.name}</div>
-      <div style="color:var(--muted)">${displayQty(i.qtyKg)} • ${formatRub(i.total)}</div>
+    const row = document.createElement('div');
+    const subtotal = i.total;
+    sum += subtotal;
+    row.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:8px">
+        <div>
+          <div style="font-weight:700">${i.name}</div>
+          <div class="small" style="color:var(--muted)">${displayQty(i.qtyKg)}</div>
+        </div>
+        <div style="font-weight:700;white-space:nowrap">${formatRub(subtotal)}</div>
+      </div>
     `;
-    modalOrderList.appendChild(el);
-    sum += i.total;
+    modalOrderList.appendChild(row);
   });
   modalTotal.textContent = formatRub(sum);
+
+  // прячем панель корзины
   hideCartPanel();
-  checkoutModal.style.display = 'flex';
-  checkoutModal.setAttribute('aria-hidden','false');
+
+  // открываем fullscreen checkout
+  checkoutOverlay.setAttribute('aria-hidden', 'false');
 });
 
-if(closeModalBtn) closeModalBtn.addEventListener('click', ()=>{
-  checkoutModal.style.display='none';
-  checkoutModal.setAttribute('aria-hidden','true');
-  if(!cartPanel.classList.contains('show')){
-    setTimeout(()=> showFloatingCart(),120);
+
+if (closeModalBtn) closeModalBtn.addEventListener('click', () => {
+  checkoutOverlay.setAttribute('aria-hidden', 'true');
+  if (!cartPanel.classList.contains('show') && cart.length > 0) {
+    setTimeout(() => showFloatingCart(), 120);
   }
 });
 
-if(deliveryTimeSelect) deliveryTimeSelect.addEventListener('change', (e)=>{
-  customTimeInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
+// закрытие по клику вне панели
+checkoutOverlay.addEventListener('click', (e) => {
+  if (e.target === checkoutOverlay) {
+    checkoutOverlay.setAttribute('aria-hidden', 'true');
+    if (!cartPanel.classList.contains('show') && cart.length > 0) {
+      setTimeout(() => showFloatingCart(), 120);
+    }
+  }
 });
+
+
+if (checkoutSubmitBtn) checkoutSubmitBtn.addEventListener('click', () => {
+  if (cart.length === 0) {
+    alert('Корзина пуста!');
+    checkoutOverlay.setAttribute('aria-hidden', 'true');
+    return;
+  }
+
+  const name = document.getElementById('cust-name').value.trim();
+  const phone = document.getElementById('cust-phone').value.trim();
+  const city = document.getElementById('cust-city').value.trim();
+  const street = document.getElementById('cust-street').value.trim();
+  const house = document.getElementById('cust-house').value.trim();
+  const apt = document.getElementById('cust-apartment').value.trim();
+  const time = deliveryTimeSelect.value === 'custom'
+    ? (customTimeInput.value || '—')
+    : 'Как можно скорее';
+  const email = document.getElementById('cust-email').value.trim();
+  const payment = document.getElementById('payment-method').value;
+
+  // простая валидация
+  if (!name || !phone || !city || !street || !house) {
+    alert('Пожалуйста, заполните все обязательные поля (отмечены *).');
+    return;
+  }
+
+  const payload = {
+    source: 'BravoMarketMiniApp',
+    customer: { name, phone, city, street, house, apt, time, email, payment },
+    items: cart.map(i=>({name:i.name,qtyKg:i.qtyKg,price:i.price,total:i.total})),
+    total: cart.reduce((s,i)=> s + i.total,0),
+    timestamp: new Date().toISOString(),
+    user: getStoredUser() || null
+  };
+
+  // отправка админу
+  sendOrderToAdmin(payload).then(resp => {
+    console.log('admin response', resp);
+  });
+
+  const user = getStoredUser();
+  if (user) {
+    const points = Math.floor(payload.total * 0.05);
+    const cur = getLoyalty();
+    setLoyalty(cur + points);
+    alert('Заказ отправлен. Начислено ' + points + ' баллов. Всего: ' + (cur + points));
+  } else {
+    alert('Заказ отправлен (тест). Чтобы получать баллы и скидки — войдите в аккаунт.');
+  }
+
+  // очистка и закрытие
+  cart = [];
+  renderCart();
+  checkoutOverlay.setAttribute('aria-hidden', 'true');
+});
+
 
 if(orderForm) orderForm.addEventListener('submit', (e)=>{
   e.preventDefault();
