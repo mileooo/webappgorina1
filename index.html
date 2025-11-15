@@ -195,17 +195,35 @@
 
       <!-- Блок: время -->
       <section class="checkout-section">
-        <div class="checkout-section-title">Время доставки</div>
-        <div class="form-row">
-          <select id="delivery-time">
-            <option value="asap">Как можно скорее</option>
-            <option value="custom">Указать время</option>
-          </select>
-        </div>
-        <div class="form-row" id="custom-time-row" style="display:none">
-          <input type="time" id="custom-time">
-        </div>
-      </section>
+  <div class="checkout-section-title">Время доставки</div>
+
+  <div class="form-row">
+    <select id="delivery-time">
+      <option value="asap">Как можно скорее (до 1 часа)</option>
+      <option value="slot_15">В течение 15 минут</option>
+      <option value="slot_30">В течение 30 минут</option>
+      <option value="slot_60">В течение 60 минут</option>
+      <option value="custom">Указать точное время</option>
+    </select>
+  </div>
+
+  <div class="form-row" id="custom-time-row" style="display:none">
+    <input type="time" id="custom-time">
+  </div>
+
+<div class="small" id="delivery-time-hint">
+    Мы доставим в выбранный интервал. Курьер свяжется при необходимости.
+</div>
+
+<!-- 🔥 ДОБАВИЛИ ВЫВОД ВЫБРАННОГО ИНТЕРВАЛА -->
+<div class="checkout-selected-time">
+    <span class="small muted">Вы выбрали:</span>
+    <div id="checkout-time-display" class="strong">Как можно скорее (до 1 часа)</div>
+</div>
+
+</section>
+
+
 
       <!-- Блок: оплата -->
       <section class="checkout-section">

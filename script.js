@@ -139,8 +139,11 @@ const modalOrderList = document.getElementById('modal-order-list');
 const modalTotal = document.getElementById('modal-total');
 const deliveryTimeSelect = document.getElementById('delivery-time');
 const customTimeInput = document.getElementById('custom-time');
+const deliveryTimeHint = document.getElementById('delivery-time-hint'); // ← добавили
 const closeModalBtn = document.getElementById('close-modal');
 const checkoutSubmitBtn = document.getElementById('checkout-submit');
+const checkoutTimeDisplay = document.getElementById('checkout-time-display');
+
 
 const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
@@ -166,6 +169,34 @@ const authTg = document.getElementById('auth-tg');
 const authClose = document.getElementById('auth-close');
 const authPhone = document.getElementById('auth-phone');
 const authPhoneBtn = document.getElementById('auth-phone-btn');
+
+// 🔥 Новый обработчик выбора времени доставки
+deliveryTimeSelect.addEventListener('change', (e) => {
+  const val = e.target.value;
+
+  // Показываем input "указать время" если выбран custom
+  customTimeInput.style.display = val === 'custom' ? 'block' : 'none';
+
+  // Обновляем подсказку / текст
+  deliveryTimeHint.textContent = describeDeliveryTime(val, customTimeInput.value);
+
+  // Если есть отображаемая строка в итоговом блоке — тоже обновляем
+  if (checkoutTimeDisplay) {
+    checkoutTimeDisplay.textContent = describeDeliveryTime(val, customTimeInput.value);
+  }
+});
+
+// 🔥 Реагируем на ввод пользовательского времени
+customTimeInput.addEventListener('input', () => {
+  const val = customTimeInput.value;
+
+  deliveryTimeHint.textContent = describeDeliveryTime('custom', val);
+
+  if (checkoutTimeDisplay) {
+    checkoutTimeDisplay.textContent = describeDeliveryTime('custom', val);
+  }
+});
+
 
 /* ========== simple user system (localStorage) ========== */
 function getStoredUser(){ try { return JSON.parse(localStorage.getItem('bm_user')||'null'); } catch(e){ return null; } }
@@ -318,6 +349,25 @@ function getCategory(it){
   if(!it) return '';
   if(Array.isArray(it)) return it[3]||'';
   return it.category||'';
+}
+function describeDeliveryTime(code, customValue){
+  switch (code) {
+    case 'asap':
+      return 'Как можно скорее (до 1 часа)';
+    case 'slot_15':
+      return 'В течение 15 минут';
+    case 'slot_30':
+      return 'В течение 30 минут';
+    case 'slot_60':
+      return 'В течение 60 минут';
+    case 'custom':
+      if (customValue) {
+        return 'Ко времени ' + customValue;
+      }
+      return 'Ко времени (время не указано)';
+    default:
+      return 'Как можно скорее';
+  }
 }
 
 /* ========== renderCatalog ========== */
@@ -739,9 +789,8 @@ if (checkoutSubmitBtn) checkoutSubmitBtn.addEventListener('click', () => {
   const street = document.getElementById('cust-street').value.trim();
   const house = document.getElementById('cust-house').value.trim();
   const apt = document.getElementById('cust-apartment').value.trim();
-  const time = deliveryTimeSelect.value === 'custom'
-    ? (customTimeInput.value || '—')
-    : 'Как можно скорее';
+  const timeCode = deliveryTimeSelect.value;
+  const time = describeDeliveryTime(timeCode, customTimeInput.value || '');
   const email = document.getElementById('cust-email').value.trim();
   const payment = document.getElementById('payment-method').value;
 
