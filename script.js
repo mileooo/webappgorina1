@@ -146,7 +146,7 @@ const deliveryTimeHint = document.getElementById('delivery-time-hint'); // ‚Üê –
 const closeModalBtn = document.getElementById('close-modal');
 const checkoutSubmitBtn = document.getElementById('checkout-submit');
 const checkoutTimeDisplay = document.getElementById('checkout-time-display');
-
+const addressSection = document.getElementById('address-section');
 
 const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
