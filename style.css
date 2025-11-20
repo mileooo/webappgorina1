@@ -338,3 +338,93 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   border-color: #A4DE02;
   box-shadow: 0 0 0 3px rgba(164, 222, 2, 0.25);
 }
+/* ===== INPUTS / SELECTS  ===== */
+
+.checkout-section input,
+.checkout-section select,
+.checkout-section textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #E5E5E5;
+  background: #F9F9F9;
+  font-size: 15px;
+  transition: 0.2s ease;
+  outline: none;
+}
+
+.checkout-section input:focus,
+.checkout-section select:focus,
+.checkout-section textarea:focus {
+  border-color: #3EB489;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(62, 180, 137, 0.15);
+}
+
+.checkout-section select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='22' viewBox='0 0 24 24' width='22' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+
+/* ===== Радиокнопки ===== */
+
+.checkout-section input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #3EB489;
+  cursor: pointer;
+}
+
+
+/* ===== Блоки секций ===== */
+
+.checkout-section {
+  background: #fff;
+  padding: 18px 14px;
+  margin-bottom: 12px;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.checkout-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+
+/* ===== Выбранное время ===== */
+
+.checkout-selected-time {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #F0F8F5;
+  color: #2E8B68;
+}
+
+.checkout-selected-time .strong {
+  font-weight: 700;
+}
+
+
+/* ===== Кнопка оформления ===== */
+
+.checkout-submit {
+  background: #34C48B !important;
+  color: #fff !important;
+  border-radius: 16px;
+  padding: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.checkout-submit:active {
+  background: #2CAF7A !important;
+  transform: scale(0.97);
+}
