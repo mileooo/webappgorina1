@@ -356,52 +356,89 @@ updateAddressVisibility();
 /* отправка заказа */
 if (checkoutSubmitBtn && checkoutOverlay) {
   checkoutSubmitBtn.addEventListener('click', () => {
+
     if (cart.length === 0) {
       alert('Корзина пуста!');
-      checkoutOverlay.setAttribute('aria-hidden', 'true');
       return;
     }
 
     const isPickup = deliveryModePickup && deliveryModePickup.checked;
 
-    const name = (document.getElementById('cust-name')?.value || '').trim();
-    const phone = (document.getElementById('cust-phone')?.value || '').trim();
-    const city = (document.getElementById('cust-city')?.value || '').trim();
-    const street = (document.getElementById('cust-street')?.value || '').trim();
-    const house = (document.getElementById('cust-house')?.value || '').trim();
-    const apt = (document.getElementById('cust-apartment')?.value || '').trim();
-    const email = (document.getElementById('cust-email')?.value || '').trim();
-    const payment = (document.getElementById('payment-method')?.value || 'cash');
-    const comment = (document.getElementById('cust-comment')?.value || '').trim();
+    // обязательные поля (общие)
+    const name = document.getElementById('cust-name').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+    const email = document.getElementById('cust-email').value.trim();
+    const payment = document.getElementById('payment-method').value;
+    const comment = document.getElementById('cust-comment').value.trim();
 
-    const timeCode = deliveryTimeSelect ? deliveryTimeSelect.value : 'asap';
-    const time = describeDeliveryTime(timeCode, customTimeInput ? customTimeInput.value || '' : '');
-
-    // базовая валидация
     if (!name || !phone) {
-      alert('Пожалуйста, укажите имя и телефон.');
+      alert("Пожалуйста, заполните имя и телефон.");
       return;
     }
 
-    // если доставка курьером — проверяем адрес
+    let timeText = "";
+
+    if (isPickup) {
+      // Время самовывоза
+      const v = pickupTimeSelect.value;
+
+      if (v === "custom") {
+        const t = pickupCustomTimeInput.value;
+        if (!t) {
+          alert("Укажите точное время самовывоза");
+          return;
+        }
+        timeText = "К " + t;
+      } else {
+        timeText = "Через " + v + " минут";
+      }
+
+    } else {
+      // Время доставки
+      const v = deliveryTimeSelect.value;
+
+      if (v === "custom") {
+        const t = customTimeInput.value;
+        if (!t) {
+          alert("Укажите точное время доставки");
+          return;
+        }
+        timeText = "К " + t + " ± 10 минут";
+      } else {
+        timeText = describeDeliveryTime(v, customTimeInput.value);
+      }
+    }
+
+    // адрес (только для доставки)
+    let city = "";
+    let street = "";
+    let house = "";
+    let apt = "";
+
     if (!isPickup) {
+      city = document.getElementById('cust-city').value.trim();
+      street = document.getElementById('cust-street').value.trim();
+      house = document.getElementById('cust-house').value.trim();
+      apt = document.getElementById('cust-apartment').value.trim();
+
       if (!city || !street || !house) {
-        alert('Пожалуйста, заполните город, улицу и дом для доставки.');
+        alert("Пожалуйста, заполните город, улицу и дом.");
         return;
       }
     }
 
-    // если самовывоз — берём выбранный пункт
+    // пункт самовывоза
     let pickupPoint = null;
     if (isPickup) {
-      const checkedPickup = document.querySelector('input[name="pickup-point"]:checked');
-      pickupPoint = checkedPickup ? checkedPickup.value : null;
-      if (!pickupPoint) {
-        alert('Выберите пункт самовывоза.');
+      const selected = document.querySelector('input[name="pickup-point"]:checked');
+      if (!selected) {
+        alert("Выберите пункт самовывоза.");
         return;
       }
+      pickupPoint = selected.value;
     }
 
+    // корзина
     const items = cart.map(i => ({
       name: i.name,
       qtyKg: i.qtyKg,
@@ -411,59 +448,36 @@ if (checkoutSubmitBtn && checkoutOverlay) {
 
     const total = cart.reduce((s, i) => s + i.total, 0);
 
+    // финальный payload
     const payload = {
-      source: 'BravoMarketMiniApp',
-      deliveryMode: isPickup ? 'pickup' : 'delivery',
-      pickupPoint: isPickup ? pickupPoint : null,
+      mode: isPickup ? "pickup" : "delivery",
+      pickupPoint,
       customer: {
         name,
         phone,
-        city: isPickup ? 'Ульяновск' : city,
-        street: isPickup ? '' : street,
-        house: isPickup ? '' : house,
-        apt,
-        time,
         email,
         payment,
-        comment
+        comment,
+        city,
+        street,
+        house,
+        apt,
+        time: timeText
       },
       items,
       total,
-      timestamp: new Date().toISOString(),
-      user: getStoredUser ? (getStoredUser() || null) : null
+      timestamp: new Date().toISOString()
     };
 
-    // отправляем на вебхук (если настроен)
-    sendOrderToAdmin(payload).then(resp => {
-      console.log('admin response', resp);
-    });
+    console.log("PAYLOAD:", payload);
 
-    // лояльность
-    const user = getStoredUser ? getStoredUser() : null;
-    if (user) {
-      const points = Math.floor(total * 0.05);
-      if (typeof getLoyalty === 'function' && typeof setLoyalty === 'function') {
-        const cur = getLoyalty();
-        setLoyalty(cur + points);
-        alert('Заказ отправлен. Начислено ' + points + ' баллов. Всего: ' + (cur + points));
-      } else {
-        alert('Заказ отправлен. Спасибо за заказ!');
-      }
-    } else {
-      alert('Заказ отправлен (тест). Чтобы получать баллы и скидки — войдите в аккаунт.');
-    }
+    alert("Заказ успешно оформлен!");
+    checkoutOverlay.setAttribute("aria-hidden", "true");
 
-    // очистка
     cart = [];
     renderCart();
-    checkoutOverlay.setAttribute('aria-hidden', 'true');
-    if (!cartPanel.classList.contains('show')) {
-      setTimeout(() => showFloatingCart(), 120);
-    }
   });
 }
-
-
 
 /* ========== simple user system (localStorage) ========== */
 function getStoredUser(){ try { return JSON.parse(localStorage.getItem('bm_user')||'null'); } catch(e){ return null; } }
