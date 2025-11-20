@@ -276,6 +276,28 @@
         </div>
       </section>
 
+<!-- Блок: время самовывоза -->
+<section class="checkout-section" id="pickup-time-section" style="display:none">
+  <div class="checkout-section-title">Заберу заказ</div>
+
+  <div class="form-row">
+    <select id="pickup-time">
+      <option value="15">Через 15 минут</option>
+      <option value="30">Через 30 минут</option>
+      <option value="60">Через 1 час</option>
+      <option value="custom">К определённому времени</option>
+    </select>
+  </div>
+
+  <div class="form-row" id="pickup-custom-time-row" style="display:none">
+    <input type="time" id="pickup-custom-time">
+  </div>
+
+  <div class="small" id="pickup-time-hint">
+    Забрать в выбранное время
+  </div>
+</section>
+
       <!-- Блок: оплата -->
       <section class="checkout-section">
         <div class="checkout-section-title">Оплата</div>

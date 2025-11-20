@@ -152,6 +152,13 @@ const checkoutSubmitBtn = document.getElementById('checkout-submit');
 const checkoutTimeDisplay = document.getElementById('checkout-time-display');
 const addressSection = document.getElementById('address-section');
 
+// блоки самовывоза
+const pickupTimeSection = document.getElementById('pickup-time-section');
+const pickupTimeSelect = document.getElementById('pickup-time');
+const pickupCustomTimeRow = document.getElementById('pickup-custom-time-row');
+const pickupCustomTimeInput = document.getElementById('pickup-custom-time');
+const pickupTimeHint = document.getElementById('pickup-time-hint');
+
 const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
@@ -203,17 +210,24 @@ function describeDeliveryTime(code, customVal) {
 function updateAddressVisibility() {
   const isPickup = deliveryModePickup && deliveryModePickup.checked;
 
-  // Поля имени и телефона — всегда показываем
-  // Скрываем только адрес
+  // Скрываем/показываем адрес
   if (fieldCity) fieldCity.style.display = isPickup ? 'none' : 'block';
   if (fieldStreet) fieldStreet.style.display = isPickup ? 'none' : 'block';
   if (fieldHouse) fieldHouse.style.display = isPickup ? 'none' : 'block';
   if (fieldApt) fieldApt.style.display = isPickup ? 'none' : 'block';
 
-  // Показываем выбор пункта выдачи
+  // Показываем адреса самовывоза
   if (pickupInfo) pickupInfo.style.display = isPickup ? 'block' : 'none';
-}
 
+  // Показываем нужный блок времени
+  if (isPickup) {
+    pickupTimeSection.style.display = 'block';
+    deliveryTimeSelect.closest('.checkout-section').style.display = 'none';
+  } else {
+    pickupTimeSection.style.display = 'none';
+    deliveryTimeSelect.closest('.checkout-section').style.display = 'block';
+  }
+}
 
 /* открытие checkout при клике "Оформить заказ" */
 if (gotoCheckoutBtn && checkoutOverlay) {
@@ -297,6 +311,33 @@ if (customTimeInput) {
     if (checkoutTimeDisplay) checkoutTimeDisplay.textContent = text;
   });
 }
+
+/* обработка выбора времени самовывоза */
+if (pickupTimeSelect) {
+  pickupTimeSelect.addEventListener('change', () => {
+    const v = pickupTimeSelect.value;
+
+    if (pickupCustomTimeRow)
+      pickupCustomTimeRow.style.display = v === 'custom' ? 'block' : 'none';
+
+    if (pickupTimeHint) {
+      if (v === 'custom') {
+        pickupTimeHint.textContent = "К выбранному времени";
+      } else {
+        pickupTimeHint.textContent = "Через " + v + " минут";
+      }
+    }
+  });
+}
+
+/* ввод точного времени самовывоза */
+if (pickupCustomTimeInput) {
+  pickupCustomTimeInput.addEventListener('input', () => {
+    if (pickupTimeHint)
+      pickupTimeHint.textContent = "К " + pickupCustomTimeInput.value;
+  });
+}
+
 
 /* переключение способа получения — доставка / самовывоз */
 if (deliveryModeDelivery) {
