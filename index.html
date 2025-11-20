@@ -165,10 +165,10 @@
 <!-- FULLSCREEN CHECKOUT (как Самокат) -->
 <div id="checkout-overlay" class="checkout-overlay" aria-hidden="true">
   <div class="checkout-panel">
+
+    <!-- HEADER -->
     <header class="checkout-header">
-      <button type="button" id="close-modal" class="checkout-back-btn" aria-label="Назад">
-        ←
-      </button>
+      <button type="button" id="close-modal" class="checkout-back-btn" aria-label="Назад">←</button>
       <div class="checkout-title-block">
         <div class="checkout-title">Оформление заказа</div>
         <div class="checkout-subtitle">Проверьте адрес и время доставки</div>
@@ -178,68 +178,125 @@
     <main class="checkout-main">
 
       <!-- Блок: способ получения -->
-<section class="checkout-section">
-  <div class="checkout-section-title">Способ получения</div>
+      <section class="checkout-section">
+        <div class="checkout-section-title">Способ получения</div>
 
-  <label class="form-row" style="display:flex;align-items:center;gap:8px;cursor:pointer">
-    <input type="radio" name="delivery-mode" value="delivery" id="delivery-mode-delivery" checked>
-    <span>Доставка курьером</span>
-  </label>
+        <label class="form-row" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="radio" name="delivery-mode" value="delivery" id="delivery-mode-delivery" checked>
+          <span>Доставка курьером</span>
+        </label>
 
-  <label class="form-row" style="display:flex;align-items:center;gap:8px;cursor:pointer">
-    <input type="radio" name="delivery-mode" value="pickup" id="delivery-mode-pickup">
-    <span>Самовывоз</span>
-  </label>
+        <label class="form-row" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="radio" name="delivery-mode" value="pickup" id="delivery-mode-pickup">
+          <span>Самовывоз</span>
+        </label>
 
-  <div class="small" id="pickup-info" style="display:none; margin-top:6px;">
-    Самовывоз: пункт выдачи Bravo Market (можно изменить адрес).
-  </div>
-</section>
+        <!-- Адреса самовывоза -->
+        <div id="pickup-info" style="display:none; margin-top:10px;">
+
+          <div style="font-weight:700;margin-bottom:6px;font-size:14px;">
+            Выберите пункт выдачи:
+          </div>
+
+          <label class="form-row" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer">
+            <input type="radio" name="pickup-point" value="Ульяновск, ул. Рябикова 89а" checked>
+            <span>Ульяновск, ул. Рябикова 89а</span>
+          </label>
+
+          <label class="form-row" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="radio" name="pickup-point" value="Ульяновск, ул. Рябикова 112б">
+            <span>Ульяновск, ул. Рябикова 112б</span>
+          </label>
+
+        </div>
+      </section>
+
+      <!-- Блок: Адрес доставки -->
+      <section class="checkout-section" id="address-section">
+        <div class="checkout-section-title">Адрес доставки</div>
+
+        <div class="form-row">
+          <label>Имя *</label>
+          <input id="cust-name" required placeholder="Ваше имя">
+        </div>
+
+        <div class="form-row">
+          <label>Телефон *</label>
+          <input id="cust-phone" required placeholder="+7...">
+        </div>
+
+        <div class="form-row">
+          <label>Город *</label>
+          <input id="cust-city" required placeholder="Например: Ульяновск">
+        </div>
+
+        <div class="form-row">
+          <label>Улица *</label>
+          <input id="cust-street" required placeholder="Улица">
+        </div>
+
+        <div class="form-row row-2">
+          <div class="col">
+            <label>Дом *</label>
+            <input id="cust-house" required placeholder="15">
+          </div>
+
+          <div class="col">
+            <label>Квартира</label>
+            <input id="cust-apartment" placeholder="Необязательно">
+          </div>
+        </div>
+      </section>
 
       <!-- Блок: время -->
       <section class="checkout-section">
-  <div class="checkout-section-title">Время доставки</div>
+        <div class="checkout-section-title">Время доставки</div>
 
-  <div class="form-row">
-    <select id="delivery-time">
-      <option value="asap">Как можно скорее (до 1 часа)</option>
-      <option value="slot_15">В течение 15 минут</option>
-      <option value="slot_30">В течение 30 минут</option>
-      <option value="slot_60">В течение 60 минут</option>
-      <option value="custom">Указать точное время</option>
-    </select>
-  </div>
+        <div class="form-row">
+          <select id="delivery-time">
+            <option value="asap">Как можно скорее (до 1 часа)</option>
+            <option value="slot_15">В течение 15 минут</option>
+            <option value="slot_30">В течение 30 минут</option>
+            <option value="slot_60">В течение 60 минут</option>
+            <option value="custom">Указать точное время</option>
+          </select>
+        </div>
 
-  <div class="form-row" id="custom-time-row" style="display:none">
-    <input type="time" id="custom-time">
-  </div>
+        <div class="form-row" id="custom-time-row" style="display:none">
+          <input type="time" id="custom-time">
+        </div>
 
-<div class="small" id="delivery-time-hint">
-    Мы доставим в выбранный интервал. Курьер свяжется при необходимости.
-</div>
+        <div class="small" id="delivery-time-hint">
+          Мы доставим в выбранный интервал.
+        </div>
 
-<!-- 🔥 ДОБАВИЛИ ВЫВОД ВЫБРАННОГО ИНТЕРВАЛА -->
-<div class="checkout-selected-time">
-    <span class="small muted">Вы выбрали:</span>
-    <div id="checkout-time-display" class="strong">Как можно скорее (до 1 часа)</div>
-</div>
-
-</section>
-
-
+        <div class="checkout-selected-time">
+          <span class="small muted">Вы выбрали:</span>
+          <div id="checkout-time-display" class="strong">Как можно скорее (до 1 часа)</div>
+        </div>
+      </section>
 
       <!-- Блок: оплата -->
       <section class="checkout-section">
         <div class="checkout-section-title">Оплата</div>
+
         <div class="form-row">
           <select id="payment-method">
             <option value="cash">Наличные</option>
             <option value="card">Карта курьеру</option>
           </select>
         </div>
+
         <div class="form-row">
           <label>Почта для чека</label>
           <input id="cust-email" type="email" placeholder="Необязательно">
+        </div>
+
+        <div class="form-row">
+          <label>Комментарий к заказу</label>
+          <textarea id="cust-comment"
+            placeholder="Например: не звонить, оставить у двери…"
+            style="min-height:70px"></textarea>
         </div>
       </section>
 
@@ -255,8 +312,8 @@
           <span>Итого к оплате</span>
           <span id="modal-total" class="summary-total">0 ₽</span>
         </div>
-        <div class="summary-hint">Цены и вес могут незначительно отличаться при сборке заказа.</div>
       </section>
+
     </main>
 
     <footer class="checkout-footer">
@@ -264,47 +321,7 @@
         Оформить заказ
       </button>
     </footer>
-  </div>
-</div>
 
-      <div style="flex:1;min-width:220px">
-        <form id="order-form">
-          <div class="form-row"><label>Имя *</label><input id="cust-name" required></div>
-          <div class="form-row"><label>Телефон *</label><input id="cust-phone" required></div>
-          <div class="form-row"><label>Город *</label><input id="cust-city" required placeholder="Например: Москва"></div>
-          <div class="form-row"><label>Улица *</label><input id="cust-street" required></div>
-          <div class="form-row" style="display:flex;gap:8px">
-            <div style="flex:1"><label>Дом *</label><input id="cust-house" required></div>
-            <div style="flex:1"><label>Квартира</label><input id="cust-apartment"></div>
-          </div>
-          <div class="form-row">
-            <label>Время доставки *</label>
-            <select id="delivery-time">
-              <option value="asap">Как можно скорее</option>
-              <option value="custom">Указать время</option>
-            </select>
-            <input type="time" id="custom-time" style="display:none;margin-top:8px">
-          </div>
-          <div class="form-row"><label>Почта для чека</label><input id="cust-email" type="email"></div>
-          <div class="form-row"><label>Способ оплаты *</label>
-            <select id="payment-method">
-              <option value="cash">Наличные</option>
-              <option value="card">Карта</option>
-            </select>
-          </div>
-          <div class="form-row">
-          <label>Комментарий к заказу</label>
-          <textarea id="cust-comment" 
-            placeholder="Например: не звонить, оставить у двери, положить спелые бананы"
-            style="width:100%;min-height:70px;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:14px;"></textarea>
-          </div>
-          <div class="form-actions" style="margin-top:12px">
-            <button type="button" id="close-modal" class="btn btn-clear">Отмена</button>
-            <button type="submit" class="btn btn-check">Подтвердить заказ</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 </div>
 
