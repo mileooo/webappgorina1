@@ -176,22 +176,25 @@
     </header>
 
     <main class="checkout-main">
-      <!-- Блок: адрес -->
-      <section class="checkout-section">
-        <div class="checkout-section-title">Адрес доставки</div>
-        <div class="form-row"><label>Имя *</label><input id="cust-name" required></div>
-        <div class="form-row"><label>Телефон *</label><input id="cust-phone" required></div>
-        <div class="form-row"><label>Город *</label><input id="cust-city" required placeholder="Например: Москва"></div>
-        <div class="form-row"><label>Улица *</label><input id="cust-street" required></div>
-        <div class="form-row row-2">
-          <div class="col">
-            <label>Дом *</label><input id="cust-house" required>
-          </div>
-          <div class="col">
-            <label>Квартира</label><input id="cust-apartment">
-          </div>
-        </div>
-      </section>
+
+      <!-- Блок: способ получения -->
+<section class="checkout-section">
+  <div class="checkout-section-title">Способ получения</div>
+
+  <label class="form-row" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+    <input type="radio" name="delivery-mode" value="delivery" id="delivery-mode-delivery" checked>
+    <span>Доставка курьером</span>
+  </label>
+
+  <label class="form-row" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+    <input type="radio" name="delivery-mode" value="pickup" id="delivery-mode-pickup">
+    <span>Самовывоз</span>
+  </label>
+
+  <div class="small" id="pickup-info" style="display:none; margin-top:6px;">
+    Самовывоз: пункт выдачи Bravo Market (можно изменить адрес).
+  </div>
+</section>
 
       <!-- Блок: время -->
       <section class="checkout-section">
@@ -288,6 +291,12 @@
               <option value="cash">Наличные</option>
               <option value="card">Карта</option>
             </select>
+          </div>
+          <div class="form-row">
+          <label>Комментарий к заказу</label>
+          <textarea id="cust-comment" 
+            placeholder="Например: не звонить, оставить у двери, положить спелые бананы"
+            style="width:100%;min-height:70px;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:14px;"></textarea>
           </div>
           <div class="form-actions" style="margin-top:12px">
             <button type="button" id="close-modal" class="btn btn-clear">Отмена</button>

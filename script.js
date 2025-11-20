@@ -139,6 +139,9 @@ const modalOrderList = document.getElementById('modal-order-list');
 const modalTotal = document.getElementById('modal-total');
 const deliveryTimeSelect = document.getElementById('delivery-time');
 const customTimeInput = document.getElementById('custom-time');
+const deliveryModeDelivery = document.getElementById('delivery-mode-delivery');
+const deliveryModePickup = document.getElementById('delivery-mode-pickup');
+const pickupInfo = document.getElementById('pickup-info');
 const deliveryTimeHint = document.getElementById('delivery-time-hint'); // ← добавили
 const closeModalBtn = document.getElementById('close-modal');
 const checkoutSubmitBtn = document.getElementById('checkout-submit');
@@ -779,6 +782,18 @@ checkoutOverlay.addEventListener('click', (e) => {
   }
 });
 
+// переключение способа получения — доставка / самовывоз
+if (deliveryModeDelivery) {
+  deliveryModeDelivery.addEventListener('change', () => {
+    pickupInfo.style.display = 'none';
+  });
+}
+
+if (deliveryModePickup) {
+  deliveryModePickup.addEventListener('change', () => {
+    pickupInfo.style.display = 'block';
+  });
+}
 
 if (checkoutSubmitBtn) checkoutSubmitBtn.addEventListener('click', () => {
   if (cart.length === 0) {
@@ -806,7 +821,19 @@ if (checkoutSubmitBtn) checkoutSubmitBtn.addEventListener('click', () => {
 
   const payload = {
     source: 'BravoMarketMiniApp',
-    customer: { name, phone, city, street, house, apt, time, email, payment },
+    customer: { 
+  name, 
+  phone, 
+  city, 
+  street, 
+  house, 
+  apt, 
+  time, 
+  email, 
+  payment,
+  comment: document.getElementById('cust-comment').value.trim()
+},
+
     items: cart.map(i=>({name:i.name,qtyKg:i.qtyKg,price:i.price,total:i.total})),
     total: cart.reduce((s,i)=> s + i.total,0),
     timestamp: new Date().toISOString(),
