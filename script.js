@@ -142,6 +142,10 @@ const customTimeInput = document.getElementById('custom-time');
 const deliveryModeDelivery = document.getElementById('delivery-mode-delivery');
 const deliveryModePickup = document.getElementById('delivery-mode-pickup');
 const pickupInfo = document.getElementById('pickup-info');
+const fieldCity = document.getElementById('cust-city').closest('.form-row');
+const fieldStreet = document.getElementById('cust-street').closest('.form-row');
+const fieldHouse = document.getElementById('cust-house').closest('.col');
+const fieldApt = document.getElementById('cust-apartment').closest('.col');
 const deliveryTimeHint = document.getElementById('delivery-time-hint'); // ← добавили
 const closeModalBtn = document.getElementById('close-modal');
 const checkoutSubmitBtn = document.getElementById('checkout-submit');
@@ -199,13 +203,17 @@ function describeDeliveryTime(code, customVal) {
 function updateAddressVisibility() {
   const isPickup = deliveryModePickup && deliveryModePickup.checked;
 
-  if (addressSection) {
-    addressSection.style.display = isPickup ? 'none' : 'block';
-  }
-  if (pickupInfo) {
-    pickupInfo.style.display = isPickup ? 'block' : 'none';
-  }
+  // Поля имени и телефона — всегда показываем
+  // Скрываем только адрес
+  if (fieldCity) fieldCity.style.display = isPickup ? 'none' : 'block';
+  if (fieldStreet) fieldStreet.style.display = isPickup ? 'none' : 'block';
+  if (fieldHouse) fieldHouse.style.display = isPickup ? 'none' : 'block';
+  if (fieldApt) fieldApt.style.display = isPickup ? 'none' : 'block';
+
+  // Показываем выбор пункта выдачи
+  if (pickupInfo) pickupInfo.style.display = isPickup ? 'block' : 'none';
 }
+
 
 /* открытие checkout при клике "Оформить заказ" */
 if (gotoCheckoutBtn && checkoutOverlay) {
