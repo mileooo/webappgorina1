@@ -428,3 +428,25 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   background: #2CAF7A !important;
   transform: scale(0.97);
 }
+/* Убираем чёрную обводку/рамку внутри кастомных радио-кнопок */
+input[type="radio"] {
+  accent-color: #30c75a; /* твой зелёный */
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Убираем focus-ring (чёрный кружок при выборе) */
+input[type="radio"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Для некоторых браузеров (Safari/Firefox) */
+input[type="radio"]::-moz-focus-inner {
+  border: 0 !important;
+}
+
+input[type="radio"]:-moz-focusring {
+  outline: none !important;
+}
+
