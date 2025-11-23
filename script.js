@@ -269,7 +269,6 @@ const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
 
-const userAreaBtn = document.getElementById('user-area');
 const uaName = document.getElementById('ua-name');
 
 const productModal = document.getElementById('product-modal');
@@ -284,11 +283,6 @@ const pmQty = document.getElementById('pm-qty');
 const pmUnit = document.getElementById('pm-unit');
 const pmAdd = document.getElementById('pm-add');
 
-const authModal = document.getElementById('auth-modal');
-const authTg = document.getElementById('auth-tg');
-const authClose = document.getElementById('auth-close');
-const authPhone = document.getElementById('auth-phone');
-const authPhoneBtn = document.getElementById('auth-phone-btn');
 /* ========== CHECKOUT (fullscreen, как Самокат) ========== */
 
 /* helper: красивый текст для времени доставки */
