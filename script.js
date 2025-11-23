@@ -104,6 +104,111 @@ const kbjuData = {
   "Кабачок": { kbju: "24 ккал • Б 1.5 г • Ж 0.3 г • У 4.6 г", desc: "🥒 Легко усваивается, богат клетчаткой и витаминами группы B." },
   "Баклажан": { kbju: "25 ккал • Б 1 г • Ж 0.2 г • У 6 г", desc: "🍆 Содержит антиоксиданты, снижает уровень холестерина и поддерживает сердце." }
 };
+/* ========== SUPABASE INIT ========== */
+
+const SUPABASE_URL = "https://ygqpyhxevvwovrcnyusj.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlncXB5aHhldnZ3b3ZyY255dXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzNzA3OTgsImV4cCI6MjA0Nzk0Njc5OH0.zhfo2sTxnJuL5FdHOEHB1F7j9vu586MTMTyQwjHly_A";
+
+// ❗ создаём клиента правильно
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+console.log("Supabase подключён:", db);
+
+/* ========== AUTH FUNCTIONS ========== */
+
+function saveUserLocally(user) {
+  localStorage.setItem("bm_user", JSON.stringify(user));
+}
+
+function getUserLocally() {
+  const raw = localStorage.getItem("bm_user");
+  return raw ? JSON.parse(raw) : null;
+}
+
+function clearUserLocally() {
+  localStorage.removeItem("bm_user");
+}
+
+function updateUserUI() {
+  const user = getUserLocally();
+  const label = document.getElementById("ua-name");
+  if (!label) return;
+  label.textContent = user ? (user.name || "Аккаунт") : "Войти";
+}
+
+/* Вход по телефону */
+async function loginWithPhone(phone) {
+  if (!phone.trim()) {
+    alert("Введите номер!");
+    return;
+  }
+
+  const { data, error } = await db
+    .from("customers")
+    .insert([{ phone }])
+    .select()
+    .single();
+
+  if (error) {
+    alert("Ошибка: " + error.message);
+    return;
+  }
+
+  saveUserLocally(data);
+  updateUserUI();
+
+  document.getElementById("auth-modal").setAttribute("aria-hidden", "true");
+  alert("Вы авторизованы!");
+}
+
+function loginWithTelegram() {
+  alert("Telegram-вход подключим позже 🛠️");
+}
+
+function logout() {
+  clearUserLocally();
+  updateUserUI();
+  alert("Вы вышли из аккаунта.");
+}
+
+/* Запуск UI */
+updateUserUI();
+
+/* ========== AUTH REFS ========== */
+
+const userAreaBtn = document.getElementById('user-area');
+const authModal = document.getElementById('auth-modal');
+const authClose = document.getElementById('auth-close');
+const authPhone = document.getElementById('auth-phone');
+const authPhoneBtn = document.getElementById('auth-phone-btn');
+const authTg = document.getElementById('auth-tg');
+
+/* ========== AUTH HANDLERS ========== */
+
+userAreaBtn.addEventListener("click", () => {
+  const user = getUserLocally();
+
+  if (user) {
+    if (confirm("Вы уже авторизованы. Выйти?")) logout();
+    return;
+  }
+
+  authModal.setAttribute("aria-hidden", "false");
+});
+
+authClose.addEventListener("click", () => {
+  authModal.setAttribute("aria-hidden", "true");
+});
+
+authPhoneBtn.addEventListener("click", () => {
+  const phone = authPhone.value.trim();
+  loginWithPhone(phone);
+});
+
+authTg.addEventListener("click", () => {
+  loginWithTelegram();
+});
+
 
 /* ========== state & refs ========== */
 let cart = [];
@@ -151,6 +256,7 @@ const closeModalBtn = document.getElementById('close-modal');
 const checkoutSubmitBtn = document.getElementById('checkout-submit');
 const checkoutTimeDisplay = document.getElementById('checkout-time-display');
 const addressSection = document.getElementById('address-section');
+
 
 // блоки самовывоза
 const pickupTimeSection = document.getElementById('pickup-time-section');
@@ -355,8 +461,17 @@ updateAddressVisibility();
 
 /* отправка заказа */
 if (checkoutSubmitBtn && checkoutOverlay) {
-  checkoutSubmitBtn.addEventListener('click', () => {
+  checkoutSubmitBtn.addEventListener('click', async () => {
 
+    // ⛔ Требуем авторизацию
+    const user = getUserLocally();
+    if (!user) {
+      authModal.setAttribute("aria-hidden", "false");
+      alert("Чтобы оформить заказ — войдите в аккаунт.");
+      return;
+    }
+
+    // Проверяем корзину
     if (cart.length === 0) {
       alert('Корзина пуста!');
       return;
@@ -364,7 +479,7 @@ if (checkoutSubmitBtn && checkoutOverlay) {
 
     const isPickup = deliveryModePickup && deliveryModePickup.checked;
 
-    // обязательные поля (общие)
+    // Общие поля
     const name = document.getElementById('cust-name').value.trim();
     const phone = document.getElementById('cust-phone').value.trim();
     const email = document.getElementById('cust-email').value.trim();
@@ -376,10 +491,10 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       return;
     }
 
+    // Время доставки или самовывоза
     let timeText = "";
 
     if (isPickup) {
-      // Время самовывоза
       const v = pickupTimeSelect.value;
 
       if (v === "custom") {
@@ -394,7 +509,6 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       }
 
     } else {
-      // Время доставки
       const v = deliveryTimeSelect.value;
 
       if (v === "custom") {
@@ -409,7 +523,7 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       }
     }
 
-    // адрес (только для доставки)
+    // Адрес
     let city = "";
     let street = "";
     let house = "";
@@ -427,7 +541,7 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       }
     }
 
-    // пункт самовывоза
+    // Пункт самовывоза
     let pickupPoint = null;
     if (isPickup) {
       const selected = document.querySelector('input[name="pickup-point"]:checked');
@@ -438,7 +552,7 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       pickupPoint = selected.value;
     }
 
-    // корзина
+    // Товары
     const items = cart.map(i => ({
       name: i.name,
       qtyKg: i.qtyKg,
@@ -448,7 +562,7 @@ if (checkoutSubmitBtn && checkoutOverlay) {
 
     const total = cart.reduce((s, i) => s + i.total, 0);
 
-    // финальный payload
+    // Payload (для логов)
     const payload = {
       mode: isPickup ? "pickup" : "delivery",
       pickupPoint,
@@ -471,7 +585,35 @@ if (checkoutSubmitBtn && checkoutOverlay) {
 
     console.log("PAYLOAD:", payload);
 
-    alert("Заказ успешно оформлен!");
+    /* ——— Сохраняем заказ в Supabase ——— */
+    const { error: orderError } = await db
+      .from("orders")
+      .insert([{
+        user_id: user?.id || null,
+        phone,
+        name,
+        mode: isPickup ? "pickup" : "delivery",
+        pickup_point: pickupPoint,
+        city,
+        street,
+        house,
+        apt,
+        payment,
+        time: timeText,
+        comment,
+        total,
+        items
+      }]);
+
+    if (orderError) {
+      console.error(orderError);
+      alert("Ошибка сохранения заказа: " + orderError.message);
+      return;
+    }
+
+    // Всё успешно 🎉
+    alert("Заказ успешно оформлен! 🎉");
+
     checkoutOverlay.setAttribute("aria-hidden", "true");
 
     cart = [];
@@ -1068,24 +1210,6 @@ if (deliveryModePickup) {
     pickupInfo.style.display = 'block';
   });
 }
-
-if (checkoutSubmitBtn) checkoutSubmitBtn.addEventListener('click', () => {
-  if (cart.length === 0) {
-    alert('Корзина пуста!');
-    checkoutOverlay.setAttribute('aria-hidden', 'true');
-    return;
-  }
-
-  const name = document.getElementById('cust-name').value.trim();
-  const phone = document.getElementById('cust-phone').value.trim();
-  const city = document.getElementById('cust-city').value.trim();
-  const street = document.getElementById('cust-street').value.trim();
-  const house = document.getElementById('cust-house').value.trim();
-  const apt = document.getElementById('cust-apartment').value.trim();
-  const timeCode = deliveryTimeSelect.value;
-  const time = describeDeliveryTime(timeCode, customTimeInput.value || '');
-  const email = document.getElementById('cust-email').value.trim();
-  const payment = document.getElementById('payment-method').value;
 
   // простая валидация
   if (!name || !phone || !city || !street || !house) {

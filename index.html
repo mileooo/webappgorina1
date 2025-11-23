@@ -5,19 +5,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Bravo Market — свежие овощи и фрукты</title>
 
+  <!-- Шрифты -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
 
-  <!-- Подключение внешнего CSS -->
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
+
 <header class="header">
   <div class="header-inner">
     <div style="display:flex;align-items:center;gap:10px">
       <div class="logo">
-        <div class="mark" aria-hidden>
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg>
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8 6 4 6 2 8c2 2 2 6 6 10s8 6 10 6c-2-6 0-12-6-22z"/></svg>
         </div>
         <h4>Bravo Market</h4>
       </div>
@@ -25,9 +30,9 @@
     </div>
 
     <div class="header-right">
-      <div class="search-wrap" title="Поиск по товарам">
-        <input id="search-input" placeholder="Поиск товара (например: Банан, Помидоры)"/>
-        <select id="sort-select" class="sort-select" title="Сортировка">
+      <div class="search-wrap">
+        <input id="search-input" placeholder="Поиск товара…" />
+        <select id="sort-select" class="sort-select">
           <option value="default">Сорт</option>
           <option value="price_asc">Цена ↑</option>
           <option value="price_desc">Цена ↓</option>
@@ -36,10 +41,10 @@
         </select>
       </div>
 
-      <div class="loyalty-badge" id="loyalty-badge" title="Ваши баллы">Баллы: 0</div>
+      <div class="loyalty-badge" id="loyalty-badge">Баллы: 0</div>
 
-      <div id="user-area" class="user-btn" title="Войти / Профиль">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM3 22c0-3 4-5 9-5s9 2 9 5" stroke="#2E2E2E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div id="user-area" class="user-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM3 22c0-3 4-5 9-5s9 2 9 5" stroke="#2E2E2E" stroke-width="1.2"/></svg>
         <div class="user-name" id="ua-name">Войти</div>
       </div>
     </div>
@@ -55,9 +60,9 @@
       <button class="btn-secondary small" id="view-catalog">Посмотреть каталог</button>
     </div>
   </div>
-  <div class="hero-right" style="min-width:200px">
-    <div class="hero-image" style="height:130px;border-radius:10px;overflow:hidden">
-      <img src="images/svezhie-frukty.jpg" alt="Свежие фрукты" style="width:100%;height:100%;object-fit:cover;border-radius:8px" />
+  <div class="hero-right">
+    <div class="hero-image" style="height:130px">
+      <img src="images/svezhie-frukty.jpg" alt="" />
     </div>
   </div>
 </section>
@@ -74,7 +79,7 @@
     <div style="margin-left:auto" class="small">Показано <span id="shown-count">0</span> товаров</div>
   </div>
 
-  <div style="margin-top:12px" class="fade-in">
+  <div class="fade-in">
     <div id="catalog" class="grid"></div>
   </div>
 </main>
@@ -370,7 +375,7 @@
   © Bravo Market — Свежесть, которую можно почувствовать.
 </footer>
 
-<!-- Подключение внешнего JS -->
+<!-- Подключение JS -->
 <script src="script.js"></script>
 
 </body>
