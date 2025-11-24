@@ -1172,116 +1172,33 @@ if (deliveryModePickup) {
   });
 }
 
-  // простая валидация
-  if (!name || !phone || !city || !street || !house) {
-    alert('Пожалуйста, заполните все обязательные поля (отмечены *).');
-    return;
-  }
-
-  const payload = {
-    source: 'BravoMarketMiniApp',
-    customer: { 
-  name, 
-  phone, 
-  city, 
-  street, 
-  house, 
-  apt, 
-  time, 
-  email, 
-  payment,
-  comment: document.getElementById('cust-comment').value.trim()
-},
-
-    items: cart.map(i=>({name:i.name,qtyKg:i.qtyKg,price:i.price,total:i.total})),
-    total: cart.reduce((s,i)=> s + i.total,0),
-    timestamp: new Date().toISOString(),
-    user: getStoredUser() || null
-  };
-
-  // отправка админу
-  sendOrderToAdmin(payload).then(resp => {
-    console.log('admin response', resp);
-  });
-
-  const user = getStoredUser();
-  if (user) {
-    const points = Math.floor(payload.total * 0.05);
-    const cur = getLoyalty();
-    setLoyalty(cur + points);
-    alert('Заказ отправлен. Начислено ' + points + ' баллов. Всего: ' + (cur + points));
-  } else {
-    alert('Заказ отправлен (тест). Чтобы получать баллы и скидки — войдите в аккаунт.');
-  }
-
-  // очистка и закрытие
-  cart = [];
-  renderCart();
-  checkoutOverlay.setAttribute('aria-hidden', 'true');
-});
-
-
-if(orderForm) orderForm.addEventListener('submit', (e)=>{
-  e.preventDefault();
-  if(cart.length === 0){
-    alert('Корзина пуста!');
-    checkoutModal.style.display='none';
-    return;
-  }
-
-  const name = document.getElementById('cust-name').value.trim();
-  const phone = document.getElementById('cust-phone').value.trim();
-  const city = document.getElementById('cust-city').value.trim();
-  const street = document.getElementById('cust-street').value.trim();
-  const house = document.getElementById('cust-house').value.trim();
-  const apt = document.getElementById('cust-apartment').value.trim();
-  const time = deliveryTimeSelect.value === 'custom'
-    ? (customTimeInput.value || '—')
-    : 'Как можно скорее';
-  const email = document.getElementById('cust-email').value.trim();
-  const payment = document.getElementById('payment-method').value;
-
-  const payload = {
-    source: 'BravoMarketMiniApp',
-    customer: { name, phone, city, street, house, apt, time, email, payment },
-    items: cart.map(i=>({name:i.name,qtyKg:i.qtyKg,price:i.price,total:i.total})),
-    total: cart.reduce((s,i)=> s+i.total,0),
-    timestamp: new Date().toISOString(),
-    user: getStoredUser() || null
-  };
-
-  sendOrderToAdmin(payload).then(resp=>{
-    console.log('admin response', resp);
-  });
-
-  const user = getStoredUser();
-  if(user){
-    const points = Math.floor(payload.total*0.05);
-    const cur = getLoyalty();
-    setLoyalty(cur + points);
-    alert('Заказ отправлен. Начислено ' + points + ' баллов. Всего: ' + (cur+points));
-  } else {
-    alert('Заказ отправлен (тест). Чтобы получать баллы и скидки — войдите в аккаунт.');
-  }
-
-  cart = [];
-  renderCart();
-  orderForm.reset();
-  customTimeInput.style.display='none';
-  checkoutModal.style.display='none';
-  setTimeout(()=> showFloatingCart(), 120);
-});
-
 /* hero buttons */
-if(heroOrderBtn) heroOrderBtn.addEventListener('click', ()=>{
-  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior:'smooth'});
-});
-if(viewCatalogBtn) viewCatalogBtn.addEventListener('click', ()=>{
-  window.scrollTo({top: document.querySelector('.main').offsetTop - 20, behavior:'smooth'});
-});
+if (heroOrderBtn) {
+  heroOrderBtn.addEventListener('click', () => {
+    const main = document.querySelector('.main');
+    if (main) {
+      window.scrollTo({
+        top: main.offsetTop - 20,
+        behavior: 'smooth'
+      });
+    }
+  });
+}
+
+if (viewCatalogBtn) {
+  viewCatalogBtn.addEventListener('click', () => {
+    const main = document.querySelector('.main');
+    if (main) {
+      window.scrollTo({
+        top: main.offsetTop - 20,
+        behavior: 'smooth'
+      });
+    }
+  });
+}
 
 /* ========== init ========== */
-function init(){
+function init() {
   tryTelegramLogin();
   updateUserUI();
 
@@ -1291,6 +1208,9 @@ function init(){
 
   hideFloatingCart();
 
-  if(tg && typeof tg.expand === 'function') tg.expand();
+  if (tg && typeof tg.expand === 'function') {
+    tg.expand();
+  }
 }
 init();
+
