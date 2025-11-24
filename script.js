@@ -171,11 +171,7 @@ function logout() {
   alert("Вы вышли из аккаунта.");
 }
 
-/* Запуск UI */
-updateUserUI();
-
 /* ========== AUTH REFS ========== */
-
 const userAreaBtn = document.getElementById('user-area');
 const authModal = document.getElementById('auth-modal');
 const authClose = document.getElementById('auth-close');
