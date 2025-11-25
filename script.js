@@ -141,53 +141,42 @@ function updateUserUI() {
   label.textContent = user ? (user.name || "Аккаунт") : "Войти";
 }
 
-/* Вход по телефону c мягкой обработкой ошибок */
+/* Вход по телефону  */
 async function loginWithPhone(phone) {
   if (!phone.trim()) {
-    alert("Введите номер!");
+    alert("Введите номер телефона!");
     return;
   }
 
-  // базовый объект пользователя, если Supabase отвалится
-  let newUser = { phone };
+  // Генерируем user_id
+  const id = "phone_" + phone.replace(/\D/g, "");
 
-  try {
-    const { data, error } = await db
-      .from("customers")
-      .insert([{ phone }])
-      .select()
-      .single();
+  // Создаём/обновляем клиента в Supabase
+  const { data, error } = await db
+    .from("customers")
+    .upsert({
+      id,
+      phone,
+      name: phone,
+      loyalty_points: 0
+    })
+    .select()
+    .single();
 
-    if (error) {
-      console.warn("Supabase error on login:", error);
-      // не показываем пользователю alert с "Failed to fetch"
-    } else if (data) {
-      newUser = data; // берём данные из БД, если всё ок
-    }
-  } catch (err) {
-    console.warn("Network error with Supabase:", err);
-    // тоже без alert – просто лог
+  if (error) {
+    console.error("Ошибка Supabase:", error);
+    alert("Проблема со входом!");
+    return;
   }
 
-  // в любом случае логиним локально
-  saveUserLocally(newUser);
+  // сохраняем локально
+  saveUserLocally(data);
   updateUserUI();
 
   document.getElementById("auth-modal").setAttribute("aria-hidden", "true");
   alert("Вы авторизованы!");
 }
 
-/* Telegram login — позже подключим API */
-function loginWithTelegram() {
-  alert("Telegram-вход подключим позже 🛠️");
-}
-
-/* Выход */
-function logout() {
-  clearUserLocally();
-  updateUserUI();
-  alert("Вы вышли из аккаунта.");
-}
 
 /* ========== AUTH REFS ========== */
 const userAreaBtn = document.getElementById('user-area');
@@ -198,6 +187,10 @@ const authPhoneBtn = document.getElementById('auth-phone-btn');
 const authTg = document.getElementById('auth-tg');
 
 /* ========== AUTH HANDLERS ========== */
+authPhoneBtn.addEventListener("click", () => {
+  const phone = authPhone.value.trim();
+  loginWithPhone(phone);
+});
 
 userAreaBtn.addEventListener("click", () => {
   const user = getUserLocally();
