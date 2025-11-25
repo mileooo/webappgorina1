@@ -1209,12 +1209,12 @@ if (viewCatalogBtn) {
 
 async function loadOrderHistory() {
   const user = getUserLocally();
-  if (!user) return [];
+  if (!user || !user.phone) return [];
 
   const { data, error } = await db
     .from("orders")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("phone", user.phone)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -1223,6 +1223,7 @@ async function loadOrderHistory() {
   }
   return data;
 }
+
 
 async function openHistoryModal() {
   const modal = document.getElementById("history-modal");
