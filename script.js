@@ -637,7 +637,6 @@ function tryTelegramLogin(){
 
 /* Auth UI wiring */
 authClose.addEventListener('click', ()=> {
-  authModal.style.display='none';
   authModal.setAttribute('aria-hidden','true');
 });
 
