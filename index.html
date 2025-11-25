@@ -352,24 +352,31 @@
   </div>
 </div>
 
-<!-- auth modal -->
+<!-- auth modal (новая плашка) -->
 <div id="auth-modal" class="auth-modal" aria-hidden="true">
-  <div class="panel">
-    <button id="auth-close" style="float:right;background:transparent;border:0;font-size:20px;cursor:pointer">✕</button>
-    <h3>Войти в Bravo Market</h3>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
-      <button id="auth-tg" class="pill" style="padding:10px 14px">Войти через Telegram</button>
-      <div style="flex:1;min-width:200px">
-        <label style="font-weight:700;font-size:13px;display:block;margin-bottom:6px">Войти по номеру телефона</label>
-        <div style="display:flex;gap:8px">
-          <input id="auth-phone" placeholder="+7..." style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border)">
-          <button id="auth-phone-btn" class="add-to-cart" style="padding:8px 10px">Войти</button>
-        </div>
-        <div style="font-size:13px;color:var(--muted);margin-top:6px">Данные хранятся локально. Для продакшена подключите сервер и SMS.</div>
-      </div>
+  <div class="auth-panel">
+    <button id="auth-close" class="auth-close-btn">✕</button>
+
+    <div class="auth-title">Вход в Bravo Market</div>
+    <div class="auth-subtitle">
+      Чтобы копить баллы и смотреть историю заказов
     </div>
+
+    <label class="auth-label">Номер телефона</label>
+    <input id="auth-phone" class="auth-input" placeholder="+7 999 123-45-67" />
+
+    <button id="auth-phone-btn" class="auth-btn-main">
+      Войти по номеру
+    </button>
+
+    <div class="auth-divider">или</div>
+
+    <button id="auth-tg" class="auth-btn-alt">
+      Войти через Telegram
+    </button>
   </div>
 </div>
+
 
 <footer class="footer" style="padding:20px;text-align:center;color:var(--muted)">
   © Bravo Market — Свежесть, которую можно почувствовать.
