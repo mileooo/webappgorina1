@@ -618,7 +618,7 @@ function logout() {
 }
 
 function updateUserUI(){
-  const u = getStoredUser();
+  const u = getUserLocally();
   if(u){
     uaName.textContent = u.name || (u.phone || 'Пользователь');
     loyaltyBadge.textContent = 'Баллы: ' + getLoyalty();
