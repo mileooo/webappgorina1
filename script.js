@@ -1006,8 +1006,6 @@ if (mobileSort) {
 
 /* Checkout / order sending */
 
-const ADMIN_WEBHOOK_URL = ""; // если нужно — прописываешь
-
 function sendOrderToAdmin(payload) {
   if (!ADMIN_WEBHOOK_URL) {
     console.log("ADMIN WEBHOOK not set — order payload:", payload);
