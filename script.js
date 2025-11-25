@@ -649,16 +649,35 @@ authTg.addEventListener('click', ()=> {
   updateUserUI();
 });
 
-authPhoneBtn.addEventListener('click', ()=> {
+authPhoneBtn.addEventListener('click', async ()=> {
   const phone = (authPhone.value || '').trim();
-  if(!phone){ alert('Введите номер телефона'); return; }
-  const user = { id: 'phone_' + phone.replace(/\D/g,''), name: phone, phone };
+  if (!phone) { 
+    alert('Введите номер телефона'); 
+    return; 
+  }
+
+  // генерируем ID
+  const id = 'phone_' + phone.replace(/\D/g,'');
+
+  // создаём пользователя локально
+  const user = { id, name: phone, phone };
   storeUser(user);
-  if(!localStorage.getItem('bm_loyalty')) localStorage.setItem('bm_loyalty','0');
-  authModal.style.display='none';
+  if (!localStorage.getItem('bm_loyalty')) localStorage.setItem('bm_loyalty','0');
+
+  // СОЗДАЁМ клиента в Supabase (если его ещё нет)
+  await db.from("customers")
+    .upsert({
+      id,
+      phone,
+      name: phone,
+      loyalty_points: 0
+    });
+
+  authModal.style.display = 'none';
   updateUserUI();
-  alert('Вход выполнен как ' + phone + ' (тестовый режим).');
+  alert('Вход выполнен как ' + phone);
 });
+
 
 /* ========== helpers ========= */
 function idify(s){ return String(s).replace(/\W+/g,'_'); }
@@ -903,6 +922,8 @@ function hideFloatingCart(){
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if(!btn) return;
+  const card = btn.closest('.card');
+  if (!card) return;
   const idxVisible = +btn.dataset.idx;
   const idxGlobal = btn.dataset.globalIdx !== undefined ? +btn.dataset.globalIdx : null;
   const card = btn.closest('.card');
