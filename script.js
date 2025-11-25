@@ -116,55 +116,73 @@ console.log("Supabase подключён:", db);
 
 /* ========== AUTH FUNCTIONS ========== */
 
+// Сохраняем данные о пользователе в localStorage
 function saveUserLocally(user) {
   localStorage.setItem("bm_user", JSON.stringify(user));
 }
 
+// Забираем данные
 function getUserLocally() {
   const raw = localStorage.getItem("bm_user");
   return raw ? JSON.parse(raw) : null;
 }
 
+// Удалить
 function clearUserLocally() {
   localStorage.removeItem("bm_user");
 }
 
+// Обновляем имя в шапке
 function updateUserUI() {
   const user = getUserLocally();
   const label = document.getElementById("ua-name");
   if (!label) return;
+
   label.textContent = user ? (user.name || "Аккаунт") : "Войти";
 }
 
-/* Вход по телефону */
+/* Вход по телефону c мягкой обработкой ошибок */
 async function loginWithPhone(phone) {
   if (!phone.trim()) {
     alert("Введите номер!");
     return;
   }
 
-  const { data, error } = await db
-    .from("customers")
-    .insert([{ phone }])
-    .select()
-    .single();
+  // базовый объект пользователя, если Supabase отвалится
+  let newUser = { phone };
 
-  if (error) {
-    alert("Ошибка: " + error.message);
-    return;
+  try {
+    const { data, error } = await db
+      .from("customers")
+      .insert([{ phone }])
+      .select()
+      .single();
+
+    if (error) {
+      console.warn("Supabase error on login:", error);
+      // не показываем пользователю alert с "Failed to fetch"
+    } else if (data) {
+      newUser = data; // берём данные из БД, если всё ок
+    }
+  } catch (err) {
+    console.warn("Network error with Supabase:", err);
+    // тоже без alert – просто лог
   }
 
-  saveUserLocally(data);
+  // в любом случае логиним локально
+  saveUserLocally(newUser);
   updateUserUI();
 
   document.getElementById("auth-modal").setAttribute("aria-hidden", "true");
   alert("Вы авторизованы!");
 }
 
+/* Telegram login — позже подключим API */
 function loginWithTelegram() {
   alert("Telegram-вход подключим позже 🛠️");
 }
 
+/* Выход */
 function logout() {
   clearUserLocally();
   updateUserUI();
