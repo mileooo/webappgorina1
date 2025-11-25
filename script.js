@@ -132,15 +132,6 @@ function clearUserLocally() {
   localStorage.removeItem("bm_user");
 }
 
-// Обновляем имя в шапке
-function updateUserUI() {
-  const user = getUserLocally();
-  const label = document.getElementById("ua-name");
-  if (!label) return;
-
-  label.textContent = user ? (user.name || "Аккаунт") : "Войти";
-}
-
 /* Вход по телефону  */
 async function loginWithPhone(phone) {
   phone = phone.trim();
@@ -178,8 +169,6 @@ async function loginWithPhone(phone) {
   document.getElementById("auth-modal").setAttribute("aria-hidden", "true");
   alert("Вы авторизованы!");
 }
-
-
 
 /* ========== AUTH REFS ========== */
 const userAreaBtn = document.getElementById('user-area');
@@ -600,6 +589,24 @@ function getLoyalty(){ return parseInt(localStorage.getItem('bm_loyalty')||'0',1
 function setLoyalty(n){ localStorage.setItem('bm_loyalty', String(n)); updateUserUI(); }
 function addLoyalty(n){ const cur = getLoyalty(); setLoyalty(cur + n); }
 
+function logout() {
+  // полностью очищаем localStorage
+  localStorage.removeItem("bm_user");
+  localStorage.removeItem("bm_loyalty");
+
+  // закрываем модалки
+  if (authModal) authModal.setAttribute("aria-hidden", "true");
+  if (checkoutOverlay) checkoutOverlay.setAttribute("aria-hidden", "true");
+
+  const historyModal = document.getElementById("history-modal");
+  if (historyModal) historyModal.style.display = "none";
+
+  // обновляем интерфейс
+  updateUserUI();
+
+  alert("Вы вышли из аккаунта.");
+}
+
 function updateUserUI(){
   const u = getStoredUser();
   if(u){
@@ -629,10 +636,6 @@ function tryTelegramLogin(){
 }
 
 /* Auth UI wiring */
-userAreaBtn.addEventListener('click', ()=> {
-  authModal.style.display = 'flex';
-  authModal.setAttribute('aria-hidden','false');
-});
 authClose.addEventListener('click', ()=> {
   authModal.style.display='none';
   authModal.setAttribute('aria-hidden','true');
