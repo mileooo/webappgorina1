@@ -107,7 +107,7 @@ const kbjuData = {
 /* ========== SUPABASE INIT ========== */
 
 const SUPABASE_URL = "https://ygqpyhxevvwovrcnyusj.supabase.co";
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlncXB5aHhldnZ3b3ZyY255dXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzNzA3OTgsImV4cCI6MjA0Nzk0Njc5OH0.zhfo2sTxnJuL5FdHOEHB1F7j9vu586MTMTyQwjHly_A";
+const SUPABASE_ANON = "sb_secret_6q9K-Pn-Lgq5uvU9uUcCtg_G1vwVAnP";
 
 // ❗ создаём клиента правильно
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
