@@ -179,6 +179,8 @@ const authPhoneBtn = document.getElementById('auth-phone-btn');
 const authTg = document.getElementById('auth-tg');
 
 /* ========== AUTH HANDLERS ========== */
+
+// обработчик на кнопку "Войти" по телефону
 authPhoneBtn.addEventListener("click", () => {
   const phone = authPhone.value.trim();
   loginWithPhone(phone);
@@ -187,13 +189,11 @@ authPhoneBtn.addEventListener("click", () => {
 userAreaBtn.addEventListener("click", () => {
   const user = getUserLocally();
 
-  // Если не авторизован → открываем окно авторизации
   if (!user) {
     authModal.setAttribute("aria-hidden", "false");
     return;
   }
 
-  // Меню действий пользователя
   const choice = prompt(
     "Выберите действие:\n1 — История заказов\n2 — Выйти из аккаунта"
   );
@@ -203,6 +203,16 @@ userAreaBtn.addEventListener("click", () => {
   } else if (choice === "2") {
     logout();
   }
+});
+
+// закрытие модалки крестиком
+authClose.addEventListener("click", () => {
+  authModal.setAttribute("aria-hidden", "true");
+});
+
+// обработчик на кнопку "Войти через Telegram"
+authTg.addEventListener("click", () => {
+  loginWithTelegram();
 });
 
 /* ========== state & refs ========== */
@@ -634,21 +644,6 @@ function tryTelegramLogin(){
   }
   return false;
 }
-
-/* Auth UI wiring */
-authClose.addEventListener('click', ()=> {
-  authModal.setAttribute('aria-hidden','true');
-});
-
-authTg.addEventListener('click', ()=> {
-  if(tryTelegramLogin()){
-    alert('Вход через Telegram выполнен.');
-    authModal.style.display='none';
-  } else {
-    alert('Telegram WebApp не доступен. Откройте мини-приложение через Telegram для этой функции.');
-  }
-  updateUserUI();
-});
 
 /* ========== helpers ========= */
 function idify(s){ return String(s).replace(/\W+/g,'_'); }
