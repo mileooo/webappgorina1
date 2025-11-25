@@ -449,146 +449,153 @@ input[type="radio"]::-moz-focus-inner {
 input[type="radio"]:-moz-focusring {
   outline: none !important;
 }
-/* ===== AUTH MODAL (люкс-плашка входа) ===== */
+/* ===== ЛЮКС-ПЛАШКА АВТОРИЗАЦИИ ===== */
 
-.auth-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);          /* плотное затемнение фона */
-  backdrop-filter: blur(8px);               /* лёгкий blur как в приложениях */
-  display: flex;
-  align-items: flex-end;                    /* панель снизу, как у Самоката */
-  justify-content: center;
-  z-index: 2000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.28s ease;
+#auth-modal{
+  /* перекрываем display:none из .product-modal */
+  display:flex;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
+  backdrop-filter:blur(10px);
 }
 
-/* когда aria-hidden="false" — показываем модалку */
-.auth-modal[aria-hidden="false"] {
-  opacity: 1;
-  pointer-events: auto;
+/* когда скрипт ставит aria-hidden="false" — показываем */
+#auth-modal[aria-hidden="false"]{
+  opacity:1;
+  pointer-events:auto;
 }
 
-.auth-panel {
-  width: 100%;
-  max-width: 430px;
-  background: #101410;                      /* тёмный фон, как премиум-сервис */
-  color: #FFFFFF;
-  border-top-left-radius: 22px;
-  border-top-right-radius: 22px;
-  padding: 20px 18px 18px;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
+.auth-panel{
+  width:320px;
+  max-width:90%;
+  background:#ffffff;
+  border-radius:18px;
+  padding:22px 22px 20px;
+  box-shadow:0 18px 45px rgba(0,0,0,0.35);
+  position:relative;
+  overflow:hidden;
+  border-top-left-radius:18px;
+  border-top-right-radius:18px;
 }
 
-/* цветная полоска сверху в фирменных цветах */
-.auth-panel::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--brand), var(--cta));
+/* тонкая цветная полоска сверху в цветах Bravo */
+.auth-panel::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:4px;
+  background:linear-gradient(90deg,var(--brand),var(--cta));
 }
 
 /* крестик */
-.auth-close-btn {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  border: 0;
-  background: rgba(255,255,255,0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #fff;
-  font-size: 18px;
+.auth-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  border:none;
+  background:rgba(0,0,0,0.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  cursor:pointer;
+  color:#666;
+}
+.auth-close:hover{
+  background:rgba(0,0,0,0.10);
 }
 
 /* заголовки */
-.auth-title {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: 900;
+.auth-title{
+  margin-top:12px;
+  font-size:18px;
+  font-weight:900;
+  font-family:'Montserrat', sans-serif;
+  color:#2E2E2E;
 }
-
-.auth-subtitle {
-  margin-top: 4px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.75);
+.auth-subtitle{
+  margin-top:4px;
+  font-size:13px;
+  color:var(--muted);
 }
 
 /* поле ввода */
-.auth-label {
-  display: block;
-  margin-top: 18px;
-  margin-bottom: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.85);
+.auth-label{
+  display:block;
+  margin-top:18px;
+  margin-bottom:6px;
+  font-size:13px;
+  font-weight:700;
+  color:#555;
+}
+.auth-input{
+  width:100%;
+  padding:11px 12px;
+  border-radius:12px;
+  border:1px solid #E0ECFF;
+  background:#F4F8FF;
+  font-size:15px;
+  font-family:'Montserrat', sans-serif;
+}
+.auth-input::placeholder{
+  color:#9BB3D9;
 }
 
-.auth-input {
-  width: 100%;
-  padding: 11px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(0,0,0,0.35);
-  color: #fff;
-  font-size: 15px;
-  outline: none;
+/* базовый стиль кнопок */
+.auth-btn{
+  width:100%;
+  padding:11px 14px;
+  border-radius:999px;
+  border:0;
+  margin-top:12px;
+  font-size:15px;
+  font-family:'Montserrat', sans-serif;
+  cursor:pointer;
 }
 
-.auth-input::placeholder {
-  color: rgba(255,255,255,0.4);
+/* главная кнопка "Войти по номеру" */
+.auth-btn-main{
+  background:var(--brand);
+  color:#133000;
+  font-weight:900;              /* Montserrat Black */
+  box-shadow:0 10px 25px rgba(164,222,2,0.55);
 }
-
-/* основная кнопка — наши цвета */
-.auth-btn-main {
-  margin-top: 14px;
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 0;
-  background: linear-gradient(135deg, var(--brand), #7CC900);
-  color: #101410;
-  font-weight: 900;
-  font-size: 15px;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(164,222,2,0.45);
-}
-
-.auth-btn-main:hover {
-  filter: brightness(1.05);
+.auth-btn-main:hover{
+  filter:brightness(1.05);
 }
 
 /* разделитель "или" */
-.auth-divider {
-  text-align: center;
-  margin: 10px 0 6px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.5);
+.auth-divider{
+  margin-top:10px;
+  font-size:11px;
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.auth-divider::before,
+.auth-divider::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:rgba(0,0,0,0.08);
+  margin:0 8px;
 }
 
 /* кнопка Telegram */
-.auth-btn-alt {
-  width: 100%;
-  padding: 11px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.03);
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 15px;
-  cursor: pointer;
+.auth-btn-tg{
+  background:#ffffff;
+  border:1px solid rgba(0,0,0,0.08);
+  color:#0088CC;
+  font-weight:700;
 }
-
+.auth-btn-tg:hover{
+  background:#F3F9FF;
+}
 

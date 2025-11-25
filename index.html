@@ -352,30 +352,31 @@
   </div>
 </div>
 
-<!-- auth modal (новая плашка) -->
-<div id="auth-modal" class="auth-modal" aria-hidden="true">
-  <div class="auth-panel">
-    <button id="auth-close" class="auth-close-btn">✕</button>
+<!-- auth modal -->
+<div id="auth-modal" class="product-modal" aria-hidden="true" style="z-index:1200">
+  <div class="panel auth-panel">
+    <button id="auth-close" class="auth-close">✕</button>
 
-    <div class="auth-title">Вход в Bravo Market</div>
+    <div class="auth-title">Войдите в личный кабинет</div>
     <div class="auth-subtitle">
-      Чтобы копить баллы и смотреть историю заказов
+      Выберите удобный способ авторизации, чтобы копить баллы и смотреть историю заказов
     </div>
 
-    <label class="auth-label">Номер телефона</label>
-    <input id="auth-phone" class="auth-input" placeholder="+7 999 123-45-67" />
+    <label class="auth-label" for="auth-phone">Номер телефона</label>
+    <input id="auth-phone" class="auth-input" placeholder="+7 900 000-00-00" />
 
-    <button id="auth-phone-btn" class="auth-btn-main">
+    <button id="auth-phone-btn" class="auth-btn auth-btn-main">
       Войти по номеру
     </button>
 
-    <div class="auth-divider">или</div>
+    <div class="auth-divider"><span>или</span></div>
 
-    <button id="auth-tg" class="auth-btn-alt">
+    <button id="auth-tg" class="auth-btn auth-btn-tg">
       Войти через Telegram
     </button>
   </div>
 </div>
+
 
 
 <footer class="footer" style="padding:20px;text-align:center;color:var(--muted)">
