@@ -202,27 +202,23 @@ const authTg = document.getElementById('auth-tg');
 userAreaBtn.addEventListener("click", () => {
   const user = getUserLocally();
 
-  if (user) {
-    if (confirm("Вы уже авторизованы. Выйти?")) logout();
+  // Если не авторизован → открываем окно авторизации
+  if (!user) {
+    authModal.setAttribute("aria-hidden", "false");
     return;
   }
 
-  authModal.setAttribute("aria-hidden", "false");
-});
+  // Меню действий пользователя
+  const choice = prompt(
+    "Выберите действие:\n1 — История заказов\n2 — Выйти из аккаунта"
+  );
 
-authClose.addEventListener("click", () => {
-  authModal.setAttribute("aria-hidden", "true");
+  if (choice === "1") {
+    openHistoryModal();
+  } else if (choice === "2") {
+    logout();
+  }
 });
-
-authPhoneBtn.addEventListener("click", () => {
-  const phone = authPhone.value.trim();
-  loginWithPhone(phone);
-});
-
-authTg.addEventListener("click", () => {
-  loginWithTelegram();
-});
-
 
 /* ========== state & refs ========== */
 let cart = [];
@@ -1210,6 +1206,91 @@ if (viewCatalogBtn) {
     }
   });
 }
+
+async function loadOrderHistory() {
+  const user = getUserLocally();
+  if (!user) return [];
+
+  const { data, error } = await db
+    .from("orders")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Ошибка загрузки заказов:", error);
+    return [];
+  }
+  return data;
+}
+
+async function openHistoryModal() {
+  const modal = document.getElementById("history-modal");
+  const list = document.getElementById("history-list");
+
+  list.innerHTML = "<div class='small'>Загрузка...</div>";
+
+  const orders = await loadOrderHistory();
+
+  if (!orders.length) {
+    list.innerHTML = "<div class='small'>У вас ещё нет заказов.</div>";
+  } else {
+    list.innerHTML = "";
+
+    orders.forEach(order => {
+      const div = document.createElement("div");
+      div.style.border = "1px solid #eee";
+      div.style.padding = "12px";
+      div.style.borderRadius = "10px";
+      div.style.background = "#fafafa";
+
+      const date = new Date(order.created_at).toLocaleString("ru-RU");
+
+      div.innerHTML = `
+        <div style="font-weight:700;margin-bottom:6px">
+          Заказ на сумму ${order.total} ₽
+        </div>
+        <div class="small" style="margin-bottom:6px;color:#777">
+          ${date}
+        </div>
+        <div class="small" style="margin-bottom:6px;color:#555">
+          ${order.mode === "pickup" 
+             ? "Самовывоз: " + (order.pickup_point || "—")
+             : "Адрес: " + order.city + ", " + order.street + " " + order.house}
+        </div>
+        <details>
+          <summary style="cursor:pointer;color:#34C48B;font-weight:600">Состав заказа</summary>
+          <div style="margin-top:6px">
+            ${order.items
+              .map(
+                item =>
+                  `<div class="small">${item.name} — ${item.qtyKg} кг — ${item.total} ₽</div>`
+              )
+              .join("")}
+          </div>
+        </details>
+      `;
+
+      list.appendChild(div);
+    });
+  }
+
+  modal.style.display = "flex";
+  modal.setAttribute("aria-hidden", "false");
+}
+
+document.getElementById("history-close").addEventListener("click", () => {
+  const modal = document.getElementById("history-modal");
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+});
+
+document.getElementById("history-modal").addEventListener("click", (e) => {
+  if (e.target.id === "history-modal") {
+    e.target.style.display = "none";
+    e.target.setAttribute("aria-hidden", "true");
+  }
+});
 
 /* ========== init ========== */
 function init() {
