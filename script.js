@@ -649,36 +649,6 @@ authTg.addEventListener('click', ()=> {
   updateUserUI();
 });
 
-authPhoneBtn.addEventListener('click', async ()=> {
-  const phone = (authPhone.value || '').trim();
-  if (!phone) { 
-    alert('Введите номер телефона'); 
-    return; 
-  }
-
-  // генерируем ID
-  const id = 'phone_' + phone.replace(/\D/g,'');
-
-  // создаём пользователя локально
-  const user = { id, name: phone, phone };
-  storeUser(user);
-  if (!localStorage.getItem('bm_loyalty')) localStorage.setItem('bm_loyalty','0');
-
-  // СОЗДАЁМ клиента в Supabase (если его ещё нет)
-  await db.from("customers")
-    .upsert({
-      id,
-      phone,
-      name: phone,
-      loyalty_points: 0
-    });
-
-  authModal.style.display = 'none';
-  updateUserUI();
-  alert('Вход выполнен как ' + phone);
-});
-
-
 /* ========== helpers ========= */
 function idify(s){ return String(s).replace(/\W+/g,'_'); }
 function formatRub(v){ return Math.round(v) + ' ₽'; }
