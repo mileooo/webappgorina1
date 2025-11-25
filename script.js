@@ -143,15 +143,16 @@ function updateUserUI() {
 
 /* Вход по телефону  */
 async function loginWithPhone(phone) {
-  if (!phone.trim()) {
+  phone = phone.trim();
+  if (!phone) {
     alert("Введите номер телефона!");
     return;
   }
 
-  // Генерируем user_id
+  // Генерируем корректный user_id
   const id = "phone_" + phone.replace(/\D/g, "");
 
-  // Создаём/обновляем клиента в Supabase
+  // Создаём / обновляем клиента
   const { data, error } = await db
     .from("customers")
     .upsert({
@@ -169,13 +170,15 @@ async function loginWithPhone(phone) {
     return;
   }
 
-  // сохраняем локально
+  // Сохраняем строго то, что вернул Supabase:
   saveUserLocally(data);
+  await refreshLoyalty();
   updateUserUI();
 
   document.getElementById("auth-modal").setAttribute("aria-hidden", "true");
   alert("Вы авторизованы!");
 }
+
 
 
 /* ========== AUTH REFS ========== */
@@ -554,28 +557,31 @@ if (checkoutSubmitBtn && checkoutOverlay) {
 
     /* ——— Сохраняем заказ в Supabase ——— */
     const { error: orderError } = await db
-      .from("orders")
-      .insert([{
-        user_id: user?.id || null,
-        phone,
-        name,
-        mode: isPickup ? "pickup" : "delivery",
-        pickup_point: pickupPoint,
-        city,
-        street,
-        house,
-        apt,
-        payment,
-        time: timeText,
-        comment,
-        total,
-        items
-      }]);
+  .from("orders")
+  .insert([{
+    user_id: user.id,          // ← ТАК
+    phone: user.phone,         // ← ТАК
+    name,
+    mode: isPickup ? "pickup" : "delivery",
+    pickup_point: pickupPoint,
+    city,
+    street,
+    house,
+    apt,
+    payment,
+    time: timeText,
+    comment,
+    total,
+    items
+  }]);
+
 
     if (orderError) {
       alert("Ошибка сохранения заказа: " + orderError.message);
       return;
     }
+
+    await refreshLoyalty();
 
     alert("Заказ успешно оформлен! 🎉");
 
@@ -1218,12 +1224,12 @@ if (viewCatalogBtn) {
 
 async function loadOrderHistory() {
   const user = getUserLocally();
-  if (!user || !user.phone) return [];
+  if (!user?.id) return [];
 
   const { data, error } = await db
     .from("orders")
     .select("*")
-    .eq("phone", user.phone)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -1232,6 +1238,7 @@ async function loadOrderHistory() {
   }
   return data;
 }
+
 
 
 async function openHistoryModal() {
@@ -1301,6 +1308,23 @@ document.getElementById("history-modal").addEventListener("click", (e) => {
     e.target.setAttribute("aria-hidden", "true");
   }
 });
+
+async function refreshLoyalty() {
+  const user = getUserLocally();
+  if (!user?.id) return;
+
+  const { data } = await db
+    .from("customers")
+    .select("loyalty_points")
+    .eq("id", user.id)
+    .single();
+
+  if (data) {
+    localStorage.setItem("bm_loyalty", data.loyalty_points);
+    updateUserUI();
+  }
+}
+
 
 /* ========== init ========== */
 function init() {
