@@ -921,29 +921,45 @@ function hideFloatingCart(){
 /* ========== Delegation: add to cart from catalog ========== */
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
-  if(!btn) return;
-  const card = btn.closest('.card');
-  if (!card) return;
+  if (!btn) return;
+
   const idxVisible = +btn.dataset.idx;
-  const idxGlobal = btn.dataset.globalIdx !== undefined ? +btn.dataset.globalIdx : null;
+  const idxGlobal = btn.dataset.globalIdx !== undefined
+    ? +btn.dataset.globalIdx
+    : null;
+
   const card = btn.closest('.card');
+  if (!card) return; // защита от null
+
   const qtyInput = card.querySelector('.qty-input');
   const unitSelect = card.querySelector('.unit-select');
+  if (!qtyInput || !unitSelect) return; // ещё защита
+
   const qty = parseFloat(qtyInput.value) || 0;
   const unit = unitSelect.value;
-  let qtyKg = unit === 'g' ? qty/1000 : qty;
-  if(qtyKg <= 0){ alert('Укажите количество'); return; }
-  const source = (visibleProducts && visibleProducts[idxVisible]) || products[idxGlobal] || products[idxVisible];
+
+  let qtyKg = unit === 'g' ? qty / 1000 : qty;
+  if (qtyKg <= 0) {
+    alert('Укажите количество');
+    return;
+  }
+
+  const source =
+    (visibleProducts && visibleProducts[idxVisible]) ||
+    products[idxGlobal] ||
+    products[idxVisible];
+
   const name = getName(source);
   const price = getPrice(source);
 
   addToCart({ name, price, qtyKg });
 
+  // анимация галочки
   const ck = document.createElement('div');
   ck.className = 'checkmark';
   ck.textContent = '✓';
-  const c = card;
-  c.style.position = 'relative';
+
+  card.style.position = 'relative';
   ck.style.position = 'absolute';
   ck.style.right = '8px';
   ck.style.top = '8px';
@@ -959,10 +975,19 @@ document.addEventListener('click', (e) => {
   ck.style.opacity = '0';
   ck.style.transform = 'scale(.6)';
   ck.style.transition = 'all .25s ease';
-  c.appendChild(ck);
-  setTimeout(()=>{ ck.style.opacity = '1'; ck.style.transform = 'scale(1)'; }, 10);
-  setTimeout(()=>{ ck.style.opacity = '0'; ck.style.transform = 'scale(.6)'; }, 900);
-  setTimeout(()=>{ ck.remove(); }, 1200);
+
+  card.appendChild(ck);
+  setTimeout(() => {
+    ck.style.opacity = '1';
+    ck.style.transform = 'scale(1)';
+  }, 10);
+  setTimeout(() => {
+    ck.style.opacity = '0';
+    ck.style.transform = 'scale(.6)';
+  }, 900);
+  setTimeout(() => {
+    ck.remove();
+  }, 1200);
 });
 
 /* catalog card click -> open product modal (ignore clicks on interactive elements) */
