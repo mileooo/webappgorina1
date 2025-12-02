@@ -300,20 +300,16 @@ authPhoneBtn.addEventListener("click", () => {
 userAreaBtn.addEventListener("click", () => {
   const user = getUserLocally();
 
+  // Не авторизован — просто показываем окно входа
   if (!user) {
-    authModal.setAttribute("aria-hidden", "false");
+    if (authModal) {
+      authModal.setAttribute("aria-hidden", "false");
+    }
     return;
   }
 
-  const choice = prompt(
-    "Выберите действие:\n1 — История заказов\n2 — Выйти из аккаунта"
-  );
-
-  if (choice === "1") {
-    openHistoryModal();
-  } else if (choice === "2") {
-    logout();
-  }
+  // Уже авторизован — сразу открываем историю заказов
+  openHistoryModal();
 });
 
 // закрытие модалки крестиком
@@ -1185,15 +1181,19 @@ function applySearchAndSort(){
 }
 
 filtersWrap.addEventListener('click', (e)=> {
-  const b = e.target.closest('.pill');
-  if(!b) return;
+  const b = e.target.closest('.filter-btn');
+  if (!b) return;
+
   const f = b.dataset.filter || 'all';
   currentFilter = f;
-  document.querySelectorAll('#filters .pill').forEach(x=>
+
+  document.querySelectorAll('#filters .filter-btn').forEach(x =>
     x.classList.toggle('active', x === b)
   );
+
   applySearchAndSort();
 });
+
 
 if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort());
 if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());
