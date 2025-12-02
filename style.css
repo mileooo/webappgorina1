@@ -825,4 +825,116 @@ input[type="radio"]:-moz-focusring {
   align-items: center;
   gap: 10px;
 }
+/* === GLOBAL BUTTON STYLE OVERRIDE === */
+
+button,
+.btn,
+button.btn,
+button.add-to-cart,
+button.filter-btn,
+button.profile-item,
+button.profile-logout {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 900 !important; /* Black */
+    background-color: #179f21 !important;
+    color: #000 !important;
+    border: none !important;
+    border-radius: 12px !important;
+}
+
+/* Главная большая кнопка */
+.hero .btn-primary,
+#hero-order {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+}
+
+/* Кнопка "Войти по номеру" */
+#auth-phone-btn {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+}
+
+/* Кнопка "Добавить в корзину" в модалке */
+#pm-add {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+}
+
+/* Плюсики в карточках */
+.add-to-cart {
+    background-color: #179f21 !important;
+    color: #fff !important; /* оставляем значок белым */
+    border-radius: 10px !important;
+}
+
+/* Фильтры категорий */
+.filter-btn {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+    border-radius: 20px !important;
+}
+
+/* Активная кнопка фильтра */
+.filter-btn.active {
+    background-color: #0f7c19 !important;
+}
+
+/* Кнопка "Посмотреть каталог" */
+#view-catalog-btn,
+.hero button {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+}
+
+/* Checkout кнопка "Оформить заказ" */
+#checkout-submit {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+}
+
+/* В корзине */
+#goto-checkout,
+#cart-close-btn,
+#clear-cart {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+}
+
+/* Кнопка "Подробнее о товаре" */
+#pm-more {
+    background-color: #179f21 !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+    border-radius: 12px !important;
+    padding: 6px 12px !important;
+}
+
+/* Кнопка выбора адреса / профиля */
+.profile-item {
+    background-color: #179f21 !important;
+}
+.profile-item-title,
+.profile-item .small {
+    color: #000 !important;
+}
+
+/* Кнопка "Выйти из аккаунта" */
+.profile-logout {
+    background-color: #179f21 !important;
+    color: #000 !important;
+}
+
+/* Кнопка в floating-cart */
+#floating-cart {
+    background-color: #179f21 !important;
+    color: #000 !important;
+}
 
