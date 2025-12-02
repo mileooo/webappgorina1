@@ -598,4 +598,61 @@ input[type="radio"]:-moz-focusring {
 .auth-btn-tg:hover{
   background:#F3F9FF;
 }
+/* ещё более компактный вид на маленьких экранах */
+@media (max-width: 600px) {
+  body {
+    font-size: 12px;
+  }
+
+  .hero {
+    padding: 10px 10px;
+    margin: 8px auto;
+  }
+
+  .hero h1 {
+    font-size: 14px;
+  }
+
+  .hero p {
+    font-size: 11px;
+  }
+
+  .pills .pill,
+  .filter-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .card {
+    min-height: 220px;
+    padding: 6px;
+  }
+
+  .name {
+    font-size: 12px;
+  }
+
+  .desc {
+    font-size: 11px;
+  }
+
+  .price {
+    font-size: 12px;
+  }
+
+  .qty-input {
+    width: 50px;
+    font-size: 11px;
+    padding: 4px;
+  }
+
+  .unit-select {
+    font-size: 11px;
+    padding: 4px;
+  }
+
+  .add-to-cart {
+    transform: scale(0.9);
+  }
+}
 
