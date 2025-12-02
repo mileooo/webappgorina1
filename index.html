@@ -401,6 +401,73 @@
   </div>
 </div>
 
+<!-- ЛИЧНЫЙ КАБИНЕТ (панель снизу) -->
+<div id="profile-panel" class="profile-panel" aria-hidden="true">
+  <div class="profile-panel-inner">
+    <header class="profile-header">
+      <div class="profile-user">
+        <div class="profile-avatar" id="profile-avatar">🙂</div>
+        <div>
+          <div class="profile-name" id="profile-name">Гость</div>
+          <div class="profile-phone small" id="profile-phone">Не авторизован</div>
+        </div>
+      </div>
+
+      <button id="profile-close" class="profile-close" aria-label="Закрыть">✕</button>
+    </header>
+
+    <section class="profile-loyalty">
+      <div class="profile-loyalty-top">
+        <div>
+          <div class="small muted">Ваш уровень</div>
+          <div class="profile-level" id="profile-level">Базовый</div>
+        </div>
+        <div class="profile-points" id="profile-points">0 баллов</div>
+      </div>
+      <div class="small" id="profile-loyalty-hint">
+        Копите баллы за каждый заказ и получайте скидки.
+      </div>
+    </section>
+
+    <nav class="profile-menu">
+      <button class="profile-item" id="profile-orders">
+        <div>
+          <div class="profile-item-title">Мои заказы</div>
+          <div class="small muted">История заказов и подробности</div>
+        </div>
+        <span class="profile-item-arrow">›</span>
+      </button>
+
+      <button class="profile-item" id="profile-addresses">
+        <div>
+          <div class="profile-item-title">Мои адреса</div>
+          <div class="small muted">Сохраните любимые адреса доставки</div>
+        </div>
+        <span class="profile-item-arrow">›</span>
+      </button>
+
+      <button class="profile-item" id="profile-payments">
+        <div>
+          <div class="profile-item-title">Оплата</div>
+          <div class="small muted">Наличные или карта курьеру</div>
+        </div>
+        <span class="profile-item-arrow">›</span>
+      </button>
+
+      <button class="profile-item" id="profile-support">
+        <div>
+          <div class="profile-item-title">Поддержка</div>
+          <div class="small muted">Задать вопрос в Telegram</div>
+        </div>
+        <span class="profile-item-arrow">›</span>
+      </button>
+    </nav>
+
+    <button class="profile-logout" id="profile-logout">
+      Выйти из аккаунта
+    </button>
+  </div>
+</div>
 
 <!-- Подключение JS -->
 <script src="script.js"></script>

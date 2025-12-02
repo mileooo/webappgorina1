@@ -655,4 +655,163 @@ input[type="radio"]:-moz-focusring {
     transform: scale(0.9);
   }
 }
+/* ========== PROFILE PANEL (личный кабинет) ========== */
+
+.profile-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1400;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+
+.profile-panel[aria-hidden="false"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.profile-panel-inner {
+  width: 100%;
+  max-width: 640px;
+  background: #fff;
+  border-radius: 18px 18px 0 0;
+  padding: 16px 16px 24px;
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.18);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* шапка */
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.profile-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #34C48B;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.profile-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.profile-phone {
+  color: var(--muted);
+}
+
+.profile-close {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* блок лояльности */
+.profile-loyalty {
+  padding: 12px;
+  border-radius: 12px;
+  background: #f5fff9;
+  border: 1px solid #d5f5e4;
+  margin-bottom: 16px;
+}
+
+.profile-loyalty-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.profile-level {
+  font-weight: 700;
+}
+
+.profile-points {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* меню */
+.profile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-item {
+  width: 100%;
+  border: 0;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-item-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-item-arrow {
+  font-size: 18px;
+  color: #ccc;
+}
+
+/* выход */
+.profile-logout {
+  width: 100%;
+  border-radius: 999px;
+  padding: 10px 14px;
+  border: 0;
+  background: #ffecec;
+  color: #e74c3c;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* чуть компактнее на телефонах */
+@media (max-width: 600px) {
+  .profile-panel-inner {
+    padding: 14px 14px 20px;
+  }
+
+  .profile-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .profile-item {
+    padding: 9px 10px;
+  }
+}
 

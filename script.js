@@ -308,8 +308,8 @@ userAreaBtn.addEventListener("click", () => {
     return;
   }
 
-  // Уже авторизован — сразу открываем историю заказов
-  openHistoryModal();
+  // Уже авторизован — открываем личный кабинет
+  openProfilePanel();
 });
 
 // закрытие модалки крестиком
@@ -394,6 +394,22 @@ const pmClose = document.getElementById('product-modal-close');
 const pmQty = document.getElementById('pm-qty');
 const pmUnit = document.getElementById('pm-unit');
 const pmAdd = document.getElementById('pm-add');
+
+/* PROFILE PANEL REFS */
+const profilePanel = document.getElementById('profile-panel');
+const profileCloseBtn = document.getElementById('profile-close');
+const profileAvatarEl = document.getElementById('profile-avatar');
+const profileNameEl = document.getElementById('profile-name');
+const profilePhoneEl = document.getElementById('profile-phone');
+const profileLevelEl = document.getElementById('profile-level');
+const profilePointsEl = document.getElementById('profile-points');
+const profileLoyaltyHintEl = document.getElementById('profile-loyalty-hint');
+
+const profileOrdersBtn = document.getElementById('profile-orders');
+const profileAddressesBtn = document.getElementById('profile-addresses');
+const profilePaymentsBtn = document.getElementById('profile-payments');
+const profileSupportBtn = document.getElementById('profile-support');
+const profileLogoutBtn = document.getElementById('profile-logout');
 
 /* ========== CHECKOUT (fullscreen, как Самокат) ========== */
 
@@ -734,6 +750,112 @@ function updateUserUI(){
     loyaltyBadge.textContent = 'Баллы: 0';
   }
 }
+
+function getUserDisplayPhone(user) {
+  if (!user) return '';
+  if (user.phone) return user.phone;
+  if (user.tgUser && user.tgUser.username) {
+    return '@' + user.tgUser.username;
+  }
+  return '';
+}
+
+function calcLoyaltyLevel(points) {
+  if (points >= 300) return 'Gold';
+  if (points >= 150) return 'Silver';
+  return 'Базовый';
+}
+
+function openProfilePanel() {
+  const user = getUserLocally();
+  if (!user) {
+    // если не авторизован — просто показываем окно входа
+    if (authModal) authModal.setAttribute('aria-hidden', 'false');
+    return;
+  }
+
+  const name = user.name || user.phone || 'Пользователь';
+  const phone = getUserDisplayPhone(user);
+  const points = getLoyalty();
+  const level = calcLoyaltyLevel(points);
+
+  if (profileNameEl) profileNameEl.textContent = name;
+  if (profilePhoneEl) profilePhoneEl.textContent = phone || 'Без номера';
+  if (profileAvatarEl) {
+    const first = name.trim()[0] || '🙂';
+    profileAvatarEl.textContent = first.toUpperCase();
+  }
+
+  if (profilePointsEl) profilePointsEl.textContent = points + ' баллов';
+  if (profileLevelEl) profileLevelEl.textContent = level;
+
+  if (profileLoyaltyHintEl) {
+    if (level === 'Gold') {
+      profileLoyaltyHintEl.textContent = 'Gold: до 10% скидки и приоритетная обработка заказов.';
+    } else if (level === 'Silver') {
+      profileLoyaltyHintEl.textContent = 'Silver: до 5% скидки и бонусы за каждый заказ.';
+    } else {
+      profileLoyaltyHintEl.textContent = 'Копите баллы за каждый заказ и переходите на уровни Silver и Gold.';
+    }
+  }
+
+  if (profilePanel) {
+    profilePanel.setAttribute('aria-hidden', 'false');
+  }
+}
+
+/* PROFILE PANEL HANDLERS */
+
+if (profileCloseBtn && profilePanel) {
+  profileCloseBtn.addEventListener('click', () => {
+    profilePanel.setAttribute('aria-hidden', 'true');
+  });
+
+  profilePanel.addEventListener('click', (e) => {
+    if (e.target === profilePanel) {
+      profilePanel.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
+
+if (profileOrdersBtn) {
+  profileOrdersBtn.addEventListener('click', () => {
+    openHistoryModal();
+  });
+}
+
+if (profileAddressesBtn) {
+  profileAddressesBtn.addEventListener('click', () => {
+    alert('Раздел "Мои адреса" появится скоро!');
+  });
+}
+
+if (profilePaymentsBtn) {
+  profilePaymentsBtn.addEventListener('click', () => {
+    alert('Сейчас доступна оплата наличными или картой курьеру.');
+  });
+}
+
+if (profileSupportBtn) {
+  profileSupportBtn.addEventListener('click', () => {
+    const supportLink = 'https://t.me/your_support_username';
+    if (typeof tg !== 'undefined' && tg.openTelegramLink) {
+      tg.openTelegramLink(supportLink);
+    } else {
+      window.open(supportLink, '_blank');
+    }
+  });
+}
+
+if (profileLogoutBtn) {
+  profileLogoutBtn.addEventListener('click', () => {
+    if (confirm('Выйти из аккаунта?')) {
+      logout();
+      profilePanel.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
+
 
 /* Try to auto-login from Telegram WebApp if available */
 function tryTelegramLogin(){
