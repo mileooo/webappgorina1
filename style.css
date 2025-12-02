@@ -814,4 +814,15 @@ input[type="radio"]:-moz-focusring {
     padding: 9px 10px;
   }
 }
+.bravo-logo {
+  height: 30px;      /* аккуратный размер, как у Самоката */
+  width: auto;
+  display: block;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
