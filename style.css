@@ -1021,4 +1021,20 @@ button.add-to-cart {
   opacity: 1;
   background: #25d366; /* зелёный индикатор */
 }
+/* ===== Расположение кнопки Личного кабинета справа ===== */
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Лого слева, ЛК справа */
+  width: 100%;
+}
+
+/* Чтобы аватар не сдвигался и висел прямо у правого края */
+.user-btn {
+  margin-left: auto !important;
+  display: flex;
+  align-items: center;
+  padding-right: 4px;
+}
 
