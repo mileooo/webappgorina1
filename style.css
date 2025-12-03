@@ -1,7 +1,7 @@
 :root{
   --white:#FFFFFF;
   --card-bg:#FAF9F6;
-  --brand:#A4DE02;
+  --brand:#179f21;
   --cta:#FF8C42;
   --text:#2E2E2E;
   --muted:#666666;
@@ -39,25 +39,81 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .loyalty-badge{background:linear-gradient(180deg,#fff,#f4fff0);padding:6px 10px;border-radius:999px;border:1px solid rgba(164,222,2,0.12);font-weight:700;color:#2e2e2e;font-size:13px}
 
 /* hero */
-.hero{max-width:var(--container);margin:14px auto;padding:16px;background:var(--white);border-radius:10px;display:flex;gap:12px;align-items:center;box-shadow:0 1px 6px rgba(0,0,0,0.03)}
-.hero-left{flex:1;min-width:180px}
-.hero h1{font-size:20px;margin:0 0 6px;color:var(--text);line-height:1.02}
-.hero p{font-size:13px;color:var(--muted);margin:0 0 8px;font-weight:300}
-.btn-cta{background:var(--cta);color:#fff;border:0;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(255,140,66,0.12);transition:transform .14s}
-.btn-secondary{background:transparent;border:1px solid var(--border);padding:6px 8px;border-radius:8px;color:var(--text);cursor:pointer;font-size:13px}
-.btn-secondary.small{transform:scale(0.67);}
+.hero{
+  max-width:var(--container);
+  margin:14px auto;
+  padding:16px;
+  background: linear-gradient(135deg, #0a6b3b, #179f21);
+  border-radius:16px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.18);
+  color:#fff;
+}
+.hero h1{
+  font-size:20px;
+  margin:0 0 6px;
+  color:#fff;
+  line-height:1.1;
+}
+.hero p{
+  font-size:13px;
+  color:rgba(255,255,255,0.85);
+  margin:0 0 8px;
+  font-weight:400;
+}
+.btn-cta{
+  background:#fff;
+  color:#0a6b3b;
+  border:0;
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,0.2);
+}
+.btn-secondary{
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.35);
+  padding:6px 10px;
+  border-radius:999px;
+  color:#fff;
+  cursor:pointer;
+  font-size:13px;
+}
 
 /* filters */
 .controls{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}
 .pills{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.pill{
-  padding:8px 12px;border-radius:999px;background:transparent;border:1px solid var(--border);
-  cursor:pointer;font-weight:700;font-size:13px;color:var(--text);
-  box-shadow:0 2px 6px rgba(0,0,0,0.03);
-  transition:all .18s;
+.pill,
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #f3f4f6;          /* светло-серый фон */
+  border: 0;
+  cursor: pointer;
+  font-weight: 900;             /* Montserrat Black */
+  font-size: 13px;
+  color: #111;                  /* чёрный текст */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
 }
-.pill:hover{transform:translateY(-3px)}
-.pill.active{background:var(--pill-bg);border-color:transparent;box-shadow:0 8px 22px rgba(164,222,2,0.08)}
+
+.pill:hover,
+.filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+/* активная категория — зелёная */
+.pill.active,
+.filter-btn.active {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(23,159,33,0.35);
+}
+
 
 /* grid */
 .main{max-width:var(--container);margin:0 auto;padding:8px 16px 120px}
@@ -825,116 +881,44 @@ input[type="radio"]:-moz-focusring {
   align-items: center;
   gap: 10px;
 }
-/* === GLOBAL BUTTON STYLE OVERRIDE === */
+/* === GLOBAL BUTTON STYLE OVERRIDE (акцентные кнопки) === */
 
 button,
 .btn,
 button.btn,
-button.add-to-cart,
-button.filter-btn,
-button.profile-item,
-button.profile-logout {
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 900 !important; /* Black */
-    background-color: #179f21 !important;
-    color: #000 !important;
-    border: none !important;
-    border-radius: 12px !important;
+button.add-to-cart {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  border: none;
+  border-radius: 12px;
 }
 
-/* Главная большая кнопка */
-.hero .btn-primary,
-#hero-order {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-}
-
-/* Кнопка "Войти по номеру" */
-#auth-phone-btn {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-}
-
-/* Кнопка "Добавить в корзину" в модалке */
-#pm-add {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-}
-
-/* Плюсики в карточках */
-.add-to-cart {
-    background-color: #179f21 !important;
-    color: #fff !important; /* оставляем значок белым */
-    border-radius: 10px !important;
-}
-
-/* Фильтры категорий */
-.filter-btn {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-    border-radius: 20px !important;
-}
-
-/* Активная кнопка фильтра */
-.filter-btn.active {
-    background-color: #0f7c19 !important;
-}
-
-/* Кнопка "Посмотреть каталог" */
-#view-catalog-btn,
-.hero button {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-}
-
-/* Checkout кнопка "Оформить заказ" */
-#checkout-submit {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-}
-
-/* В корзине */
+/* основные зелёные action-кнопки */
+#hero-order,
+#auth-phone-btn,
+#pm-add,
+#checkout-submit,
 #goto-checkout,
 #cart-close-btn,
-#clear-cart {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-}
-
-/* Кнопка "Подробнее о товаре" */
-#pm-more {
-    background-color: #179f21 !important;
-    color: #000 !important;
-    font-weight: 900 !important;
-    border-radius: 12px !important;
-    padding: 6px 12px !important;
-}
-
-/* Кнопка выбора адреса / профиля */
-.profile-item {
-    background-color: #179f21 !important;
-}
-.profile-item-title,
-.profile-item .small {
-    color: #000 !important;
-}
-
-/* Кнопка "Выйти из аккаунта" */
-.profile-logout {
-    background-color: #179f21 !important;
-    color: #000 !important;
-}
-
-/* Кнопка в floating-cart */
+#clear-cart,
+#pm-more,
 #floating-cart {
-    background-color: #179f21 !important;
-    color: #000 !important;
+  background-color: #179f21;
+  color: #000;
+  font-weight: 900;
 }
+
+/* плюсик на карточке — зелёный фон, белый знак */
+.add-to-cart {
+  background-color: #179f21;
+  color: #fff;
+  border-radius: 10px;
+}
+
+/* фильтры оставляем светло-серые — ИХ НЕ ТРОГАЕМ!
+   работают стили выше в файле (.pill, .filter-btn, .active и т.д.) */
+
+/* элементы в личном кабинете тоже оставляем светлыми —
+   работают стили .profile-item и .profile-logout выше */
+
 
