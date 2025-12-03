@@ -1184,4 +1184,43 @@ button.add-to-cart {
 .search-big-btn:active {
   transform: translateX(-50%) scale(0.97);
 }
+/* Верхняя панель поиска */
+.search-page-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* разнести влево и вправо */
+  gap: 12px;
+  padding: 8px 0;
+}
+
+/* Поле ввода — как у iOS */
+.search-page-input {
+  flex: 1;
+  padding: 10px 16px;
+  background: #f2f2f5;          /* мягкий светло-серый */
+  border-radius: 12px;          /* плавные углы */
+  border: none;
+  font-size: 16px;
+  outline: none;
+  color: #333;
+}
+
+.search-page-input::placeholder {
+  color: #b8b8be;               /* серый placeholder, как в iOS */
+}
+
+/* "Отмена" — текстовая кнопка как в iOS */
+.search-cancel-btn {
+  background: none;
+  border: none;
+  font-size: 17px;
+  font-weight: 500;
+  color: #14a11f;               /* ЗЕЛЁНЫЙ цвет (как ты хотел) */
+  padding: 0 4px;
+  cursor: pointer;
+}
+
+.search-cancel-btn:active {
+  opacity: 0.5;
+}
 
