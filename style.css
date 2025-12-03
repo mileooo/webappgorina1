@@ -70,16 +70,77 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 
 /* hero */
 .hero{
-  max-width:var(--container);
-  margin:14px auto 18px;
-  padding:40px 20px 220px;        /* стало больше внутренний отступ, особенно снизу */
-  background: linear-gradient(135deg, #0a6b3b, #179f21);
-  border-radius:16px;
-  display:flex;
-  gap:12px;
-  align-items:flex-start;        /* прижимаем контент к верху блока */
-  box-shadow:0 10px 30px rgba(0,0,0,0.18);
-  color:#fff;
+  position: relative;
+  max-width: var(--container);
+  margin: 0 auto 18px;
+  padding: 16px;                  /* базовый отступ, без текста */
+  min-height: 520px;              /* высота баннера */
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+
+  /* ТВОЙ БАННЕР */
+  background: url("images/hero-bravo.jpg") center center / cover no-repeat;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  color: #fff;
+}
+/* ЛК в правом верхнем углу баннера */
+.hero-user {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+/* Контейнер с кнопками внизу */
+.hero-actions {
+  position: absolute;
+  left: 16px;
+  bottom: 24px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Делаем кнопки поярче на фоне фото */
+.hero-actions .btn-cta,
+.hero-actions .btn-secondary {
+  font-size: 14px;
+  padding: 10px 18px;
+  border-radius: 999px;
+}
+
+/* "Каталог" — жёлтая, как на макете, можно оставить зелёной если хочешь */
+.hero-actions .btn-cta {
+  background: #ffc93a;
+  color: #234000;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* "Заказать сейчас" — прозрачная с белой рамкой */
+.hero-actions .btn-secondary {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.7);
+  color: #ffffff;
+}
+
+/* На маленьких экранах чуть ниже и компактнее */
+@media (max-width: 600px) {
+  .hero {
+    padding: 12px;
+    min-height: 480px;
+  }
+
+  .hero-actions {
+    left: 16px;
+    right: 16px;
+    bottom: 32px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .hero-actions .btn-cta,
+  .hero-actions .btn-secondary {
+    font-size: 13px;
+    padding: 9px 16px;
+  }
 }
 .hero h1{
   font-size:20px;
