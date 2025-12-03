@@ -29,7 +29,28 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .header-right{display:flex;align-items:center;gap:10px}
 
 /* header small user area */
-.user-btn{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer}
+.user-btn {
+  background: transparent !important;
+  border: none !important;
+  padding: 4px !important;
+  border-radius: 999px !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  margin-left: auto !important; /* отправляем кнопку вправо */
+}
+
+.user-name {
+  display: none !important; /* скрываем номер телефона */
+}
+
+.user-btn .user-icon {
+  font-size: 22px;
+  line-height: 1;
+}
 .user-name{font-weight:700;font-size:13px}
 
 /* search / hero */
@@ -937,4 +958,67 @@ button.add-to-cart {
 /* элементы в личном кабинете тоже оставляем светлыми —
    работают стили .profile-item и .profile-logout выше */
 
+#ua-name {
+  display: none !important;
+}
+
+/* ===== АВАТАР ПОЛЬЗОВАТЕЛЯ В ШАПКЕ ===== */
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 4px;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+}
+
+/* скрываем имя/номер в шапке */
+.user-name {
+  display: none !important;
+}
+
+/* круглая аватарка */
+.user-avatar {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #179f21;
+  box-shadow: 0 4px 10px rgba(23,159,33,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* иконка-силуэт */
+.user-avatar-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  fill: #ffffff;
+}
+
+/* индикатор онлайн (по умолчанию скрыт) */
+.user-status-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #cccccc; /* не авторизован */
+  border: 2px solid #ffffff;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+/* активный статус — авторизован */
+.user-btn.is-logged-in .user-status-dot {
+  opacity: 1;
+  background: #25d366; /* зелёный индикатор */
+}
 

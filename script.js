@@ -738,14 +738,26 @@ function logout() {
   alert("Вы вышли из аккаунта.");
 }
 
-function updateUserUI(){
+function updateUserUI() {
   const u = getUserLocally();
-  if(u){
-    uaName.textContent = u.name || (u.phone || 'Пользователь');
-    loyaltyBadge.textContent = 'Баллы: ' + getLoyalty();
+
+  if (u) {
+    // показываем имя/телефон, если хочешь — можно скрыть текст через CSS
+    if (uaName) {
+      uaName.textContent = u.name || u.phone || 'Пользователь';
+    }
+
+    // добавляем класс "залогинен" для зелёной точки
+    if (userAreaBtn) {
+      userAreaBtn.classList.add('is-logged-in');
+    }
   } else {
-    uaName.textContent = 'Войти';
-    loyaltyBadge.textContent = 'Баллы: 0';
+    if (uaName) {
+      uaName.textContent = 'Войти';
+    }
+    if (userAreaBtn) {
+      userAreaBtn.classList.remove('is-logged-in');
+    }
   }
 }
 
