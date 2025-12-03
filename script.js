@@ -1331,17 +1331,32 @@ if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort())
 if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());
 
 /* mobile search wiring */
-if(fabOpen){
-  fabOpen.addEventListener('click', ()=>{
-    if(searchPanel){
-      searchPanel.classList.toggle('open');
+if (fabOpen) {
+  fabOpen.addEventListener('click', () => {
+    if (!searchPanel) return;
+
+    const wasOpen = searchPanel.classList.contains('open');
+    searchPanel.classList.toggle('open');
+
+    if (!wasOpen) {
+      // Открыли панель — просто фокус в поле
       mobileSearchInput && mobileSearchInput.focus();
+    } else {
+      // Закрыли панель — СБРАСЫВАЕМ ПОИСК
+      if (mobileSearchInput) mobileSearchInput.value = '';
+      if (searchInput) searchInput.value = '';   // поле под баннером
+      applySearchAndSort();                      // перерисовать список
     }
   });
 }
-if(closeSearchPanelBtn){
-  closeSearchPanelBtn.addEventListener('click', ()=>{
-    if(searchPanel) searchPanel.classList.remove('open');
+if (closeSearchPanelBtn) {
+  closeSearchPanelBtn.addEventListener('click', () => {
+    if (searchPanel) searchPanel.classList.remove('open');
+
+    // СБРАСЫВАЕМ ПОИСК
+    if (mobileSearchInput) mobileSearchInput.value = '';
+    if (searchInput) searchInput.value = '';
+    applySearchAndSort();
   });
 }
 if(mobileSearchInput){
