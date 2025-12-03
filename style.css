@@ -1223,4 +1223,90 @@ button.add-to-cart {
 .search-cancel-btn:active {
   opacity: 0.5;
 }
+/* ===== БЛОК КАТЕГОРИЙ ===== */
+
+.categories-block {
+  margin: 10px 0 6px;
+}
+
+.categories-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.categories-title {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.categories-count {
+  color: var(--muted);
+}
+
+/* сетка карточек, как на примере */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (min-width: 520px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .categories-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* сама карточка категории */
+.category-card {
+  border: none;
+  padding: 10px;
+  border-radius: 18px;
+  background: #f5f5f7;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+/* верхняя часть под картинку/иконку */
+.category-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+/* подпись категории */
+.category-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+}
+
+/* hover / tap эффект */
+.category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+/* активная категория — подчёркиваем как выбранную */
+.category-card.active {
+  background: #e5f8e7;
+  box-shadow: 0 8px 22px rgba(23,159,33,0.3);
+}
 

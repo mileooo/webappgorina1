@@ -97,25 +97,87 @@
 </section>
 
 <main class="main container">
-  <div class="controls">
-    <div class="pills" id="filters">
-  <button data-filter="all" class="pill filter-btn active">Все</button>
-  <button data-filter="fruits" class="pill filter-btn">Фрукты</button>
-  <button data-filter="vegetables" class="pill filter-btn">Овощи</button>
-  <button data-filter="greens" class="pill filter-btn">Зелень</button>
-  <button data-filter="nuts" class="pill filter-btn">Сухофрукты и орехи</button>
-  <button data-filter="sweets" class="pill filter-btn">Сладости</button>
-  <button data-filter="pasta" class="pill filter-btn">Макароны</button>
-  <button data-filter="canned" class="pill filter-btn">Консервы</button>
-  <button data-filter="spices" class="pill filter-btn">Специи</button>
-  <button data-filter="drinks" class="pill filter-btn">Напитки</button>
-  <button data-filter="cereals" class="pill filter-btn">Крупы / бакалея</button>
-  <button data-filter="tea" class="pill filter-btn">Чай</button>
-  <button data-filter="household" class="pill filter-btn">Бытовые товары</button>
-  <button data-filter="eggs" class="pill filter-btn">Яйца</button>
-</div>
-    <div style="margin-left:auto" class="small">Показано <span id="shown-count">0</span> товаров</div>
-  </div>
+  <!-- Блок категорий -->
+  <section class="categories-block">
+    <div class="categories-header">
+      <h2 class="categories-title">Категории</h2>
+      <div class="categories-count small">
+        Показано <span id="shown-count">0</span> товаров
+      </div>
+    </div>
+
+    <div class="categories-grid" id="filters">
+      <button data-filter="all" class="category-card filter-btn active">
+        <div class="category-img"><span>🛒</span></div>
+        <div class="category-name">Все товары</div>
+      </button>
+
+      <button data-filter="fruits" class="category-card filter-btn">
+        <div class="category-img"><span>🍎</span></div>
+        <div class="category-name">Фрукты</div>
+      </button>
+
+      <button data-filter="vegetables" class="category-card filter-btn">
+        <div class="category-img"><span>🥕</span></div>
+        <div class="category-name">Овощи</div>
+      </button>
+
+      <button data-filter="greens" class="category-card filter-btn">
+        <div class="category-img"><span>🌿</span></div>
+        <div class="category-name">Зелень</div>
+      </button>
+
+      <button data-filter="nuts" class="category-card filter-btn">
+        <div class="category-img"><span>🥜</span></div>
+        <div class="category-name">Сухофрукты и орехи</div>
+      </button>
+
+      <button data-filter="sweets" class="category-card filter-btn">
+        <div class="category-img"><span>🍪</span></div>
+        <div class="category-name">Сладости</div>
+      </button>
+
+      <button data-filter="pasta" class="category-card filter-btn">
+        <div class="category-img"><span>🍝</span></div>
+        <div class="category-name">Макароны</div>
+      </button>
+
+      <button data-filter="canned" class="category-card filter-btn">
+        <div class="category-img"><span>🥫</span></div>
+        <div class="category-name">Консервы</div>
+      </button>
+
+      <button data-filter="spices" class="category-card filter-btn">
+        <div class="category-img"><span>🌶️</span></div>
+        <div class="category-name">Специи</div>
+      </button>
+
+      <button data-filter="drinks" class="category-card filter-btn">
+        <div class="category-img"><span>🥤</span></div>
+        <div class="category-name">Напитки</div>
+      </button>
+
+      <button data-filter="cereals" class="category-card filter-btn">
+        <div class="category-img"><span>🍚</span></div>
+        <div class="category-name">Крупы / бакалея</div>
+      </button>
+
+      <button data-filter="tea" class="category-card filter-btn">
+        <div class="category-img"><span>☕</span></div>
+        <div class="category-name">Чай</div>
+      </button>
+
+      <button data-filter="household" class="category-card filter-btn">
+        <div class="category-img"><span>🧻</span></div>
+        <div class="category-name">Бытовые товары</div>
+      </button>
+
+      <button data-filter="eggs" class="category-card filter-btn">
+        <div class="category-img"><span>🥚</span></div>
+        <div class="category-name">Яйца</div>
+      </button>
+    </div>
+  </section>
 
   <div class="fade-in">
     <div id="catalog" class="grid"></div>
