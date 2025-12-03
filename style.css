@@ -71,13 +71,13 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 /* hero */
 .hero{
   max-width:var(--container);
-  margin:14px auto;
-  padding:16px;
+  margin:14px auto 18px;
+  padding:24px 16px 56px;        /* стало больше внутренний отступ, особенно снизу */
   background: linear-gradient(135deg, #0a6b3b, #179f21);
   border-radius:16px;
   display:flex;
   gap:12px;
-  align-items:center;
+  align-items:flex-start;        /* прижимаем контент к верху блока */
   box-shadow:0 10px 30px rgba(0,0,0,0.18);
   color:#fff;
 }
