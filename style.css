@@ -227,10 +227,13 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 /* полноэкранная "страница поиска" */
 .search-panel {
   position: fixed;
-  inset: 0;
+  inset: 0;                    /* top:0; right:0; bottom:0; left:0 */
   z-index: 1200;
   background: #ffffff;
   display: none;
+
+  overflow-y: auto;            /* ВАЖНО: скролл внутри панели */
+  -webkit-overflow-scrolling: touch;  /* плавный скролл на iOS */
 }
 
 .search-panel.open {
@@ -245,32 +248,6 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-/* верхняя строка */
-.search-page-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.search-page-input {
-  flex: 1;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: none;
-  background: #f3f3f5;
-  font-size: 16px;
-  outline: none;
-}
-
-.search-cancel-btn {
-  background: transparent;
-  border: none;
-  color: #ff2d55; /* розовый как в iOS */
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 /* блоки категорий */

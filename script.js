@@ -1331,6 +1331,7 @@ if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort())
 if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());
 
 /* ========== mobile search wiring — полноэкранный поиск ========== */
+/* открытие/закрытие полноэкранного поиска */
 if (fabOpen) {
   fabOpen.addEventListener('click', () => {
     if (!searchPanel) return;
@@ -1338,18 +1339,20 @@ if (fabOpen) {
     const wasOpen = searchPanel.classList.contains('open');
 
     if (!wasOpen) {
-      // открываем "страницу"
+      // ОТКРЫВАЕМ "страницу"
       searchPanel.classList.add('open');
       searchPanel.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';  // блокируем фон
+
       if (mobileSearchInput) {
         mobileSearchInput.focus();
       }
     } else {
-      // если вдруг нажали повторно — просто закрываем
+      // ЗАКРЫВАЕМ
       searchPanel.classList.remove('open');
       searchPanel.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';        // возвращаем скролл фону
 
-      // и СБРАСЫВАЕМ текст поиска
       if (mobileSearchInput) mobileSearchInput.value = '';
       if (searchInput) searchInput.value = '';
       applySearchAndSort();
@@ -1361,11 +1364,10 @@ if (closeSearchPanelBtn) {
   closeSearchPanelBtn.addEventListener('click', () => {
     if (!searchPanel) return;
 
-    // закрыть "страницу"
     searchPanel.classList.remove('open');
     searchPanel.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';          // возвращаем скролл фону
 
-    // сбросить текст поиска (чтобы не мешал категориям)
     if (mobileSearchInput) mobileSearchInput.value = '';
     if (searchInput) searchInput.value = '';
     applySearchAndSort();
