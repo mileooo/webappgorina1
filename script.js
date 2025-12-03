@@ -334,7 +334,7 @@ const sortSelect = document.getElementById('sort-select');
 const mobileSearchInput = document.getElementById('mobile-search-input');
 const mobileSort = document.getElementById('mobile-sort');
 const searchPanel = document.getElementById('search-panel');
-const fabOpen = document.getElementById('fab-open');
+const fabOpen = document.getElementById('search-fab');
 const closeSearchPanelBtn = document.getElementById('close-search-panel');
 
 const floatingCart = document.getElementById('floating-cart');
