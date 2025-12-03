@@ -19,25 +19,45 @@
 
 <header class="header">
   <div class="header-inner">
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="logo">
-     <img src="images/logo-bravo.png" class="bravo-logo" alt="Bravo Market">
+    <!-- логотип слева -->
+    <div class="logo">
+      <img src="images/logo-bravo.png" class="bravo-logo" alt="Bravo Market">
       <h4>Bravo Market</h4>
-      </div>
-<!-- ЛИЧНЫЙ КАБИНЕТ / АВАТАР -->
-<div id="user-area" class="user-btn" role="button" aria-label="Личный кабинет">
-  <div class="user-avatar">
-    <svg class="user-avatar-icon" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="11" fill="#179f21"/>
-      <path d="M12 7a3 3 0 1 1 0 6a3 3 0 0 1 0-6zm0 7c-3.3 0-6 1.7-6 3.5V19h12v-1.5C18 15.7 15.3 14 12 14z"
-            fill="#ffffff"/>
-    </svg>
-    <span class="user-status-dot"></span>
-  </div>
-  <span class="user-name" id="ua-name">Войти</span>
-</div>
-     
+    </div>
+
+    <!-- справа: баллы + личный кабинет -->
     <div class="header-right">
+      <div class="loyalty-badge" id="loyalty-badge">Баллы: 0</div>
+
+      <!-- ЛИЧНЫЙ КАБИНЕТ / АВАТАР -->
+      <div id="user-area" class="user-btn" role="button" aria-label="Личный кабинет">
+        <div class="user-avatar">
+          <svg class="user-avatar-icon" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="11" fill="#179f21"/>
+            <path d="M12 7a3 3 0 1 1 0 6a3 3 0 0 1 0-6zm0 7c-3.3 0-6 1.7-6 3.5V19h12v-1.5C18 15.7 15.3 14 12 14z"
+                  fill="#ffffff"/>
+          </svg>
+          <span class="user-status-dot"></span>
+        </div>
+        <span class="user-name" id="ua-name">Войти</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero container">
+  <div class="hero-left">
+    <h1>Свежие продукты — прямо к вам домой</h1>
+    <p>Доставим за 60 минут из фермерских хозяйств. Выберите из каталога.</p>
+
+    <div class="hero-cta">
+      <button class="btn-cta" id="hero-order">Заказать сейчас</button>
+      <!-- КНОПКА "КАТАЛОГ" -->
+      <button class="btn-secondary small" id="view-catalog">Каталог</button>
+    </div>
+
+    <!-- ПОИСК ПОД БАННЕРОМ -->
+    <div class="hero-search">
       <div class="search-wrap">
         <input id="search-input" placeholder="Поиск товара…" />
         <select id="sort-select" class="sort-select">
@@ -48,24 +68,30 @@
           <option value="name_desc">Я → A</option>
         </select>
       </div>
-
-      <div class="loyalty-badge" id="loyalty-badge">Баллы: 0</div>
     </div>
   </div>
-</header>
 
-<section class="hero container">
-  <div class="hero-left">
-    <h1>Свежие продукты — прямо к вам домой</h1>
-    <p>Доставим за 60 минут из фермерских хозяйств. Выбери из каталога.</p>
-    <div class="hero-cta">
-      <button class="btn-cta" id="hero-order">Заказать сейчас</button>
-      <button class="btn-secondary small" id="view-catalog">Посмотреть каталог</button>
-    </div>
-  </div>
   <div class="hero-right">
     <div class="hero-image" style="height:130px">
-      <img src="images/svezhie-frukty.jpg" alt="" />
+      <img src="images/svezhie-frukty.jpg" alt="Свежие фрукты" />
+    </div>
+  </div>
+</section>
+
+<!-- спец-подборки: акции / хиты -->
+<section class="specials container">
+  <h2 class="specials-title">Выгодно сегодня</h2>
+  <div class="specials-row">
+    <div class="special-card">
+      <div class="special-tag">Акция</div>
+      <div class="special-title">Сладкие фрукты к чаю</div>
+      <div class="special-desc">Подборка сезонных фруктов со скидкой.</div>
+    </div>
+
+    <div class="special-card">
+      <div class="special-tag special-tag-hit">Хит продаж</div>
+      <div class="special-title">Набор для борща</div>
+      <div class="special-desc">Овощи для супа в одном наборе.</div>
     </div>
   </div>
 </section>

@@ -93,6 +93,9 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   margin:0 0 8px;
   font-weight:400;
 }
+.hero-search{
+  margin-top: 12px;
+}
 .btn-cta{
   background:#fff;
   color:#0a6b3b;
@@ -1036,5 +1039,60 @@ button.add-to-cart {
   display: flex;
   align-items: center;
   padding-right: 4px;
+}
+/* ===== спец-подборки: акции / хиты ===== */
+
+.specials {
+  max-width: var(--container);
+  margin: 0 auto 12px;
+  padding: 0 16px;
+}
+
+.specials-title {
+  font-size: 16px;
+  font-weight: 900;
+  margin: 4px 0 8px;
+}
+
+.specials-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.special-card {
+  min-width: 210px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+}
+
+.special-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.special-tag-hit {
+  background: #FF8C42; /* яркий для "Хит продаж" */
+}
+
+.special-title {
+  font-size: 14px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.special-desc {
+  font-size: 12px;
+  color: var(--muted);
 }
 
