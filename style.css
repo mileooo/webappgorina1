@@ -224,11 +224,96 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   width:44px;height:44px;border-radius:999px;background:#fff;border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,0.08);cursor:pointer;
 }
-.search-panel{
-  position:fixed;left:14px;bottom:74px;z-index:1000;background:white;border-radius:12px;
-  box-shadow:0 12px 36px rgba(0,0,0,0.12);padding:8px;width:calc(100% - 56px);max-width:360px;display:none;
+/* полноэкранная "страница поиска" */
+.search-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: #ffffff;
+  display: none;
 }
-.search-panel.open{display:block;}
+
+.search-panel.open {
+  display: flex;
+}
+
+.search-page {
+  padding: 16px 16px 24px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* верхняя строка */
+.search-page-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-page-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #f3f3f5;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-cancel-btn {
+  background: transparent;
+  border: none;
+  color: #ff2d55; /* розовый как в iOS */
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* блоки категорий */
+.search-section {
+  margin-top: 4px;
+}
+
+.search-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.search-suggest {
+  width: 100%;
+  border-radius: 14px;
+  border: none;
+  background: #fafafa;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.search-suggest:active {
+  background: #f0f0f0;
+}
+
+.ss-emoji {
+  font-size: 22px;
+  width: 32px;
+  text-align: center;
+}
+
+.ss-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
 
 .fade-in{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}

@@ -163,19 +163,107 @@
 </button>
 
 <div class="search-panel" id="search-panel" aria-hidden="true">
-  <div style="display:flex;gap:8px;align-items:center">
-    <input id="mobile-search-input" placeholder="Поиск товаров..." style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:14px">
-    <button id="close-search-panel" style="background:transparent;border:0;cursor:pointer;font-size:18px">✕</button>
-  </div>
-  <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-    <select id="mobile-sort" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:13px">
-      <option value="default">Сорт</option>
-      <option value="price_asc">Цена ↑</option>
-      <option value="price_desc">Цена ↓</option>
-      <option value="name_asc">A → Я</option>
-      <option value="name_desc">Я → A</option>
-    </select>
-    <div style="flex:1"></div>
+  <div class="search-page">
+
+    <!-- верхняя строка: поиск + "Отмена" -->
+    <div class="search-page-top">
+      <input id="mobile-search-input"
+             class="search-page-input"
+             placeholder="Поиск"
+             autocomplete="off">
+      <button id="close-search-panel" class="search-cancel-btn">Отмена</button>
+    </div>
+
+    <!-- БЛОК: Овощи и фрукты -->
+    <div class="search-section">
+      <div class="search-section-title">Овощи и фрукты</div>
+
+      <button class="search-suggest" data-filter="fruits">
+        <span class="ss-emoji">🍎</span>
+        <span class="ss-text">Фрукты и ягоды</span>
+      </button>
+
+      <button class="search-suggest" data-filter="vegetables">
+        <span class="ss-emoji">🥕</span>
+        <span class="ss-text">Овощи, грибы и зелень</span>
+      </button>
+
+      <button class="search-suggest" data-filter="greens">
+        <span class="ss-emoji">🌿</span>
+        <span class="ss-text">Свежая зелень</span>
+      </button>
+
+      <button class="search-suggest" data-filter="fruits">
+        <span class="ss-emoji">🍓</span>
+        <span class="ss-text">Сейчас сезон</span>
+      </button>
+    </div>
+
+    <!-- БЛОК: Бакалея и напитки -->
+    <div class="search-section">
+      <div class="search-section-title">Бакалея и напитки</div>
+
+      <button class="search-suggest" data-filter="cereals">
+        <span class="ss-emoji">🍚</span>
+        <span class="ss-text">Крупы и бакалея</span>
+      </button>
+
+      <button class="search-suggest" data-filter="drinks">
+        <span class="ss-emoji">🥤</span>
+        <span class="ss-text">Напитки и вода</span>
+      </button>
+
+      <button class="search-suggest" data-filter="tea">
+        <span class="ss-emoji">☕</span>
+        <span class="ss-text">Чай</span>
+      </button>
+    </div>
+
+    <!-- БЛОК: Сладкое и перекусы -->
+    <div class="search-section">
+      <div class="search-section-title">Сладкое и перекусы</div>
+
+      <button class="search-suggest" data-filter="sweets">
+        <span class="ss-emoji">🍪</span>
+        <span class="ss-text">Сладости и печенье</span>
+      </button>
+
+      <button class="search-suggest" data-filter="nuts">
+        <span class="ss-emoji">🥜</span>
+        <span class="ss-text">Орехи и сухофрукты</span>
+      </button>
+    </div>
+
+    <!-- БЛОК: Для дома -->
+    <div class="search-section">
+      <div class="search-section-title">Для дома</div>
+
+      <button class="search-suggest" data-filter="household">
+        <span class="ss-emoji">🧻</span>
+        <span class="ss-text">Бытовые товары</span>
+      </button>
+
+      <button class="search-suggest" data-filter="eggs">
+        <span class="ss-emoji">🥚</span>
+        <span class="ss-text">Яйца</span>
+      </button>
+
+      <button class="search-suggest" data-filter="canned">
+        <span class="ss-emoji">🥫</span>
+        <span class="ss-text">Консервы</span>
+      </button>
+
+      <button class="search-suggest" data-filter="spices">
+        <span class="ss-emoji">🌶️</span>
+        <span class="ss-text">Специи</span>
+      </button>
+
+      <button class="search-suggest" data-filter="pasta">
+        <span class="ss-emoji">🍝</span>
+        <span class="ss-text">Макароны</span>
+      </button>
+    </div>
+
   </div>
 </div>
 

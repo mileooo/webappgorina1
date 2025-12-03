@@ -1330,47 +1330,91 @@ filtersWrap.addEventListener('click', (e)=> {
 if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort());
 if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());
 
-/* mobile search wiring */
+/* ========== mobile search wiring — полноэкранный поиск ========== */
 if (fabOpen) {
   fabOpen.addEventListener('click', () => {
     if (!searchPanel) return;
 
     const wasOpen = searchPanel.classList.contains('open');
-    searchPanel.classList.toggle('open');
 
     if (!wasOpen) {
-      // Открыли панель — просто фокус в поле
-      mobileSearchInput && mobileSearchInput.focus();
+      // открываем "страницу"
+      searchPanel.classList.add('open');
+      searchPanel.setAttribute('aria-hidden', 'false');
+      if (mobileSearchInput) {
+        mobileSearchInput.focus();
+      }
     } else {
-      // Закрыли панель — СБРАСЫВАЕМ ПОИСК
+      // если вдруг нажали повторно — просто закрываем
+      searchPanel.classList.remove('open');
+      searchPanel.setAttribute('aria-hidden', 'true');
+
+      // и СБРАСЫВАЕМ текст поиска
       if (mobileSearchInput) mobileSearchInput.value = '';
-      if (searchInput) searchInput.value = '';   // поле под баннером
-      applySearchAndSort();                      // перерисовать список
+      if (searchInput) searchInput.value = '';
+      applySearchAndSort();
     }
   });
 }
+
 if (closeSearchPanelBtn) {
   closeSearchPanelBtn.addEventListener('click', () => {
-    if (searchPanel) searchPanel.classList.remove('open');
+    if (!searchPanel) return;
 
-    // СБРАСЫВАЕМ ПОИСК
+    // закрыть "страницу"
+    searchPanel.classList.remove('open');
+    searchPanel.setAttribute('aria-hidden', 'true');
+
+    // сбросить текст поиска (чтобы не мешал категориям)
     if (mobileSearchInput) mobileSearchInput.value = '';
     if (searchInput) searchInput.value = '';
     applySearchAndSort();
   });
 }
-if(mobileSearchInput){
-  mobileSearchInput.addEventListener('input', ()=>{
-    if(searchInput) searchInput.value = mobileSearchInput.value;
+
+/* ввод текста в поле на странице поиска */
+if (mobileSearchInput) {
+  mobileSearchInput.addEventListener('input', () => {
+    if (searchInput) searchInput.value = mobileSearchInput.value;
     applySearchAndSort();
   });
 }
-if(mobileSort){
-  mobileSort.addEventListener('change', ()=>{
-    if(sortSelect) sortSelect.value = mobileSort.value;
-    applySearchAndSort();
-  });
-}
+
+/* сортировку через mobileSort можно не трогать — элемента теперь нет,
+   но код защищён проверкой if(mobileSort){...} */
+
+/* клик по готовым подборкам в полноэкранном поиске */
+document.addEventListener('click', (e) => {
+  const sugg = e.target.closest('.search-suggest');
+  if (!sugg) return;
+
+  const f = sugg.dataset.filter || 'all';
+
+  // активируем соответствующую кнопку-фильтр в pills
+  const btn = document.querySelector(`#filters .filter-btn[data-filter="${f}"]`)
+           || document.querySelector('#filters .filter-btn[data-filter="all"]');
+
+  if (btn) {
+    document.querySelectorAll('#filters .filter-btn').forEach(x =>
+      x.classList.toggle('active', x === btn)
+    );
+    currentFilter = btn.dataset.filter || 'all';
+  } else {
+    currentFilter = f;
+  }
+
+  // чистим текст поиска
+  if (mobileSearchInput) mobileSearchInput.value = '';
+  if (searchInput) searchInput.value = '';
+
+  applySearchAndSort();
+
+  // закрываем страницу поиска
+  if (searchPanel) {
+    searchPanel.classList.remove('open');
+    searchPanel.setAttribute('aria-hidden', 'true');
+  }
+});
 
 /* ========== Checkout / order sending ========== */
 function sendOrderToAdmin(payload){
