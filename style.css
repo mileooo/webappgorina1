@@ -36,7 +36,16 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .search-wrap{display:flex;align-items:center;gap:8px;background:#fff;padding:6px;border-radius:12px;border:1px solid var(--border)}
 .search-wrap input{border:0;outline:0;padding:8px 10px;width:220px;border-radius:8px;font-weight:300}
 .sort-select{padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff;font-weight:300}
-.loyalty-badge{background:linear-gradient(180deg,#fff,#f4fff0);padding:6px 10px;border-radius:999px;border:1px solid rgba(164,222,2,0.12);font-weight:700;color:#2e2e2e;font-size:13px}
+.loyalty-badge{
+  display: none; /* прячем бейдж целиком из шапки */
+  background:linear-gradient(180deg,#fff,#f4fff0);
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(164,222,2,0.12);
+  font-weight:700;
+  color:#2e2e2e;
+  font-size:13px;
+}
 
 /* hero */
 .hero{
@@ -893,8 +902,15 @@ button.add-to-cart {
   border-radius: 12px;
 }
 
-/* основные зелёные action-кнопки */
+/* hero-кнопки: зелёный фон + БЕЛЫЙ текст */
 #hero-order,
+#view-catalog {
+  background-color: #179f21;
+  color: #fff;
+  font-weight: 900;
+}
+
+/* остальные зелёные action-кнопки (как было) */
 #auth-phone-btn,
 #pm-add,
 #checkout-submit,
