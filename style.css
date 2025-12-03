@@ -79,7 +79,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   overflow: hidden;
 
   /* ТВОЙ БАННЕР */
-  background: url("images/hero-bravo.jpg") center center / cover no-repeat;
+  background: url("images/hero-bravo.jpg") center 80% / cover no-repeat;
   box-shadow: 0 10px 30px rgba(0,0,0,0.18);
   color: #fff;
 }
@@ -87,7 +87,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .hero-user {
   position: absolute;
   top: 16px;
-  right: 16px;
+  left: 16px;
 }
 
 /* Контейнер с кнопками внизу */
