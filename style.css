@@ -68,21 +68,6 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   font-size:13px;
 }
 
-/* hero */
-.hero{
-  max-width:var(--container);
-  margin:14px auto;
-  padding:16px 16px 260px;
-  position: relative;
-  border-radius: 0 0 24px 24px;
-  overflow: hidden;
-
-  background-image: url("images/hero-bravo.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center 85%; /* ← меняешь ЗДЕСЬ */
-}
-
 /* ЛК в правом верхнем углу баннера */
 .hero-user {
   position: absolute;
@@ -1429,6 +1414,20 @@ button.add-to-cart {
 }.hero{
   background-image: url("images/hero-bravo.jpg") !important;
   background-size: cover !important;
-  background-position: center 60% !important;
+  background-position: center 80% !important;
+}
+.hero{
+  position: relative;
+  max-width: var(--container);
+  margin: 0 auto 18px;
+  border-radius: 0 0 24px 24px;
+  overflow: hidden;
+
+  min-height: 520px; /* высота баннера, можно менять */
+
+  background-image: url("images/hero-bravo.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center 80%;  /* <-- ТУТ крутим по высоте */
 }
 
