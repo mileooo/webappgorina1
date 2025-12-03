@@ -70,19 +70,19 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 
 /* hero */
 .hero{
+  max-width:var(--container);
+  margin:14px auto;
+  padding:16px 16px 260px;
   position: relative;
-  max-width: var(--container);
-  margin: 0 auto 18px;
-  padding: 16px;                  /* базовый отступ, без текста */
-  min-height: 520px;              /* высота баннера */
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 24px 24px;
   overflow: hidden;
 
-  /* ТВОЙ БАННЕР */
-  background: url("images/hero-bravo.jpg") center 80% / cover no-repeat;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-  color: #fff;
+  background-image: url("images/hero-bravo.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center 85%; /* ← меняешь ЗДЕСЬ */
 }
+
 /* ЛК в правом верхнем углу баннера */
 .hero-user {
   position: absolute;
@@ -1426,5 +1426,9 @@ button.add-to-cart {
   padding: 10px 16px 20px;
   overflow-y: auto;
   flex: 1;
+}.hero{
+  background-image: url("images/hero-bravo.jpg") !important;
+  background-size: cover !important;
+  background-position: center 60% !important;
 }
 
