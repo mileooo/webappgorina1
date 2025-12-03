@@ -379,6 +379,10 @@ const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
 
+const categoryPanel = document.getElementById('category-panel');
+const categoryBackBtn = document.getElementById('category-back');
+const categoryPageTitle = document.getElementById('category-page-title');
+
 const uaName = document.getElementById('ua-name');
 
 const productModal = document.getElementById('product-modal');
@@ -1291,6 +1295,58 @@ if(clearCartBtn) clearCartBtn.addEventListener('click', ()=>{
   clearCart();
   hideCartPanel();
 });
+function openCategoryPage(filter, title) {
+  currentFilter = filter || 'all';
+
+  // Подсветим активную карточку на главной (если есть)
+  const btn = document.querySelector(
+    `#filters .filter-btn[data-filter="${currentFilter}"]`
+  );
+  if (btn) {
+    document.querySelectorAll('#filters .filter-btn').forEach(x =>
+      x.classList.toggle('active', x === btn)
+    );
+    if (!title) {
+      const nm = btn.querySelector('.category-name');
+      if (nm) title = nm.textContent.trim();
+    }
+  }
+
+  if (!title) title = 'Категория';
+  if (categoryPageTitle) categoryPageTitle.textContent = title;
+
+  // очистим текст поиска, чтобы не мешал фильтрации
+  if (searchInput) searchInput.value = '';
+  if (mobileSearchInput) mobileSearchInput.value = '';
+
+  // отфильтруем и отрисуем товары в #catalog
+  applySearchAndSort();
+
+  // покажем экран категории
+  if (categoryPanel) {
+    categoryPanel.classList.add('open');
+    categoryPanel.setAttribute('aria-hidden', 'false');
+  }
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCategoryPage() {
+  if (!categoryPanel) return;
+  categoryPanel.classList.remove('open');
+  categoryPanel.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+if (categoryBackBtn) {
+  categoryBackBtn.addEventListener('click', closeCategoryPage);
+}
+
+if (categoryPanel) {
+  categoryPanel.addEventListener('click', (e) => {
+    if (e.target === categoryPanel) {
+      closeCategoryPage();
+    }
+  });
+}
 
 /* ========== Filters / Search / Sort ========== */
 function applySearchAndSort(){
@@ -1312,20 +1368,18 @@ function applySearchAndSort(){
   renderCatalog(visibleProducts);
 }
 
-filtersWrap.addEventListener('click', (e)=> {
-  const b = e.target.closest('.filter-btn');
-  if (!b) return;
+if (filtersWrap) {
+  filtersWrap.addEventListener('click', (e) => {
+    const b = e.target.closest('.filter-btn');
+    if (!b) return;
 
-  const f = b.dataset.filter || 'all';
-  currentFilter = f;
+    const f = b.dataset.filter || 'all';
+    const title =
+      (b.querySelector('.category-name')?.textContent || '').trim();
 
-  document.querySelectorAll('#filters .filter-btn').forEach(x =>
-    x.classList.toggle('active', x === b)
-  );
-
-  applySearchAndSort();
-});
-
+    openCategoryPage(f, title);
+  });
+}
 
 if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort());
 if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());
@@ -1391,31 +1445,22 @@ document.addEventListener('click', (e) => {
   if (!sugg) return;
 
   const f = sugg.dataset.filter || 'all';
-
-  // активируем соответствующую кнопку-фильтр в pills
-  const btn = document.querySelector(`#filters .filter-btn[data-filter="${f}"]`)
-           || document.querySelector('#filters .filter-btn[data-filter="all"]');
-
-  if (btn) {
-    document.querySelectorAll('#filters .filter-btn').forEach(x =>
-      x.classList.toggle('active', x === btn)
-    );
-    currentFilter = btn.dataset.filter || 'all';
-  } else {
-    currentFilter = f;
-  }
-
-  // чистим текст поиска
-  if (mobileSearchInput) mobileSearchInput.value = '';
-  if (searchInput) searchInput.value = '';
-
-  applySearchAndSort();
+  const title =
+    (sugg.querySelector('.ss-text')?.textContent || '').trim();
 
   // закрываем страницу поиска
   if (searchPanel) {
     searchPanel.classList.remove('open');
     searchPanel.setAttribute('aria-hidden', 'true');
   }
+  document.body.style.overflow = '';
+
+  // очищаем поисковую строку
+  if (mobileSearchInput) mobileSearchInput.value = '';
+  if (searchInput) searchInput.value = '';
+
+  // и открываем экран категории
+  openCategoryPage(f, title);
 });
 
 /* ========== Checkout / order sending ========== */
@@ -1513,13 +1558,7 @@ if (heroOrderBtn) {
 
 if (viewCatalogBtn) {
   viewCatalogBtn.addEventListener('click', () => {
-    const main = document.querySelector('.main');
-    if (main) {
-      window.scrollTo({
-        top: main.offsetTop - 20,
-        behavior: 'smooth'
-      });
-    }
+    openCategoryPage('all', 'Все товары');
   });
 }
 

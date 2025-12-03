@@ -178,11 +178,28 @@
       </button>
     </div>
   </section>
-
-  <div class="fade-in">
-    <div id="catalog" class="grid"></div>
-  </div>
 </main>
+
+<!-- СТРАНИЦА КАТЕГОРИИ (отдельный экран с ассортиментом) -->
+<div class="category-panel" id="category-panel" aria-hidden="true">
+  <div class="category-page">
+
+    <header class="category-page-header">
+      <button type="button"
+              id="category-back"
+              class="category-back-btn"
+              aria-label="Назад">←</button>
+      <div class="category-page-title" id="category-page-title">Категория</div>
+    </header>
+
+    <div class="category-page-body">
+      <!-- тот же самый catalog, только теперь живёт в экране категории -->
+      <div id="catalog" class="grid"></div>
+    </div>
+
+  </div>
+</div>
+
 
 <!-- cart panel (bottom sheet) -->
 <aside id="cart-panel" class="cart-panel" aria-hidden="true">
