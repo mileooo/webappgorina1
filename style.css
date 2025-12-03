@@ -755,9 +755,9 @@ input[type="radio"]:-moz-focusring {
     font-size: 12px;
   }
 
-  .hero {
-    padding: 10px 10px;
-    margin: 8px auto;
+    .hero {
+    padding: 24px 16px 180px;
+    margin: 12px auto 24px;
   }
 
   .hero h1 {
