@@ -79,7 +79,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .hero-actions {
   position: absolute;
   left: 16px;
-  bottom: 140px;   /* было 24px */
+  bottom: 110px;   /* было 24px */
   display: flex;
   gap: 10px;
 }
@@ -116,7 +116,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   .hero-actions {
     left: 16px;
     right: 16px;
-    bottom: 120px;
+    bottom: 100px;
     justify-content: flex-start;
     flex-wrap: wrap;
   }
