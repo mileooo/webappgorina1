@@ -802,7 +802,7 @@ input[type="radio"]:-moz-focusring {
   }
 
     .hero {
-    padding: 24px 16px 460px;
+    padding: 24px 16px 410px;
     margin: 12px auto 24px;
   }
 
@@ -1414,7 +1414,7 @@ button.add-to-cart {
 }.hero{
   background-image: url("images/hero-bravo.jpg") !important;
   background-size: cover !important;
-  background-position: center 110% !important;
+  background-position: center 50% !important;
 }
 .hero{
   position: relative;
@@ -1428,6 +1428,6 @@ button.add-to-cart {
   background-image: url("images/hero-bravo.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center 110%;  /* <-- ТУТ крутим по высоте */
+  background-position: center 50%;  /* <-- ТУТ крутим по высоте */
 }
 
