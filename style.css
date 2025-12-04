@@ -71,7 +71,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 /* ЛК в правом верхнем углу баннера */
 .hero-user {
   position: absolute;
-  top: -6px;
+  top: -4px;
   left: 0px;
 }
 
@@ -79,7 +79,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .hero-actions {
   position: absolute;
   left: 16px;
-  bottom: 150px;
+  bottom: 190px;
   display: flex;
   gap: 10px;
 }
