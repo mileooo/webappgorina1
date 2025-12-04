@@ -71,15 +71,15 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 /* ЛК в правом верхнем углу баннера */
 .hero-user {
   position: absolute;
-  top: -10px;
-  left: -4px;
+  top: -6px;
+  left: 0px;
 }
 
 /* Контейнер с кнопками внизу */
 .hero-actions {
   position: absolute;
-  left: 20px;
-  bottom: 130px;
+  left: 16px;
+  bottom: 150px;
   display: flex;
   gap: 10px;
 }
