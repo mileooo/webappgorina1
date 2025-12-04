@@ -801,9 +801,9 @@ input[type="radio"]:-moz-focusring {
     font-size: 12px;
   }
 
-    .hero {
-    padding: 24px 16px 490px;
+  .hero {
     margin: 12px auto 24px;
+    padding: 0; /* паддинги не нужны, картинка сама по себе */
   }
 
   .hero h1 {
@@ -1411,23 +1411,21 @@ button.add-to-cart {
   padding: 10px 16px 20px;
   overflow-y: auto;
   flex: 1;
-}.hero{
-  background-image: url("images/hero-bravo.jpg") !important;
-  background-size: cover !important;
-  background-position: center 10% !important;
 }
-.hero{
+/* HERO как блок-контейнер под картинку */
+.hero {
   position: relative;
   max-width: var(--container);
   margin: 0 auto 18px;
   border-radius: 0 0 24px 24px;
   overflow: hidden;
-
-  min-height: 520px; /* высота баннера, можно менять */
-
-  background-image: url("images/hero-bravo.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center 10%;  /* <-- ТУТ крутим по высоте */
 }
+
+/* Картинка баннера — ВСЯ, без обрезаний */
+.hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 
