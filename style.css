@@ -77,11 +77,12 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 
 /* Контейнер с кнопками внизу */
 .hero-actions {
-  position: absolute;
-  left: 16px;
-  bottom: 90px;   /* было 24px */
-  display: flex;
-  gap: 10px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* ← центрирует */
+    bottom: 140px;
+    display: flex;
+    gap: 10px;
 }
 
 /* Делаем кнопки поярче на фоне фото */
@@ -114,12 +115,13 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   }
 
   .hero-actions {
-    left: 16px;
-    right: 16px;
-    bottom: 80px;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 120px;
+      gap: 10px;
   }
+}
+
 
   .hero-actions .btn-cta,
   .hero-actions .btn-secondary {
