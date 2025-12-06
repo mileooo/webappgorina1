@@ -1360,7 +1360,6 @@ if (cartCloseBtn && cartPanel) {
   });
 }
 
-}
 function openCategoryPage(filter, title) {
   currentFilter = filter || 'all';
 
