@@ -343,6 +343,7 @@ const fcTotalEl = document.getElementById('fc-total');
 
 const cartPanel = document.getElementById('cart-panel');
 const cartItemsEl = document.getElementById('cart-items');
+const cartSuggestList = document.getElementById('cart-suggest-list');
 const cartSumEl = document.getElementById('cart-sum');
 const cartCountSmall = document.getElementById('cart-count-2');
 const cartCloseBtn = document.getElementById('cart-close-btn');
@@ -1116,7 +1117,44 @@ function renderCart(){
     btn.onclick = ()=> removeFromCart(btn.dataset.remove);
   });
 }
+function renderCartSuggestions(){
+  if (!cartSuggestList) return;
+  cartSuggestList.innerHTML = '';
 
+  if (!Array.isArray(products) || products.length === 0) return;
+
+  // товары, которых ещё нет в корзине
+  const inCartNames = new Set(cart.map(i => i.name));
+  const candidates = products.filter(p => !inCartNames.has(getName(p)));
+
+  if (!candidates.length) return;
+
+  // Перемешаем и возьмём максимум 4 штуки
+  const shuffled = candidates.slice().sort(() => Math.random() - 0.5);
+  const toShow = shuffled.slice(0, 4);
+
+  toShow.forEach(p => {
+    const name = getName(p);
+    const price = getPrice(p);
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cart-suggest-item';
+    btn.innerHTML = `
+      <div class="cart-suggest-name">${name}</div>
+      <div class="cart-suggest-price">${formatRub(price)}</div>
+    `;
+
+    btn.addEventListener('click', () => {
+      // добавляем 1 кг / 1 шт
+      addToCart({ name, price, qtyKg: 1 });
+      renderCart();            // обновляем корзину
+      renderCartSuggestions(); // и сами рекомендации
+    });
+
+    cartSuggestList.appendChild(btn);
+  });
+}
 /* floating cart helpers */
 function showFloatingCart(){
   if(!floatingCart) return;
@@ -1267,7 +1305,7 @@ pmAdd.addEventListener('click', () => {
   productModal.setAttribute('aria-hidden','true');
 });
 
-/* floating cart => сразу полноэкранная корзина / checkout */
+/* floating cart => открываем панель корзины */
 if (floatingCart) {
   floatingCart.addEventListener('click', () => {
     if (cart.length === 0) {
@@ -1275,30 +1313,21 @@ if (floatingCart) {
       return;
     }
 
-    // наполняем список товаров в модалке
-    modalOrderList.innerHTML = '';
-    let sum = 0;
-    cart.forEach(i => {
-      const row = document.createElement('div');
-      const subtotal = i.total;
-      sum += subtotal;
-      row.innerHTML = `
-        <div style="display:flex;justify-content:space-between;gap:8px">
-          <div>
-            <div style="font-weight:700">${i.name}</div>
-            <div class="small" style="color:var(--muted)">${displayQty(i.qtyKg)}</div>
-          </div>
-          <div style="font-weight:700;white-space:nowrap">${formatRub(subtotal)}</div>
-        </div>
-      `;
-      modalOrderList.appendChild(row);
-    });
-    if (modalTotal) {
-      modalTotal.textContent = formatRub(sum);
+    // перерисуем корзину (и рекомендации, если есть такая функция)
+    if (typeof renderCart === 'function') {
+      renderCart();
+    }
+    if (typeof renderCartSuggestions === 'function') {
+      renderCartSuggestions();
     }
 
-    // показываем полноэкранный checkout
-    checkoutOverlay.setAttribute('aria-hidden', 'false');
+    // показываем панель корзины
+    if (cartPanel) {
+      cartPanel.classList.add('show');
+      cartPanel.setAttribute('aria-hidden', 'false');
+    }
+
+    // прячем плавающий виджет
     hideFloatingCart();
   });
 }
