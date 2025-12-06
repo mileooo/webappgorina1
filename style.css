@@ -243,6 +243,13 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   pointer-events:none;
   visibility:hidden;
 }
+/* когда у корзины есть класс .visible — показываем её */
+.floating-cart.visible{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+  visibility:visible;
+}
 
 /* cart panel */
 .cart-panel{
