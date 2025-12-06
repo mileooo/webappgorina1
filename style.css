@@ -221,11 +221,11 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 /* floating cart */
 .floating-cart{
   position:fixed;
-  bottom:80px;              /* было 20px — поднимаем повыше, чтобы не мешал поиску */
+  bottom:20px;              /* было 20px — поднимаем повыше, чтобы не мешал поиску */
   right:14px;
   background:var(--brand);
   color:#fff;
-  padding:8px 10px;         /* меньше отступы */
+  padding:6px 8px;         /* меньше отступы */
   border-radius:999px;
   box-shadow:0 6px 18px rgba(0,0,0,0.18);
   cursor:pointer;
@@ -233,10 +233,10 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   z-index:1000;
   display:flex;
   align-items:center;
-  gap:6px;                  /* меньше расстояние */
-  min-width:120px;          /* было 150px — делаем компактнее */
+  gap:4px;                  /* меньше расстояние */
+  min-width:90px;          /* было 150px — делаем компактнее */
   justify-content:center;
-  font-size:12px;           /* текст поменьше */
+  font-size:10px;           /* текст поменьше */
   transition:transform .28s ease, opacity .28s ease, visibility .28s;
   opacity:0;
   transform:translateY(12px) scale(.98);
