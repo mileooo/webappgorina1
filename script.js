@@ -347,7 +347,6 @@ const cartSuggestList = document.getElementById('cart-suggest-list');
 const cartSumEl = document.getElementById('cart-sum');
 const cartCountSmall = document.getElementById('cart-count-2');
 const cartCloseBtn = document.getElementById('cart-close-btn');
-const clearCartBtn = document.getElementById('clear-cart');
 const gotoCheckoutBtn = document.getElementById('goto-checkout');
 
 const checkoutOverlay = document.getElementById('checkout-overlay');
