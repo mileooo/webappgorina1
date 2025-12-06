@@ -1267,34 +1267,41 @@ pmAdd.addEventListener('click', () => {
   productModal.setAttribute('aria-hidden','true');
 });
 
-/* floating cart <-> panel logic */
-let cartOpen = false;
-function showCartPanel(){
-  cartPanel.classList.add('show');
-  cartPanel.setAttribute('aria-hidden','false');
-  cartOpen = true;
-  hideFloatingCart();
+/* floating cart => сразу полноэкранная корзина / checkout */
+if (floatingCart) {
+  floatingCart.addEventListener('click', () => {
+    if (cart.length === 0) {
+      alert('Корзина пуста — добавьте товары.');
+      return;
+    }
+
+    // наполняем список товаров в модалке
+    modalOrderList.innerHTML = '';
+    let sum = 0;
+    cart.forEach(i => {
+      const row = document.createElement('div');
+      const subtotal = i.total;
+      sum += subtotal;
+      row.innerHTML = `
+        <div style="display:flex;justify-content:space-between;gap:8px">
+          <div>
+            <div style="font-weight:700">${i.name}</div>
+            <div class="small" style="color:var(--muted)">${displayQty(i.qtyKg)}</div>
+          </div>
+          <div style="font-weight:700;white-space:nowrap">${formatRub(subtotal)}</div>
+        </div>
+      `;
+      modalOrderList.appendChild(row);
+    });
+    if (modalTotal) {
+      modalTotal.textContent = formatRub(sum);
+    }
+
+    // показываем полноэкранный checkout
+    checkoutOverlay.setAttribute('aria-hidden', 'false');
+    hideFloatingCart();
+  });
 }
-function hideCartPanel(){
-  cartPanel.classList.remove('show');
-  cartPanel.setAttribute('aria-hidden','true');
-  cartOpen = false;
-  setTimeout(()=> showFloatingCart(), 120);
-}
-if(floatingCart) floatingCart.addEventListener('click', ()=>{
-  if(!cartOpen) showCartPanel();
-  else hideCartPanel();
-});
-if(cartCloseBtn) cartCloseBtn.addEventListener('click', ()=> hideCartPanel());
-document.addEventListener('click', (e)=> {
-  if(!cartPanel.classList.contains('show')) return;
-  if(e.target.closest('#cart-panel') || e.target.closest('#floating-cart')) return;
-  hideCartPanel();
-});
-if(clearCartBtn) clearCartBtn.addEventListener('click', ()=>{
-  clearCart();
-  hideCartPanel();
-});
 function openCategoryPage(filter, title) {
   currentFilter = filter || 'all';
 
