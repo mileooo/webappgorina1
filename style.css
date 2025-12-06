@@ -1036,10 +1036,7 @@ input[type="radio"]:-moz-focusring {
   align-items: center;
   gap: 10px;
 }
-/* старую выезжающую панель корзины прячем */
-#cart-panel {
-  display: none;
-}
+
 /* === GLOBAL BUTTON STYLE OVERRIDE (акцентные кнопки) === */
 
 button,
