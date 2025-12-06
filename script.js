@@ -1110,8 +1110,13 @@ function renderCart(){
   if(fcCountEl) fcCountEl.textContent = cart.length + ' поз.';
   if(fcTotalEl) fcTotalEl.textContent = formatRub(sum);
 
-  if(cart.length > 0) showFloatingCart();
-  else hideFloatingCart();
+    if (cart.length > 0) {
+    showFloatingCart();
+    document.body.classList.add('cart-has-items');
+  } else {
+    hideFloatingCart();
+    document.body.classList.remove('cart-has-items');
+  }
 
   cartItemsEl.querySelectorAll('[data-remove]').forEach(btn => {
     btn.onclick = ()=> removeFromCart(btn.dataset.remove);
@@ -1163,6 +1168,20 @@ function showFloatingCart(){
 function hideFloatingCart(){
   if(!floatingCart) return;
   floatingCart.classList.remove('visible');
+}
+/* cart fullscreen panel helpers */
+function showCartPanel() {
+  if (!cartPanel) return;
+  cartPanel.classList.add('show');
+  cartPanel.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function hideCartPanel() {
+  if (!cartPanel) return;
+  cartPanel.classList.remove('show');
+  cartPanel.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
 }
 
 /* ========== Delegation: add to cart from catalog ========== */
@@ -1305,7 +1324,7 @@ pmAdd.addEventListener('click', () => {
   productModal.setAttribute('aria-hidden','true');
 });
 
-/* floating cart => открываем панель корзины */
+/* floating cart => полноэкранная корзина */
 if (floatingCart) {
   floatingCart.addEventListener('click', () => {
     if (cart.length === 0) {
@@ -1313,23 +1332,34 @@ if (floatingCart) {
       return;
     }
 
-    // перерисуем корзину (и рекомендации, если есть такая функция)
-    if (typeof renderCart === 'function') {
-      renderCart();
-    }
+    renderCart();
     if (typeof renderCartSuggestions === 'function') {
       renderCartSuggestions();
     }
 
-    // показываем панель корзины
-    if (cartPanel) {
-      cartPanel.classList.add('show');
-      cartPanel.setAttribute('aria-hidden', 'false');
-    }
-
-    // прячем плавающий виджет
+    showCartPanel();
     hideFloatingCart();
   });
+}
+/* закрытие окна корзины */
+if (cartCloseBtn && cartPanel) {
+  cartCloseBtn.addEventListener('click', () => {
+    hideCartPanel();
+    if (cart.length > 0) {
+      showFloatingCart();
+    }
+  });
+
+  cartPanel.addEventListener('click', (e) => {
+    if (e.target === cartPanel) {
+      hideCartPanel();
+      if (cart.length > 0) {
+        showFloatingCart();
+      }
+    }
+  });
+}
+
 }
 function openCategoryPage(filter, title) {
   currentFilter = filter || 'all';
@@ -1514,40 +1544,6 @@ function sendOrderToAdmin(payload){
     return { ok:false, error: String(err) };
   });
 }
-
-if (gotoCheckoutBtn) gotoCheckoutBtn.addEventListener('click', () => {
-  if (cart.length === 0) {
-    alert('Корзина пуста — добавьте товары.');
-    return;
-  }
-
-  // наполняем список товаров
-  modalOrderList.innerHTML = '';
-  let sum = 0;
-  cart.forEach(i => {
-    const row = document.createElement('div');
-    const subtotal = i.total;
-    sum += subtotal;
-    row.innerHTML = `
-      <div style="display:flex;justify-content:space-between;gap:8px">
-        <div>
-          <div style="font-weight:700">${i.name}</div>
-          <div class="small" style="color:var(--muted)">${displayQty(i.qtyKg)}</div>
-        </div>
-        <div style="font-weight:700;white-space:nowrap">${formatRub(subtotal)}</div>
-      </div>
-    `;
-    modalOrderList.appendChild(row);
-  });
-  modalTotal.textContent = formatRub(sum);
-
-  // прячем панель корзины
-  hideCartPanel();
-
-  // открываем fullscreen checkout
-  checkoutOverlay.setAttribute('aria-hidden', 'false');
-});
-
 
 if (closeModalBtn) closeModalBtn.addEventListener('click', () => {
   checkoutOverlay.setAttribute('aria-hidden', 'true');

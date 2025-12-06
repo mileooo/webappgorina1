@@ -201,24 +201,36 @@
 </div>
 
 
-<!-- cart panel (bottom sheet) -->
-<aside id="cart-panel" class="cart-panel" aria-hidden="true">
-  <h4>
-    <span>Корзина <small style="color:var(--muted);font-weight:600">(<span id="cart-count-2">0</span>)</small></span>
-    <button class="cart-close-btn" id="cart-close-btn" title="Закрыть">✕</button>
-  </h4>
-  <div class="cart-items" id="cart-items"></div>
-  <div class="cart-total"><span>Итого</span><span id="cart-sum">0 ₽</span></div>
-  <div class="cart-actions">
-    <button id="clear-cart" class="btn btn-clear">Очистить</button>
-    <button id="goto-checkout" class="btn btn-check">Оформить заказ</button>
+<!-- CART FULLSCREEN PANEL -->
+<div id="cart-panel" class="cart-panel" aria-hidden="true">
+  <div class="cart-panel-inner">
+
+    <h4 style="display:flex;align-items:center;justify-content:space-between;margin-top:0;">
+      <span>Корзина <small style="color:var(--muted);font-weight:600">(<span id="cart-count-2">0</span>)</small></span>
+      <button class="cart-close-btn" id="cart-close-btn" title="Закрыть">✕</button>
+    </h4>
+
+    <div class="cart-items" id="cart-items"></div>
+
+    <div class="cart-total">
+      <span>Итого</span>
+      <span id="cart-sum">0 ₽</span>
+    </div>
+
+    <div class="cart-actions" style="display:flex;gap:8px;margin-top:8px">
+      <button id="clear-cart" class="btn btn-clear">Очистить</button>
+      <button id="goto-checkout" class="btn btn-check">Оформить заказ</button>
+    </div>
+
+    <!-- Рекомендации: добавьте в корзину -->
+    <div class="cart-suggest-block">
+      <div class="cart-suggest-title">Добавьте в корзину</div>
+      <div class="cart-suggest-list" id="cart-suggest-list"></div>
+    </div>
+
   </div>
-</aside>
-      <!-- Рекомендации: добавьте в корзину -->
-      <div class="cart-suggest-block">
-        <div class="cart-suggest-title">Добавьте в корзину</div>
-        <div class="cart-suggest-list" id="cart-suggest-list"></div>
-      </div>
+</div>
+
 <!-- floating cart -->
 <div id="floating-cart" class="floating-cart" role="button" aria-label="Открыть корзину">
   <div style="display:flex;align-items:center;gap:8px">
