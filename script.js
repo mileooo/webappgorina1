@@ -168,16 +168,16 @@ const products = [
 
 // специальные подборки для блоков "Выгодно / Сезон / Хиты / Под заказ"
 const specialFilters = {
-  sweet-tea: p => getCategory(p) === 'fruits',                            // "Сладкие фрукты к чаю"
-  borsch-set: p => getCategory(p) === 'vegetables',                       // "Набор для борща"
-  summer-fruits: p => getCategory(p) === 'fruits',                        // "Летние фрукты"
-  grill-veg: p => getCategory(p) === 'vegetables',                        // "Овощи для гриля"
-  popular-fruits: p => getCategory(p) === 'fruits',                       // "Популярные фрукты"
-  breakfast: p => ['sweets', 'tea', 'drinks', 'cereals']
-                        .includes(getCategory(p)),                        // "Товары для завтрака"
-  preorder-fruits: p => getCategory(p) === 'fruits',                      // "Фрукты оптом"
-  preorder-rare: p => ['tea', 'nuts', 'canned']
-                        .includes(getCategory(p))                         // "Редкие товары"
+  "sweet-tea":      p => getCategory(p) === 'fruits',                    // "Сладкие фрукты к чаю"
+  "borsch-set":     p => getCategory(p) === 'vegetables',                // "Набор для борща"
+  "summer-fruits":  p => getCategory(p) === 'fruits',                    // "Летние фрукты"
+  "grill-veg":      p => getCategory(p) === 'vegetables',                // "Овощи для гриля"
+  "popular-fruits": p => getCategory(p) === 'fruits',                    // "Популярные фрукты"
+  "breakfast":      p => ['sweets', 'tea', 'drinks', 'cereals']
+                        .includes(getCategory(p)),                       // "Товары для завтрака"
+  "preorder-fruits":p => getCategory(p) === 'fruits',                    // "Фрукты оптом"
+  "preorder-rare":  p => ['tea', 'nuts', 'canned']
+                        .includes(getCategory(p))                        // "Редкие товары"
 };
 
 /* KBJU and descriptions */
