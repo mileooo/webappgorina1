@@ -1088,20 +1088,34 @@ function renderCart(){
   cart.forEach(item => {
     sum += item.total;
     const row = document.createElement('div');
-    row.className = 'cart-row';
-    row.innerHTML = `
-      <div style="display:flex;gap:8px;align-items:center">
-        <div>
-          <div style="font-weight:700">${item.name}${item.components ? ' (Custom)' : ''}</div>
-          <div class="small" style="color:var(--muted)">${displayQty(item.qtyKg)} • ${formatRub(item.total)}</div>
-        </div>
+row.className = 'cart-row';
+row.innerHTML = `
+  <div class="cart-row-main">
+    <div class="cart-row-img">
+      <img alt="${item.name}">
+    </div>
+    <div class="cart-row-info">
+      <div class="cart-row-title">
+        ${item.name}${item.components ? ' (Custom)' : ''}
       </div>
-      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-        <button style="background:transparent;border:0;cursor:pointer;color:#e74c3c" data-remove="${item.id}">✕</button>
-        <div style="font-weight:700">${formatRub(item.total)}</div>
+      <div class="cart-row-meta">
+        ${displayQty(item.qtyKg)} • ${formatRub(item.price)} / кг
       </div>
-    `;
-    cartItemsEl.appendChild(row);
+    </div>
+  </div>
+  <div class="cart-row-right">
+    <button class="cart-row-remove" data-remove="${item.id}">✕</button>
+    <div class="cart-row-price">${formatRub(item.total)}</div>
+  </div>
+`;
+
+// подгружаем фотку товара в корзине — используем ту же функцию, что и в каталоге
+const img = row.querySelector('img');
+if (img) {
+  tryLoadImage(img, item.name);
+}
+
+cartItemsEl.appendChild(row);
   });
 
   if(cartSumEl) cartSumEl.textContent = formatRub(sum);

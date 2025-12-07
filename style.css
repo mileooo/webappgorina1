@@ -353,6 +353,98 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .kbju-label{font-weight:600;margin-top:8px;color:var(--muted)}
 .kbju{background:#f7f8f6;padding:10px;border-radius:8px;border:1px solid var(--border);font-weight:700;margin:6px 0}
 .prod-desc{margin-top:10px;color:var(--muted);line-height:1.4}
+/* ===== ОБНОВЛЁННЫЙ ВНЕШНИЙ ВИД КОРЗИНЫ, КАК НА САМОКАТЕ ===== */
+
+/* панель — шире, выше, более «страничная» */
+.cart-panel-inner {
+  max-width: 600px;
+  max-height: 88vh;
+  border-radius: 24px 24px 0 0;
+  padding: 18px 18px 20px;
+}
+
+/* список товаров — больше высота прокрутки */
+.cart-items {
+  max-height: 55vh;
+  padding-right: 4px;
+}
+
+/* сама карточка товара в корзине */
+.cart-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #ececec;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* левая часть: картинка + текст */
+.cart-row-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+}
+
+/* контейнер под фото товара */
+.cart-row-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.cart-row-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* текстовая инфа по товару */
+.cart-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cart-row-title {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.cart-row-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* правая колонка: крестик + итоговая цена */
+.cart-row-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 70px;
+}
+
+.cart-row-remove {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: #e74c3c;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.cart-row-price {
+  font-weight: 900;
+  font-size: 14px;
+}
 
 /* search fab mobile */
 .search-fab{position:fixed;bottom:20px;left:14px;z-index:1000;display:none;gap:8px;align-items:center}
