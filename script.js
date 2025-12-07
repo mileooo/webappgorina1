@@ -166,6 +166,20 @@ const products = [
 ["🧻 Туалетная бумага — 35 ₽", "Туалетная бумага", 35, "household"],
 ];
 
+// специальные подборки для блоков "Выгодно / Сезон / Хиты / Под заказ"
+const specialFilters = {
+  sweet-tea: p => getCategory(p) === 'fruits',                            // "Сладкие фрукты к чаю"
+  borsch-set: p => getCategory(p) === 'vegetables',                       // "Набор для борща"
+  summer-fruits: p => getCategory(p) === 'fruits',                        // "Летние фрукты"
+  grill-veg: p => getCategory(p) === 'vegetables',                        // "Овощи для гриля"
+  popular-fruits: p => getCategory(p) === 'fruits',                       // "Популярные фрукты"
+  breakfast: p => ['sweets', 'tea', 'drinks', 'cereals']
+                        .includes(getCategory(p)),                        // "Товары для завтрака"
+  preorder-fruits: p => getCategory(p) === 'fruits',                      // "Фрукты оптом"
+  preorder-rare: p => ['tea', 'nuts', 'canned']
+                        .includes(getCategory(p))                         // "Редкие товары"
+};
+
 /* KBJU and descriptions */
 const kbjuData = {
   "Груша": { kbju: "57 ккал • Б 0.4 г • Ж 0.4 г • У 15 г", desc: "🍐 Отличный источник клетчатки, поддерживает здоровое пищеварение и снижает уровень холестерина." },
@@ -1472,9 +1486,18 @@ if (categoryPanel) {
 /* ========== Filters / Search / Sort ========== */
 function applySearchAndSort(){
   const q = (searchInput && searchInput.value || '').trim().toLowerCase();
-  let list = (currentFilter === 'all' || !currentFilter)
-    ? products.slice()
-    : products.filter(p => String(getCategory(p)) === String(currentFilter));
+  let list;
+
+// если выбран спец-блок (specialFilters)
+if (currentFilter && specialFilters[currentFilter]) {
+  list = products.filter(p => specialFilters[currentFilter](p));
+} else if (currentFilter === 'all' || !currentFilter) {
+  list = products.slice();
+} else {
+  list = products.filter(
+    p => String(getCategory(p)) === String(currentFilter)
+  );
+}
   if(q){
     list = list.filter(p =>
       ( (getLabel(p) + ' ' + getName(p)).toLowerCase().indexOf(q) !== -1 )
@@ -1501,6 +1524,16 @@ if (filtersWrap) {
     openCategoryPage(f, title);
   });
 }
+// кликаем по спец-карточкам ("Выгодно", "Сезонные", "Хиты", "Под заказ")
+document.querySelectorAll('.special-card[data-special]').forEach(card => {
+  card.addEventListener('click', () => {
+    const filter = card.dataset.special;
+    const title =
+      (card.querySelector('.special-title')?.textContent || '').trim();
+
+    openCategoryPage(filter, title);   // используем уже готовую логику экрана категории
+  });
+});
 
 if(searchInput) searchInput.addEventListener('input', ()=> applySearchAndSort());
 if(sortSelect) sortSelect.addEventListener('change', ()=> applySearchAndSort());

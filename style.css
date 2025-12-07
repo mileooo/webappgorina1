@@ -1808,5 +1808,36 @@ body.cart-has-items .search-big-btn {
     font-size: 11px;
   }
 }
+/* specials как сетка, похожая на категории */
+.specials-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  overflow-x: visible;
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 520px) {
+  .specials-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.special-card {
+  min-width: 0;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.special-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
 
 
