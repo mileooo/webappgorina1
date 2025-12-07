@@ -1081,49 +1081,58 @@ function clearCart(){
   renderCart();
 }
 
-function renderCart(){
-  if(!cartItemsEl) return;
+function renderCart() {
+  if (!cartItemsEl) return;
   cartItemsEl.innerHTML = '';
   let sum = 0;
+
   cart.forEach(item => {
+    // всегда пересчитываем total от qty * price
+    item.total = item.qtyKg * item.price;
     sum += item.total;
+
     const row = document.createElement('div');
-row.className = 'cart-row';
-row.innerHTML = `
-  <div class="cart-row-main">
-    <div class="cart-row-img">
-      <img alt="${item.name}">
-    </div>
-    <div class="cart-row-info">
-      <div class="cart-row-title">
-        ${item.name}${item.components ? ' (Custom)' : ''}
+    row.className = 'cart-row';
+    row.innerHTML = `
+      <div class="cart-row-main">
+        <div class="cart-row-img">
+          <img alt="${item.name}">
+        </div>
+        <div class="cart-row-info">
+          <div class="cart-row-title">
+            ${item.name}${item.components ? ' (Custom)' : ''}
+          </div>
+          <div class="cart-row-meta small">
+            ${displayQty(item.qtyKg)} • ${formatRub(item.price)} / кг
+          </div>
+          <div class="cart-row-qty">
+            <button class="cart-qty-btn" data-minus="${item.id}">−</button>
+            <span class="cart-qty-value">${displayQty(item.qtyKg)}</span>
+            <button class="cart-qty-btn" data-plus="${item.id}">+</button>
+          </div>
+        </div>
       </div>
-      <div class="cart-row-meta">
-        ${displayQty(item.qtyKg)} • ${formatRub(item.price)} / кг
+
+      <div class="cart-row-right">
+        <button class="cart-row-remove" data-remove="${item.id}">✕</button>
+        <div class="cart-row-price">${formatRub(item.total)}</div>
       </div>
-    </div>
-  </div>
-  <div class="cart-row-right">
-    <button class="cart-row-remove" data-remove="${item.id}">✕</button>
-    <div class="cart-row-price">${formatRub(item.total)}</div>
-  </div>
-`;
+    `;
 
-// подгружаем фотку товара в корзине — используем ту же функцию, что и в каталоге
-const img = row.querySelector('img');
-if (img) {
-  tryLoadImage(img, item.name);
-}
+    const imgEl = row.querySelector('img');
+    if (imgEl) {
+      tryLoadImage(imgEl, item.name);
+    }
 
-cartItemsEl.appendChild(row);
+    cartItemsEl.appendChild(row);
   });
 
-  if(cartSumEl) cartSumEl.textContent = formatRub(sum);
-  if(cartCountSmall) cartCountSmall.textContent = cart.length;
-  if(fcCountEl) fcCountEl.textContent = cart.length + ' поз.';
-  if(fcTotalEl) fcTotalEl.textContent = formatRub(sum);
+  if (cartSumEl) cartSumEl.textContent = formatRub(sum);
+  if (cartCountSmall) cartCountSmall.textContent = cart.length;
+  if (fcCountEl) fcCountEl.textContent = cart.length + ' поз.';
+  if (fcTotalEl) fcTotalEl.textContent = formatRub(sum);
 
-    if (cart.length > 0) {
+  if (cart.length > 0) {
     showFloatingCart();
     document.body.classList.add('cart-has-items');
   } else {
@@ -1131,11 +1140,35 @@ cartItemsEl.appendChild(row);
     document.body.classList.remove('cart-has-items');
   }
 
+  // удалить товар
   cartItemsEl.querySelectorAll('[data-remove]').forEach(btn => {
-    btn.onclick = ()=> removeFromCart(btn.dataset.remove);
+    btn.onclick = () => removeFromCart(btn.dataset.remove);
+  });
+
+  // плюс
+  cartItemsEl.querySelectorAll('[data-plus]').forEach(btn => {
+    btn.onclick = () => {
+      const item = cart.find(i => i.id === btn.dataset.plus);
+      if (!item) return;
+      item.qtyKg += 1;          // шаг 1 кг; можно заменить на 0.5 если хочешь
+      renderCart();
+    };
+  });
+
+  // минус
+  cartItemsEl.querySelectorAll('[data-minus]').forEach(btn => {
+    btn.onclick = () => {
+      const item = cart.find(i => i.id === btn.dataset.minus);
+      if (!item) return;
+      item.qtyKg -= 1;
+      if (item.qtyKg <= 0) {
+        cart = cart.filter(i => i.id !== item.id);
+      }
+      renderCart();
+    };
   });
 }
-function renderCartSuggestions(){
+function renderCartSuggestions() {
   if (!cartSuggestList) return;
   cartSuggestList.innerHTML = '';
 
@@ -1147,7 +1180,7 @@ function renderCartSuggestions(){
 
   if (!candidates.length) return;
 
-  // Перемешаем и возьмём максимум 4 штуки
+  // перемешали и взяли до 4 штук
   const shuffled = candidates.slice().sort(() => Math.random() - 0.5);
   const toShow = shuffled.slice(0, 4);
 
@@ -1159,9 +1192,19 @@ function renderCartSuggestions(){
     btn.type = 'button';
     btn.className = 'cart-suggest-item';
     btn.innerHTML = `
-      <div class="cart-suggest-name">${name}</div>
+      <div class="cart-suggest-main">
+        <div class="cart-suggest-img">
+          <img alt="${name}">
+        </div>
+        <div class="cart-suggest-name">${name}</div>
+      </div>
       <div class="cart-suggest-price">${formatRub(price)}</div>
     `;
+
+    const imgEl = btn.querySelector('img');
+    if (imgEl) {
+      tryLoadImage(imgEl, name);
+    }
 
     btn.addEventListener('click', () => {
       // добавляем 1 кг / 1 шт
