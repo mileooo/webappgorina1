@@ -400,6 +400,9 @@ const loyaltyBadge = document.getElementById('loyalty-badge');
 const heroOrderBtn = document.getElementById('hero-order');
 const viewCatalogBtn = document.getElementById('view-catalog');
 
+const heroSlides = document.querySelectorAll('.hero-slide');
+const heroDots   = document.querySelectorAll('.hero-dot');
+
 const categoryPanel = document.getElementById('category-panel');
 const categoryBackBtn = document.getElementById('category-back');
 const categoryPageTitle = document.getElementById('category-page-title');
@@ -1953,12 +1956,65 @@ async function refreshLoyalty() {
     updateUserUI();
   }
 }
+// ===== HERO СЛАЙДЕР =====
+let heroCurrent = 0;
+let heroTimer = null;
 
+function setHeroSlide(index) {
+  if (!heroSlides.length) return;
+
+  heroCurrent = (index + heroSlides.length) % heroSlides.length;
+
+  heroSlides.forEach((slide, i) => {
+    const isActive = i === heroCurrent;
+    slide.classList.toggle('is-active', isActive);
+
+    const video = slide.querySelector('video');
+    if (video) {
+      if (isActive) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    }
+  });
+
+  if (heroDots.length) {
+    heroDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === heroCurrent);
+    });
+  }
+}
+
+function initHeroSlider() {
+  if (!heroSlides.length) return;
+
+  // первый слайд
+  setHeroSlide(0);
+
+  // по клику на точки
+  if (heroDots.length) {
+    heroDots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        setHeroSlide(i);
+        if (heroTimer) clearInterval(heroTimer);
+        heroTimer = setInterval(() => setHeroSlide(heroCurrent + 1), 7000);
+      });
+    });
+  }
+
+  // автопрокрутка
+  heroTimer = setInterval(() => {
+    setHeroSlide(heroCurrent + 1);
+  }, 7000);
+}
 
 /* ========== init ========== */
 function init() {
   tryTelegramLogin();
   updateUserUI();
+
+  initHeroSlider();
 
   visibleProducts = products.slice();
   renderCatalog(visibleProducts);

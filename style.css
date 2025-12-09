@@ -144,7 +144,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 @media (max-width: 600px) {
   .hero {
     padding: 12px;
-    min-height: 480px;
+    min-height: 260px;
   }
 
   .hero-actions {
@@ -1952,6 +1952,7 @@ button.add-to-cart {
   width: 100%;
   height: auto;
   display: block;
+  object-fit: cover;
 }
 /* ===== Анимация: когда в корзине есть товары ===== */
 
