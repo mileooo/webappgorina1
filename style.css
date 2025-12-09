@@ -1894,8 +1894,8 @@ button.add-to-cart {
   margin: 0 auto 18px;
   border-radius: 0 0 24px 24px;
   overflow: hidden;
-  aspect-ratio: 3 / 2;
-  max-height: 260px;
+  aspect-ratio: 9 / 16;
+  max-height: 640px;
 }
 .hero-slider {
   position: relative;
@@ -2164,6 +2164,13 @@ body.cart-has-items .search-big-btn {
 
 .hero-actions {
   z-index: 20;
+}
+/* Последняя правка: на мобильных делаем баннер высоким */
+@media (max-width: 600px) {
+  .hero {
+    aspect-ratio: 9 / 16;
+    max-height: 700px; /* чтобы всё влезало, как на старом баннере */
+  }
 }
 
 
