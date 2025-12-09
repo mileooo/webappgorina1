@@ -18,11 +18,26 @@
 <body>
 
 <section class="hero">
-  <!-- ФОТО-БАННЕР -->
-  <img src="images/hero-bravo.jpg" alt="Bravo Market" class="hero-img">
+  <!-- Слайдер -->
+  <div class="hero-slider">
+    <div class="hero-slide is-active">
+      <img src="images/hero-bravo.jpg" alt="Bravo Market" class="hero-img">
+    </div>
+    <div class="hero-slide">
+      <img src="images/hero-second.jpg" alt="Акции и подборки" class="hero-img">
+    </div>
+    <div class="hero-slide">
+      <video class="hero-img" src="video/hero-promo.mp4" muted loop playsinline></video>
+    </div>
+  </div>
 
-  <!-- Личный кабинет поверх баннера -->
+  <!-- Личный кабинет + ИИ-помощник -->
   <div class="hero-user">
+    <button id="ai-helper-btn" class="ai-btn" type="button">
+      <span class="ai-icon">🤖</span>
+      <span class="ai-text">ИИ помощник</span>
+    </button>
+
     <div id="user-area" class="user-btn" role="button" aria-label="Личный кабинет">
       <div class="user-avatar">
         <svg class="user-avatar-icon" viewBox="0 0 24 24">
@@ -34,6 +49,13 @@
       </div>
       <span class="user-name" id="ua-name">Войти</span>
     </div>
+  </div>
+
+  <!-- Точки-переключатели -->
+  <div class="hero-dots">
+    <button class="hero-dot active" data-slide="0"></button>
+    <button class="hero-dot" data-slide="1"></button>
+    <button class="hero-dot" data-slide="2"></button>
   </div>
 
   <!-- Кнопки поверх баннера внизу -->
@@ -48,17 +70,22 @@
   <h2 class="specials-title">Хиты продаж</h2>
   <div class="specials-row">
     <div class="special-card" data-special="popular-fruits">
-      <div class="special-tag special-tag-hit">Хит</div>
-      <div class="special-title">Популярные фрукты</div>
-      <div class="special-desc">То, что чаще всего заказывают клиенты.</div>
-    </div>
+  <div class="special-card-img">
+    <img src="images/sp-popular-fruits.jpg" alt="Популярные фрукты">
+  </div>
+  <div class="special-tag special-tag-hit">Хит</div>
+  <div class="special-title">Популярные фрукты</div>
+  <div class="special-desc">То, что чаще всего заказывают клиенты.</div>
+</div>
 
     <div class="special-card" data-special="breakfast">
-      <div class="special-tag special-tag-hit">Хит</div>
-      <div class="special-title">Товары для завтрака</div>
-      <div class="special-desc">Набор продуктов на каждый день.</div>
-    </div>
+  <div class="special-card-img">
+    <img src="images/sp-breakfast.jpg" alt="Товары для завтрака">
   </div>
+  <div class="special-tag special-tag-hit">Хит</div>
+  <div class="special-title">Товары для завтрака</div>
+  <div class="special-desc">Набор продуктов на каждый день.</div>
+</div>
 </section>
 
 <!-- СЕЗОННЫЕ ТОВАРЫ -->
@@ -66,17 +93,22 @@
   <h2 class="specials-title">Сезонные товары</h2>
   <div class="specials-row">
     <div class="special-card" data-special="summer-fruits">
-      <div class="special-tag">Сезон</div>
-      <div class="special-title">Летние фрукты</div>
-      <div class="special-desc">Ягоды и фрукты, которые в самом сезоне.</div>
-    </div>
-
-    <div class="special-card" data-special="grill-veg">
-      <div class="special-tag">Сезон</div>
-      <div class="special-title">Овощи для гриля</div>
-      <div class="special-desc">Подборка овощей для шашлыка и гриля.</div>
-    </div>
+  <div class="special-card-img">
+    <img src="images/sp-summer-fruits.jpg" alt="Зимние фрукты">
   </div>
+  <div class="special-tag">Сезон</div>
+  <div class="special-title">Зимние фрукты</div>
+  <div class="special-desc">Ягоды и фрукты, которые в самом сезоне.</div>
+</div>
+
+<div class="special-card" data-special="grill-veg">
+  <div class="special-card-img">
+    <img src="images/sp-grill-veg.jpg" alt="Овощи/фрукты для салата">
+  </div>
+  <div class="special-tag">Сезон</div>
+  <div class="special-title">Овощи/фрукты для салата</div>
+  <div class="special-desc">Подборка овощей и фруктов для салата.</div>
+</div>
 </section>
 
 <!-- ВЫГОДНО СЕГОДНЯ -->
@@ -84,17 +116,22 @@
   <h2 class="specials-title">Выгодно сегодня</h2>
   <div class="specials-row">
     <div class="special-card" data-special="sweet-tea">
-      <div class="special-tag">Акция</div>
-      <div class="special-title">Сладкие фрукты к чаю</div>
-      <div class="special-desc">Подборка сезонных фруктов со скидкой.</div>
-    </div>
-
-    <div class="special-card" data-special="borsch-set">
-      <div class="special-tag special-tag-hit">Хит продаж</div>
-      <div class="special-title">Набор для борща</div>
-      <div class="special-desc">Овощи для супа в одном наборе.</div>
-    </div>
+  <div class="special-card-img">
+    <img src="images/sp-sweet-tea.jpg" alt="Сладкие фрукты к чаю">
   </div>
+  <div class="special-tag">Акция</div>
+  <div class="special-title">Сладкие фрукты к чаю</div>
+  <div class="special-desc">Подборка сезонных фруктов со скидкой.</div>
+</div>
+
+<div class="special-card" data-special="borsch-set">
+  <div class="special-card-img">
+    <img src="images/sp-borsch-set.jpg" alt="Набор для борща">
+  </div>
+  <div class="special-tag special-tag-hit">Хит продаж</div>
+  <div class="special-title">Набор для борща</div>
+  <div class="special-desc">Овощи для супа в одном наборе.</div>
+</div>
 </section>
 
 <!-- ПОД ЗАКАЗ -->
@@ -102,17 +139,22 @@
   <h2 class="specials-title">Под заказ</h2>
   <div class="specials-row">
     <div class="special-card" data-special="preorder-fruits">
-      <div class="special-tag">Под заказ</div>
-      <div class="special-title">Фрукты оптом</div>
-      <div class="special-desc">Большие коробки фруктов по предзаказу.</div>
-    </div>
-
-    <div class="special-card" data-special="preorder-rare">
-      <div class="special-tag">Под заказ</div>
-      <div class="special-title">Редкие товары</div>
-      <div class="special-desc">То, что привозим по индивидуальному запросу.</div>
-    </div>
+  <div class="special-card-img">
+    <img src="images/sp-preorder-fruits.jpg" alt="Фрукты/овощи оптом">
   </div>
+  <div class="special-tag">Под заказ</div>
+  <div class="special-title">Фрукты/овощи оптом</div>
+  <div class="special-desc">Большие коробки фруктов по предзаказу.</div>
+</div>
+
+<div class="special-card" data-special="preorder-rare">
+  <div class="special-card-img">
+    <img src="images/sp-preorder-rare.jpg" alt="Редкие товары">
+  </div>
+  <div class="special-tag">Под заказ</div>
+  <div class="special-title">Редкие товары</div>
+  <div class="special-desc">То, что привозим по индивидуальному запросу.</div>
+</div>
 </section>
 
 <main class="main container">
@@ -653,6 +695,34 @@
 <footer class="footer" style="padding:20px;text-align:center;color:var(--muted)">
   © Bravo Market
 </footer>
+<!-- ИИ-помощник -->
+<div id="ai-panel" class="ai-panel" aria-hidden="true">
+  <div class="ai-panel-inner">
+    <header class="ai-header">
+      <div class="ai-header-left">
+        <div class="ai-avatar">🤖</div>
+        <div>
+          <div class="ai-title-text">Bravo ИИ</div>
+          <div class="small muted">Подберу товары и сборки</div>
+        </div>
+      </div>
+      <button id="ai-close" class="ai-close">✕</button>
+    </header>
+
+    <div id="ai-messages" class="ai-messages">
+      <div class="ai-msg ai-msg-bot">
+        Привет! Расскажи, для чего собираешь заказ:
+        завтрак, фильм, гости или что-то по КБЖУ? 🙂
+      </div>
+    </div>
+
+    <form id="ai-form" class="ai-form">
+      <input id="ai-input" type="text"
+             placeholder="Напишите, что хотите купить…" autocomplete="off" />
+      <button type="submit">Отправить</button>
+    </form>
+  </div>
+</div>
 
 <!-- История заказов -->
 <div id="history-modal" class="product-modal" aria-hidden="true" style="z-index:1300">

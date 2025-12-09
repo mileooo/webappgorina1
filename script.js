@@ -345,6 +345,13 @@ const filtersWrap = document.getElementById('filters');
 const searchInput = document.getElementById('search-input');
 const sortSelect = document.getElementById('sort-select');
 
+const aiBtn       = document.getElementById('ai-helper-btn');
+const aiPanel     = document.getElementById('ai-panel');
+const aiClose     = document.getElementById('ai-close');
+const aiForm      = document.getElementById('ai-form');
+const aiInput     = document.getElementById('ai-input');
+const aiMessages  = document.getElementById('ai-messages');
+
 const mobileSearchInput = document.getElementById('mobile-search-input');
 const mobileSort = document.getElementById('mobile-sort');
 const searchPanel = document.getElementById('search-panel');
@@ -1774,6 +1781,73 @@ if (heroOrderBtn) {
 if (viewCatalogBtn) {
   viewCatalogBtn.addEventListener('click', () => {
     openCategoryPage('all', 'Все товары');
+  });
+}
+function openAiPanel() {
+  if (!aiPanel) return;
+  aiPanel.setAttribute('aria-hidden', 'false');
+}
+
+function closeAiPanel() {
+  if (!aiPanel) return;
+  aiPanel.setAttribute('aria-hidden', 'true');
+}
+
+function addAiMessage(text, from) {
+  if (!aiMessages) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + (from === 'user' ? 'ai-msg-user' : 'ai-msg-bot');
+  div.textContent = text;
+  aiMessages.appendChild(div);
+  aiMessages.scrollTop = aiMessages.scrollHeight;
+}
+
+function getLocalAiReply(text) {
+  const q = text.toLowerCase();
+
+  if (q.includes('гост') || q.includes('вечерин')) {
+    return 'Для гостей могу собрать: фрукты тарелкой, закуски, напитки и что-нибудь к чаю. Напиши, сколько человек и бюджет.';
+  }
+  if (q.includes('фильм') || q.includes('кино')) {
+    return 'Под фильм зайдут снеки, сладости, фрукты без косточек и газировки. Хочешь что-то полегче или пофастфудному?';
+  }
+  if (q.includes('завтрак')) {
+    return 'Для завтрака предлагаю: фрукты, соки, чай/кофе, крупы и сладости к чаю. Напиши, хочешь ПП или просто вкусно.';
+  }
+  if (q.includes('кбжу') || q.includes('диет') || q.includes('пп')) {
+    return 'Могу подсказать более лёгкие варианты по КБЖУ: цитрусы, ягоды, овощи, вода/соки без сахара. Напиши свои цели и ограничения.';
+  }
+  if (q.includes('выгодн') || q.includes('акци')) {
+    return 'За выгодой загляни в блок «Выгодно сегодня» и «Хиты продаж» — там самые интересные цены. Могу подсказать по категориям.';
+  }
+
+  return 'Понял запрос 👌 Сейчас ИИ работает в тестовом режиме. Напиши, для чего собираешь заказ (гости, фильм, завтрак, ПП), я подскажу категории.';
+}
+
+/* обработчики ИИ */
+if (aiBtn && aiPanel) {
+  aiBtn.addEventListener('click', openAiPanel);
+}
+
+if (aiClose && aiPanel) {
+  aiClose.addEventListener('click', closeAiPanel);
+  aiPanel.addEventListener('click', (e) => {
+    if (e.target === aiPanel) closeAiPanel();
+  });
+}
+
+if (aiForm && aiInput) {
+  aiForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = aiInput.value.trim();
+    if (!text) return;
+    addAiMessage(text, 'user');
+    aiInput.value = '';
+
+    const reply = getLocalAiReply(text);
+    setTimeout(() => {
+      addAiMessage(reply, 'bot');
+    }, 400);
   });
 }
 
