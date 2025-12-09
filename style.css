@@ -2173,9 +2173,9 @@ body.cart-has-items .search-big-btn {
 /* Последняя правка: на мобильных делаем баннер высоким */
 @media (max-width: 600px) {
   .hero {
-    height: 88vh;      /* прям почти весь экран */
+    height: 92vh;      /* прям почти весь экран */
     max-height: none;  /* не режем */
-    min-height: 540px; /* комфортный минимум */
+    min-height: 590px; /* комфортный минимум */
     margin-bottom: 12px;
   }
 }
