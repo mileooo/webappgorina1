@@ -1891,6 +1891,8 @@ button.add-to-cart {
   margin: 0 auto 18px;
   border-radius: 0 0 24px 24px;
   overflow: hidden;
+  aspect-ratio: 3 / 2;
+  max-height: 260px;
 }
 .hero-slider {
   position: relative;
