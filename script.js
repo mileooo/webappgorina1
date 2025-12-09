@@ -1820,33 +1820,6 @@ function getLocalAiReply(text) {
   return 'Понял запрос 👌 Сейчас ИИ работает в тестовом режиме. Напиши, для чего собираешь заказ (гости, фильм, завтрак, ПП), я подскажу категории.';
 }
 
-/* обработчики ИИ */
-if (aiBtn && aiPanel) {
-  aiBtn.addEventListener('click', openAiPanel);
-}
-
-if (aiClose && aiPanel) {
-  aiClose.addEventListener('click', closeAiPanel);
-  aiPanel.addEventListener('click', (e) => {
-    if (e.target === aiPanel) closeAiPanel();
-  });
-}
-
-if (aiForm && aiInput) {
-  aiForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const text = aiInput.value.trim();
-    if (!text) return;
-    addAiMessage(text, 'user');
-    aiInput.value = '';
-
-    const reply = getLocalAiReply(text);
-    setTimeout(() => {
-      addAiMessage(reply, 'bot');
-    }, 400);
-  });
-}
-
 async function loadOrderHistory() {
   const user = getUserLocally();
   if (!user?.id) return [];
@@ -1863,8 +1836,6 @@ async function loadOrderHistory() {
   }
   return data;
 }
-
-
 
 async function openHistoryModal() {
   const modal = document.getElementById("history-modal");
