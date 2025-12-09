@@ -1887,17 +1887,21 @@ button.add-to-cart {
   overflow-y: auto;
   flex: 1;
 }
-/* HERO как большой высокий баннер, почти на весь экран */
+/* HERO — высокий баннер во весь экран */
 .hero {
   position: relative;
+  width: 100%;
   max-width: var(--container);
-  margin: 0 auto 0;          /* без лишнего отступа снизу */
-  border-radius: 0 0 24px 24px;
+  margin: 0 auto 0;
+  border-radius: 0 0 28px 28px;
   overflow: hidden;
 
-  /* высота: почти весь экран, но не больше 720px */
-  height: min(720px, 80vh);
+  /* ВАЖНО: чёткая высота, чтобы баннер тянулся вниз */
+  height: 85vh;       /* баннер занимает 85% высоты экрана */
+  max-height: 750px;  /* ограничение для больших экранов */
+  min-height: 500px;  /* чтобы даже на маленьких iPhone не схлопывался */
 }
+
 .hero-slider {
   position: relative;
   width: 100%;
@@ -2169,10 +2173,13 @@ body.cart-has-items .search-big-btn {
 /* Последняя правка: на мобильных делаем баннер высоким */
 @media (max-width: 600px) {
   .hero {
-    height: min(720px, 82vh);  /* ещё чуть выше на телефоне */
-    margin: 0 auto 8px;        /* маленький отступ перед "Хиты продаж" */
+    height: 88vh;      /* прям почти весь экран */
+    max-height: none;  /* не режем */
+    min-height: 540px; /* комфортный минимум */
+    margin-bottom: 12px;
   }
 }
+
 
 
 
