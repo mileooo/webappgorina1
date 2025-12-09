@@ -2163,6 +2163,28 @@ body.cart-has-items .search-big-btn {
   font-weight: 600;
   cursor: pointer;
 }
+.ai-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.ai-preset-btn {
+  border-radius: 999px;
+  border: 0;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #f3f4ff;
+  color: #333;
+  cursor: pointer;
+}
+
+.ai-preset-btn:active {
+  transform: scale(0.97);
+  background: #e0e3ff;
+}
+
 .hero-user {
   z-index: 20;
 }

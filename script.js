@@ -2059,6 +2059,176 @@ document.addEventListener('click', (e) => {
     setTimeout(showSearchFab, 300);
   }
 });
+// =========================
+//      ИИ-ПОМОЩНИК
+// =========================
+
+const aiBtn       = document.querySelector('.ai-btn');
+const aiPanel     = document.querySelector('.ai-panel');
+const aiCloseBtn  = document.querySelector('.ai-close');
+const aiForm      = document.querySelector('.ai-form');
+const aiInput     = aiForm ? aiForm.querySelector('input') : null;
+const aiMessages  = document.querySelector('.ai-messages');
+const aiPresetBtns = document.querySelectorAll('.ai-preset-btn');
+
+function aiAddMessage(text, from = 'bot') {
+  if (!aiMessages) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + (from === 'bot' ? 'ai-msg-bot' : 'ai-msg-user');
+  div.textContent = text;
+  aiMessages.appendChild(div);
+  aiMessages.scrollTop = aiMessages.scrollHeight;
+}
+
+function aiOpen() {
+  if (!aiPanel) return;
+  aiPanel.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('search-hidden'); // чтобы убрать плавающий "Поиск"
+  // приветствие только если ещё нет сообщений
+  if (!aiMessages || aiMessages.children.length) return;
+  aiAddMessage('Привет! Я помогу собрать корзину: к фильму, к завтраку, по выгодным ценам или просто найти нужный товар. Напиши, что хочешь 🙂');
+}
+
+function aiClose() {
+  if (!aiPanel) return;
+  aiPanel.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('search-hidden');
+}
+
+// простенький поиск по товарам по названию
+function aiFindProductsByName(query) {
+  if (!window.products || !Array.isArray(products)) return [];
+  const q = query.toLowerCase();
+  return products
+    .filter(p => (p.name || '').toLowerCase().includes(q))
+    .slice(0, 5);
+}
+
+// выбираем товары по «сценарию»
+function aiPickScenario(scenario) {
+  if (!window.products || !Array.isArray(products)) return [];
+
+  const byCat = (cats) =>
+    products.filter(p => {
+      try {
+        return cats.includes(getCategory(p));
+      } catch (e) {
+        return false;
+      }
+    });
+
+  if (scenario === 'movie') {
+    // сладости, напитки, снеки
+    return byCat(['Сладости', 'Напитки', 'Сухофрукты и орехи']).slice(0, 6);
+  }
+
+  if (scenario === 'guests') {
+    // фрукты + напитки
+    return byCat(['Фрукты', 'Напитки']).slice(0, 8);
+  }
+
+  if (scenario === 'healthy') {
+    // фрукты + овощи + зелень
+    return byCat(['Фрукты', 'Овощи', 'Зелень']).slice(0, 8);
+  }
+
+  if (scenario === 'cheap') {
+    // просто самые дешёвые
+    return products
+      .slice()
+      .sort((a, b) => (a.price || 0) - (b.price || 0))
+      .slice(0, 6);
+  }
+
+  return [];
+}
+
+function aiDescribeProducts(list) {
+  if (!list.length) return 'Пока не нашёл подходящих товаров 😔';
+  const lines = list.map(p => `• ${p.name} — ${p.price} ₽`);
+  return lines.join('\n');
+}
+
+function aiHandleScenario(scenario) {
+  const prods = aiPickScenario(scenario);
+  let title = '';
+
+  if (scenario === 'movie')   title = 'Вот набор к вечеру кино:';
+  if (scenario === 'guests')  title = 'Подборка к приходу гостей:';
+  if (scenario === 'healthy') title = 'Вот несколько более полезных вариантов:';
+  if (scenario === 'cheap')   title = 'Самые выгодные по цене сейчас:';
+
+  aiAddMessage(title + '\n' + aiDescribeProducts(prods), 'bot');
+}
+
+// ответ на произвольный текст
+function aiReply(text) {
+  const msg = text.toLowerCase();
+
+  // сначала сценарии по ключевым словам
+  if (msg.includes('фильм') || msg.includes('кино')) {
+    aiHandleScenario('movie');
+    return;
+  }
+  if (msg.includes('гост') || msg.includes('вечерин')) {
+    aiHandleScenario('guests');
+    return;
+  }
+  if (msg.includes('полезн') || msg.includes('здоров')) {
+    aiHandleScenario('healthy');
+    return;
+  }
+  if (msg.includes('дешев') || msg.includes('выгодн') || msg.includes('акци')) {
+    aiHandleScenario('cheap');
+    return;
+  }
+
+  // иначе – поиск по названию
+  const found = aiFindProductsByName(text);
+  if (found.length) {
+    aiAddMessage(
+      'Нашёл вот что:\n' + aiDescribeProducts(found),
+      'bot'
+    );
+  } else {
+    aiAddMessage(
+      'Я пока умею:\n' +
+        '• Подбирать корзину к фильму, гостям, полезному питанию\n' +
+        '• Искать товары по названию\n\n' +
+        'Попробуй, например: "собери корзину к фильму" или "найди яблоки".',
+      'bot'
+    );
+  }
+}
+
+// ==== ЛИСТЕНЕРЫ ====
+if (aiBtn) {
+  aiBtn.addEventListener('click', aiOpen);
+}
+
+if (aiCloseBtn) {
+  aiCloseBtn.addEventListener('click', aiClose);
+}
+
+if (aiForm && aiInput) {
+  aiForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = aiInput.value.trim();
+    if (!value) return;
+    aiAddMessage(value, 'user');
+    aiInput.value = '';
+    aiReply(value);
+  });
+}
+
+aiPresetBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const scenario = btn.dataset.scenario;
+    const text = btn.textContent.trim();
+    aiAddMessage(text, 'user');
+    aiHandleScenario(scenario);
+  });
+});
 
 /* ========== init ========== */
 function init() {
