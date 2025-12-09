@@ -113,7 +113,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
     position: absolute;
     left: 50%;
     transform: translateX(-50%); /* ← центрирует */
-    bottom: 60px;
+    bottom: 30px;
     display: flex;
     gap: 10px;
 }
@@ -143,9 +143,12 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 /* На маленьких экранах чуть ниже и компактнее */
 @media (max-width: 600px) {
   .hero {
-    padding: 12px;
-    min-height: 260px;
+    padding: 0;                 /* убираем пустое пространство */
+    height: 360px;              /* адекватная высота */
+    min-height: 360px;
+    max-height: 360px;
   }
+}
 
   .hero-actions {
       left: 50%;
@@ -1950,7 +1953,7 @@ button.add-to-cart {
 /* Картинка баннера — ВСЯ, без обрезаний */
 .hero-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   object-fit: cover;
 }
@@ -2154,6 +2157,13 @@ body.cart-has-items .search-big-btn {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+}
+.hero-user {
+  z-index: 20;
+}
+
+.hero-actions {
+  z-index: 20;
 }
 
 

@@ -2008,6 +2008,57 @@ function initHeroSlider() {
     setHeroSlide(heroCurrent + 1);
   }, 7000);
 }
+/* =============================
+   HIDE SEARCH WHEN MODALS OPEN
+   ============================= */
+
+function hideSearchFab() {
+  const fab = document.getElementById('search-fab');
+  const panel = document.getElementById('search-panel');
+
+  if (fab) fab.style.display = 'none';
+  if (panel) {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function showSearchFab() {
+  const fab = document.getElementById('search-fab');
+  if (fab) fab.style.display = '';
+}
+
+/* --- Когда открыт ИИ-помощник --- */
+if (aiBtn) {
+  aiBtn.addEventListener('click', () => {
+    hideSearchFab();
+  });
+}
+
+/* --- Когда открыт Личный кабинет --- */
+if (userAreaBtn) {
+  userAreaBtn.addEventListener('click', () => {
+    hideSearchFab();
+  });
+}
+
+/* --- Когда открываем оформление заказа --- */
+if (gotoCheckoutBtn) {
+  gotoCheckoutBtn.addEventListener('click', () => {
+    hideSearchFab();
+  });
+}
+
+/* --- Когда закрываются панели — вернуть поиск --- */
+document.addEventListener('click', (e) => {
+  if (e.target.id === "ai-close" ||
+      e.target.id === "profile-close" ||
+      e.target.id === "close-modal" ||
+      e.target.id === "cart-close-btn") 
+  {
+    setTimeout(showSearchFab, 300);
+  }
+});
 
 /* ========== init ========== */
 function init() {
