@@ -1887,15 +1887,16 @@ button.add-to-cart {
   overflow-y: auto;
   flex: 1;
 }
-/* HERO как блок-контейнер под картинку */
+/* HERO как большой высокий баннер, почти на весь экран */
 .hero {
   position: relative;
   max-width: var(--container);
-  margin: 0 auto 18px;
+  margin: 0 auto 0;          /* без лишнего отступа снизу */
   border-radius: 0 0 24px 24px;
   overflow: hidden;
-  aspect-ratio: 9 / 16;
-  max-height: 640px;
+
+  /* высота: почти весь экран, но не больше 720px */
+  height: min(720px, 80vh);
 }
 .hero-slider {
   position: relative;
@@ -2168,9 +2169,10 @@ body.cart-has-items .search-big-btn {
 /* Последняя правка: на мобильных делаем баннер высоким */
 @media (max-width: 600px) {
   .hero {
-    aspect-ratio: 9 / 16;
-    max-height: 700px; /* чтобы всё влезало, как на старом баннере */
+    height: min(720px, 82vh);  /* ещё чуть выше на телефоне */
+    margin: 0 auto 8px;        /* маленький отступ перед "Хиты продаж" */
   }
 }
+
 
 
