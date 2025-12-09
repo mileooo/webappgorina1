@@ -2063,16 +2063,9 @@ document.addEventListener('click', (e) => {
 //      ИИ-ПОМОЩНИК
 // =========================
 
-const aiBtn       = document.querySelector('.ai-btn');
-const aiPanel     = document.querySelector('.ai-panel');
-const aiCloseBtn  = document.querySelector('.ai-close');
-const aiForm      = document.querySelector('.ai-form');
-const aiInput     = aiForm ? aiForm.querySelector('input') : null;
-const aiMessages  = document.querySelector('.ai-messages');
 const aiPresetBtns = document.querySelectorAll('.ai-preset-btn');
 
 function aiAddMessage(text, from = 'bot') {
-  if (!aiMessages) return;
   const div = document.createElement('div');
   div.className = 'ai-msg ' + (from === 'bot' ? 'ai-msg-bot' : 'ai-msg-user');
   div.textContent = text;
@@ -2081,154 +2074,92 @@ function aiAddMessage(text, from = 'bot') {
 }
 
 function aiOpen() {
-  if (!aiPanel) return;
   aiPanel.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('search-hidden'); // чтобы убрать плавающий "Поиск"
-  // приветствие только если ещё нет сообщений
-  if (!aiMessages || aiMessages.children.length) return;
-  aiAddMessage('Привет! Я помогу собрать корзину: к фильму, к завтраку, по выгодным ценам или просто найти нужный товар. Напиши, что хочешь 🙂');
+  document.body.classList.add('search-hidden');
+
+  if (!aiMessages.children.length) {
+    aiAddMessage('Привет 👋 Я помогу подобрать товары, собрать корзину, найти выгодные варианты. Напиши, что нужно!');
+  }
 }
 
-function aiClose() {
-  if (!aiPanel) return;
+function aiClosePanel() {
   aiPanel.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('search-hidden');
 }
 
-// простенький поиск по товарам по названию
-function aiFindProductsByName(query) {
-  if (!window.products || !Array.isArray(products)) return [];
-  const q = query.toLowerCase();
-  return products
-    .filter(p => (p.name || '').toLowerCase().includes(q))
-    .slice(0, 5);
+function aiFindProductsByName(q) {
+  q = q.toLowerCase();
+  return products.filter(p => p.name.toLowerCase().includes(q)).slice(0, 6);
 }
 
-// выбираем товары по «сценарию»
-function aiPickScenario(scenario) {
-  if (!window.products || !Array.isArray(products)) return [];
-
+function aiPickScenario(type) {
   const byCat = (cats) =>
-    products.filter(p => {
-      try {
-        return cats.includes(getCategory(p));
-      } catch (e) {
-        return false;
-      }
-    });
+    products.filter(p => cats.includes(getCategory(p)));
 
-  if (scenario === 'movie') {
-    // сладости, напитки, снеки
-    return byCat(['Сладости', 'Напитки', 'Сухофрукты и орехи']).slice(0, 6);
-  }
-
-  if (scenario === 'guests') {
-    // фрукты + напитки
-    return byCat(['Фрукты', 'Напитки']).slice(0, 8);
-  }
-
-  if (scenario === 'healthy') {
-    // фрукты + овощи + зелень
-    return byCat(['Фрукты', 'Овощи', 'Зелень']).slice(0, 8);
-  }
-
-  if (scenario === 'cheap') {
-    // просто самые дешёвые
-    return products
-      .slice()
-      .sort((a, b) => (a.price || 0) - (b.price || 0))
-      .slice(0, 6);
-  }
+  if (type === 'movie')   return byCat(['Сладости', 'Напитки', 'Сухофрукты и орехи']);
+  if (type === 'guests')  return byCat(['Фрукты', 'Напитки']);
+  if (type === 'healthy') return byCat(['Овощи', 'Фрукты', 'Зелень']);
+  if (type === 'cheap')
+    return products.slice().sort((a,b)=>a.price-b.price).slice(0,6);
 
   return [];
 }
 
-function aiDescribeProducts(list) {
-  if (!list.length) return 'Пока не нашёл подходящих товаров 😔';
-  const lines = list.map(p => `• ${p.name} — ${p.price} ₽`);
-  return lines.join('\n');
+function aiDescribe(list) {
+  if (!list.length) return 'Ничего не нашёл 😔';
+  return list.map(p => `• ${p.name} — ${p.price} ₽`).join('\n');
 }
 
-function aiHandleScenario(scenario) {
-  const prods = aiPickScenario(scenario);
-  let title = '';
+function aiHandleScenario(type) {
+  const prods = aiPickScenario(type);
+  let title =
+    type === 'movie'   ? 'Набор к фильму:' :
+    type === 'guests'  ? 'Для гостей:' :
+    type === 'healthy' ? 'Полезные товары:' :
+    type === 'cheap'   ? 'Самые выгодные:' : '';
 
-  if (scenario === 'movie')   title = 'Вот набор к вечеру кино:';
-  if (scenario === 'guests')  title = 'Подборка к приходу гостей:';
-  if (scenario === 'healthy') title = 'Вот несколько более полезных вариантов:';
-  if (scenario === 'cheap')   title = 'Самые выгодные по цене сейчас:';
-
-  aiAddMessage(title + '\n' + aiDescribeProducts(prods), 'bot');
+  aiAddMessage(title + '\n' + aiDescribe(prods), 'bot');
 }
 
-// ответ на произвольный текст
 function aiReply(text) {
-  const msg = text.toLowerCase();
+  text = text.toLowerCase();
 
-  // сначала сценарии по ключевым словам
-  if (msg.includes('фильм') || msg.includes('кино')) {
-    aiHandleScenario('movie');
-    return;
-  }
-  if (msg.includes('гост') || msg.includes('вечерин')) {
-    aiHandleScenario('guests');
-    return;
-  }
-  if (msg.includes('полезн') || msg.includes('здоров')) {
-    aiHandleScenario('healthy');
-    return;
-  }
-  if (msg.includes('дешев') || msg.includes('выгодн') || msg.includes('акци')) {
-    aiHandleScenario('cheap');
-    return;
-  }
+  if (text.includes('фильм'))    return aiHandleScenario('movie');
+  if (text.includes('гост'))     return aiHandleScenario('guests');
+  if (text.includes('полез'))    return aiHandleScenario('healthy');
+  if (text.includes('выгод') ||
+      text.includes('дешев'))    return aiHandleScenario('cheap');
 
-  // иначе – поиск по названию
   const found = aiFindProductsByName(text);
   if (found.length) {
-    aiAddMessage(
-      'Нашёл вот что:\n' + aiDescribeProducts(found),
-      'bot'
-    );
+    aiAddMessage('Нашёл такие товары:\n' + aiDescribe(found));
   } else {
-    aiAddMessage(
-      'Я пока умею:\n' +
-        '• Подбирать корзину к фильму, гостям, полезному питанию\n' +
-        '• Искать товары по названию\n\n' +
-        'Попробуй, например: "собери корзину к фильму" или "найди яблоки".',
-      'bot'
-    );
+    aiAddMessage('Пока не понял 🙈 Попробуй: "к фильму", "полезное", "найди яблоки".');
   }
 }
 
 // ==== ЛИСТЕНЕРЫ ====
-if (aiBtn) {
-  aiBtn.addEventListener('click', aiOpen);
-}
 
-if (aiCloseBtn) {
-  aiCloseBtn.addEventListener('click', aiClose);
-}
+aiBtn.addEventListener('click', aiOpen);
+aiClose.addEventListener('click', aiClosePanel);
 
-if (aiForm && aiInput) {
-  aiForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const value = aiInput.value.trim();
-    if (!value) return;
-    aiAddMessage(value, 'user');
-    aiInput.value = '';
-    aiReply(value);
-  });
-}
+aiForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const v = aiInput.value.trim();
+  if (!v) return;
+  aiAddMessage(v, 'user');
+  aiInput.value = '';
+  aiReply(v);
+});
 
 aiPresetBtns.forEach(btn => {
   btn.addEventListener('click', () => {
-    const scenario = btn.dataset.scenario;
-    const text = btn.textContent.trim();
-    aiAddMessage(text, 'user');
-    aiHandleScenario(scenario);
+    const type = btn.dataset.scenario;
+    aiAddMessage(btn.textContent.trim(), 'user');
+    aiHandleScenario(type);
   });
 });
+
 
 /* ========== init ========== */
 function init() {
