@@ -2093,21 +2093,52 @@ function aiFindProductsByName(q) {
 }
 
 function aiPickScenario(type) {
-  const byCat = (cats) =>
-    products.filter(p => cats.includes(getCategory(p)));
+  if (!Array.isArray(products)) return [];
 
-  if (type === 'movie')   return byCat(['Сладости', 'Напитки', 'Сухофрукты и орехи']);
-  if (type === 'guests')  return byCat(['Фрукты', 'Напитки']);
-  if (type === 'healthy') return byCat(['Овощи', 'Фрукты', 'Зелень']);
-  if (type === 'cheap')
-    return products.slice().sort((a,b)=>a.price-b.price).slice(0,6);
+  // твои реальные категории
+  const byCat = (cat) => products.filter(p => p.category === cat);
+
+  if (type === 'movie') {
+    // сладкое + напитки + орехи
+    return [
+      ...byCat('sweets'),
+      ...byCat('drinks'),
+      ...byCat('nuts')
+    ].slice(0, 8);
+  }
+
+  if (type === 'guests') {
+    // фрукты + напитки
+    return [
+      ...byCat('fruits'),
+      ...byCat('drinks')
+    ].slice(0, 8);
+  }
+
+  if (type === 'healthy') {
+    // овощи + фрукты + зелень
+    return [
+      ...byCat('vegetables'),
+      ...byCat('fruits'),
+      ...byCat('greens')
+    ].slice(0, 8);
+  }
+
+  if (type === 'cheap') {
+    // самые дешёвые позиции
+    return products
+      .filter(p => p.price)       // цена не undefined
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 8);
+  }
 
   return [];
 }
-
 function aiDescribe(list) {
   if (!list.length) return 'Ничего не нашёл 😔';
-  return list.map(p => `• ${p.name} — ${p.price} ₽`).join('\n');
+  return list
+    .map(p => `• ${p.name} — ${p.price ? p.price + ' ₽' : 'цена не указана'}`)
+    .join('\n');
 }
 
 function aiHandleScenario(type) {
