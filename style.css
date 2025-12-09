@@ -145,8 +145,8 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
   .hero {
     padding: 0;                 /* убираем пустое пространство */
     height: 360px;              /* адекватная высота */
-    min-height: 360px;
-    max-height: 360px;
+    min-height: 480px;
+    max-height: 480px;
   }
 }
 
