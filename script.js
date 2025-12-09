@@ -1992,13 +1992,6 @@ function showSearchFab() {
   if (fab) fab.style.display = '';
 }
 
-/* --- Когда открыт ИИ-помощник --- */
-if (aiBtn) {
-  aiBtn.addEventListener('click', () => {
-    hideSearchFab();
-  });
-}
-
 /* --- Когда открыт Личный кабинет --- */
 if (userAreaBtn) {
   userAreaBtn.addEventListener('click', () => {
