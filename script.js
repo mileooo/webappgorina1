@@ -1188,46 +1188,75 @@ function renderCartSuggestions() {
 
   if (!Array.isArray(products) || products.length === 0) return;
 
-  // товары, которых ещё нет в корзине
+  if (!cart.length) {
+    // если корзина пустая — просто ничего не показываем
+    return;
+  }
+
+  // 1) считаем, какие категории сейчас чаще всего в корзине
+  const countsByCategory = {};
+  cart.forEach(item => {
+    const prod = products.find(p => getName(p) === item.name);
+    if (!prod) return;
+    const cat = String(getCategory(prod) || 'other');
+    countsByCategory[cat] = (countsByCategory[cat] || 0) + item.qtyKg;
+  });
+
+  // 2) выбираем "топ-категорию"
+  const topCategory = Object.entries(countsByCategory)
+    .sort((a, b) => b[1] - a[1])[0]?.[0];
+
+  // 3) товары, которых ещё нет в корзине
   const inCartNames = new Set(cart.map(i => i.name));
-  const candidates = products.filter(p => !inCartNames.has(getName(p)));
 
-  if (!candidates.length) return;
+  let candidates;
+  if (topCategory) {
+    // сначала пробуем товары из той же категории
+    candidates = products.filter(p =>
+      String(getCategory(p)) === String(topCategory) &&
+      !inCartNames.has(getName(p))
+    );
+  }
+  // если вдруг не хватило — добиваем любыми другими товарами
+  if (!candidates || !candidates.length) {
+    candidates = products.filter(p => !inCartNames.has(getName(p)));
+  }
 
-  // перемешали и взяли до 4 штук
-  const shuffled = candidates.slice().sort(() => Math.random() - 0.5);
-  const toShow = shuffled.slice(0, 4);
+  // ограничиваем, например, 6 рекомендациями
+  const picks = candidates.slice(0, 6);
 
-  toShow.forEach(p => {
-    const name = getName(p);
-    const price = getPrice(p);
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'cart-suggest-item';
-    btn.innerHTML = `
-      <div class="cart-suggest-main">
-        <div class="cart-suggest-img">
-          <img alt="${name}">
-        </div>
-        <div class="cart-suggest-name">${name}</div>
+  picks.forEach(p => {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'cart-suggest-item';
+    card.innerHTML = `
+      <div class="cart-suggest-img">
+        <img alt="${getName(p)}">
       </div>
-      <div class="cart-suggest-price">${formatRub(price)}</div>
+      <div class="cart-suggest-info">
+        <div class="cart-suggest-name">${getName(p)}</div>
+        <div class="cart-suggest-meta small">
+          ${getLabel(p)} • ${formatRub(getPrice(p))} / кг
+        </div>
+      </div>
+      <div class="cart-suggest-price">${formatRub(getPrice(p))}</div>
     `;
 
-    const imgEl = btn.querySelector('img');
-    if (imgEl) {
-      tryLoadImage(imgEl, name);
-    }
+    const imgEl = card.querySelector('img');
+    if (imgEl) tryLoadImage(imgEl, getName(p));
 
-    btn.addEventListener('click', () => {
-      // добавляем 1 кг / 1 шт
-      addToCart({ name, price, qtyKg: 1 });
-      renderCart();            // обновляем корзину
-      renderCartSuggestions(); // и сами рекомендации
+    // клик по рекомендации — сразу добавляем 0.5 кг (пример)
+    card.addEventListener('click', () => {
+      addToCart({
+        name: getName(p),
+        price: getPrice(p),
+        qtyKg: 0.5
+      });
+      renderCart();
+      renderCartSuggestions();
     });
 
-    cartSuggestList.appendChild(btn);
+    cartSuggestList.appendChild(card);
   });
 }
 /* floating cart helpers */
@@ -1588,6 +1617,72 @@ if (mobileSearchInput) {
     if (searchInput) searchInput.value = mobileSearchInput.value;
     applySearchAndSort();
   });
+}
+// live-подсказки по товарам на странице поиска
+const liveSugList = document.getElementById('search-suggestions-list');
+
+function updateLiveSuggestions() {
+  if (!liveSugList || !mobileSearchInput) return;
+
+  const q = mobileSearchInput.value.trim().toLowerCase();
+  liveSugList.innerHTML = '';
+
+  if (!q) {
+    liveSugList.classList.remove('show');
+    return;
+  }
+
+  // ищем до 6 совпадений по названию/лейблу
+  const matches = products
+    .filter(p => (getLabel(p) + ' ' + getName(p))
+      .toLowerCase()
+      .includes(q))
+    .slice(0, 6);
+
+  if (!matches.length) {
+    liveSugList.classList.remove('show');
+    return;
+  }
+
+  matches.forEach(p => {
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'live-suggestion-item';
+    el.innerHTML = `
+      <span class="live-suggestion-name">${getName(p)}</span>
+      <span class="live-suggestion-price">${formatRub(getPrice(p))} / кг</span>
+    `;
+    el.addEventListener('click', () => {
+      // закрываем панель поиска
+      if (searchPanel) {
+        searchPanel.classList.remove('open');
+        searchPanel.setAttribute('aria-hidden', 'true');
+      }
+      document.body.style.overflow = '';
+
+      // чистим текст поиска
+      mobileSearchInput.value = '';
+      if (searchInput) searchInput.value = '';
+
+      // открываем экран категории с фильтром "all"
+      openCategoryPage('all', 'Все товары');
+
+      // и сразу ставим текст в обычный поиск + фильтруем
+      if (searchInput) {
+        searchInput.value = getName(p);
+        applySearchAndSort();
+      }
+    });
+
+    liveSugList.appendChild(el);
+  });
+
+  liveSugList.classList.add('show');
+}
+
+// привязываем к вводу
+if (mobileSearchInput) {
+  mobileSearchInput.addEventListener('input', updateLiveSuggestions);
 }
 
 /* сортировку через mobileSort можно не трогать — элемента теперь нет,
