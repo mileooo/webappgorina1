@@ -345,13 +345,6 @@ const filtersWrap = document.getElementById('filters');
 const searchInput = document.getElementById('search-input');
 const sortSelect = document.getElementById('sort-select');
 
-const aiBtn       = document.getElementById('ai-helper-btn');
-const aiPanel     = document.getElementById('ai-panel');
-const aiClose     = document.getElementById('ai-close');
-const aiForm      = document.getElementById('ai-form');
-const aiInput     = document.getElementById('ai-input');
-const aiMessages  = document.getElementById('ai-messages');
-
 const mobileSearchInput = document.getElementById('mobile-search-input');
 const mobileSort = document.getElementById('mobile-sort');
 const searchPanel = document.getElementById('search-panel');
@@ -2059,138 +2052,136 @@ document.addEventListener('click', (e) => {
     setTimeout(showSearchFab, 300);
   }
 });
-// =========================
-//      ИИ-ПОМОЩНИК
-// =========================
+// ===== BRAVO ИИ — простой умный помощник =====
 
-const aiPresetBtns = document.querySelectorAll('.ai-preset-btn');
+const aiPanel      = document.querySelector('.ai-panel');
+const aiBtn        = document.querySelector('.ai-btn');
+const aiCloseBtn   = document.querySelector('.ai-close');
+const aiForm       = document.querySelector('.ai-form');
+const aiInput      = aiForm ? aiForm.querySelector('input') : null;
+const aiMsgList    = document.querySelector('.ai-messages');
+const aiScenarioBtns = document.querySelectorAll('[data-ai-scenario]');
 
+// аккуратное добавление сообщения в чат
 function aiAddMessage(text, from = 'bot') {
-  const div = document.createElement('div');
-  div.className = 'ai-msg ' + (from === 'bot' ? 'ai-msg-bot' : 'ai-msg-user');
-  div.textContent = text;
-  aiMessages.appendChild(div);
-  aiMessages.scrollTop = aiMessages.scrollHeight;
+  if (!aiMsgList) return;
+  const msg = document.createElement('div');
+  msg.className = 'ai-msg ' + (from === 'bot' ? 'ai-msg-bot' : 'ai-msg-user');
+  msg.textContent = text;
+  aiMsgList.appendChild(msg);
+  aiMsgList.scrollTop = aiMsgList.scrollHeight;
 }
 
-function aiOpen() {
+// тексты для готовых сценариев
+const AI_SCENARIOS = {
+  movie: {
+    title: 'Набор к фильму',
+    reply: 'К фильму чаще всего берут: фрукты, сладости, снеки и напитки. Загляни в разделы «Фрукты», «Сладости», «Напитки» и «Чай» — там соберёшь идеальную корзину к просмотру 🎬'
+  },
+  guests: {
+    title: 'К приходу гостей',
+    reply: 'Для гостей подойдут фрукты, овощи на закуски, напитки, сладости и что-то к чаю. Посмотри разделы «Фрукты», «Овощи», «Сладости», «Напитки» и «Чай» 🍇☕'
+  },
+  healthy: {
+    title: 'Что-нибудь полезное',
+    reply: 'Для полезного рациона ищи фрукты, овощи, орехи, крупы и молочку. Обрати внимание на разделы «Фрукты», «Овощи», «Сухофрукты и орехи», «Крупы / бакалея» 🥦'
+  },
+  cheap: {
+    title: 'Самое выгодное',
+    reply: 'За выгодой заглядывай в блоки «Выгодно сегодня», «Хиты продаж» и следи за акционными ценниками в каталоге. Так проще всего собрать бюджетную корзину 💰'
+  }
+};
+
+// открытие панели ИИ
+function openAiPanel(initialScenario) {
+  if (!aiPanel) return;
   aiPanel.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('search-hidden');
+  document.body.classList.add('ai-open'); // если где-то в стилях это используется
 
-  if (!aiMessages.children.length) {
-    aiAddMessage('Привет 👋 Я помогу подобрать товары, собрать корзину, найти выгодные варианты. Напиши, что нужно!');
+  // очистить чат и показать приветствие
+  if (aiMsgList) aiMsgList.innerHTML = '';
+
+  aiAddMessage(
+    'Привет! Я Bravo ИИ. Подскажу, что заказать: к фильму, к приходу гостей, на завтрак или просто что-нибудь полезное 😉'
+  );
+
+  if (initialScenario && AI_SCENARIOS[initialScenario]) {
+    const s = AI_SCENARIOS[initialScenario];
+    aiAddMessage(s.title + ':');
+    aiAddMessage(s.reply);
+  }
+
+  if (aiInput) {
+    aiInput.value = '';
+    aiInput.focus();
   }
 }
 
-function aiClosePanel() {
+// закрытие панели ИИ
+function closeAiPanel() {
+  if (!aiPanel) return;
   aiPanel.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('search-hidden');
+  document.body.classList.remove('ai-open');
 }
 
-function aiFindProductsByName(q) {
-  q = q.toLowerCase();
-  return products.filter(p => p.name.toLowerCase().includes(q)).slice(0, 6);
+// кнопка «ИИ помощник» на баннере
+if (aiBtn && aiPanel) {
+  aiBtn.addEventListener('click', () => {
+    openAiPanel();
+  });
 }
 
-function aiPickScenario(type) {
-  if (!Array.isArray(products)) return [];
-
-  // твои реальные категории
-  const byCat = (cat) => products.filter(p => p.category === cat);
-
-  if (type === 'movie') {
-    // сладкое + напитки + орехи
-    return [
-      ...byCat('sweets'),
-      ...byCat('drinks'),
-      ...byCat('nuts')
-    ].slice(0, 8);
-  }
-
-  if (type === 'guests') {
-    // фрукты + напитки
-    return [
-      ...byCat('fruits'),
-      ...byCat('drinks')
-    ].slice(0, 8);
-  }
-
-  if (type === 'healthy') {
-    // овощи + фрукты + зелень
-    return [
-      ...byCat('vegetables'),
-      ...byCat('fruits'),
-      ...byCat('greens')
-    ].slice(0, 8);
-  }
-
-  if (type === 'cheap') {
-    // самые дешёвые позиции
-    return products
-      .filter(p => p.price)       // цена не undefined
-      .sort((a, b) => a.price - b.price)
-      .slice(0, 8);
-  }
-
-  return [];
-}
-function aiDescribe(list) {
-  if (!list.length) return 'Ничего не нашёл 😔';
-  return list
-    .map(p => `• ${p.name} — ${p.price ? p.price + ' ₽' : 'цена не указана'}`)
-    .join('\n');
+// крестик в правом верхнем углу панели
+if (aiCloseBtn) {
+  aiCloseBtn.addEventListener('click', () => {
+    closeAiPanel();
+  });
 }
 
-function aiHandleScenario(type) {
-  const prods = aiPickScenario(type);
-  let title =
-    type === 'movie'   ? 'Набор к фильму:' :
-    type === 'guests'  ? 'Для гостей:' :
-    type === 'healthy' ? 'Полезные товары:' :
-    type === 'cheap'   ? 'Самые выгодные:' : '';
-
-  aiAddMessage(title + '\n' + aiDescribe(prods), 'bot');
-}
-
-function aiReply(text) {
-  text = text.toLowerCase();
-
-  if (text.includes('фильм'))    return aiHandleScenario('movie');
-  if (text.includes('гост'))     return aiHandleScenario('guests');
-  if (text.includes('полез'))    return aiHandleScenario('healthy');
-  if (text.includes('выгод') ||
-      text.includes('дешев'))    return aiHandleScenario('cheap');
-
-  const found = aiFindProductsByName(text);
-  if (found.length) {
-    aiAddMessage('Нашёл такие товары:\n' + aiDescribe(found));
-  } else {
-    aiAddMessage('Пока не понял 🙈 Попробуй: "к фильму", "полезное", "найди яблоки".');
-  }
-}
-
-// ==== ЛИСТЕНЕРЫ ====
-
-aiBtn.addEventListener('click', aiOpen);
-aiClose.addEventListener('click', aiClosePanel);
-
-aiForm.addEventListener('submit', e => {
-  e.preventDefault();
-  const v = aiInput.value.trim();
-  if (!v) return;
-  aiAddMessage(v, 'user');
-  aiInput.value = '';
-  aiReply(v);
-});
-
-aiPresetBtns.forEach(btn => {
+// обработка кликов по быстрым сценариям сверху
+aiScenarioBtns.forEach(btn => {
   btn.addEventListener('click', () => {
-    const type = btn.dataset.scenario;
-    aiAddMessage(btn.textContent.trim(), 'user');
-    aiHandleScenario(type);
+    const scenario = btn.dataset.aiScenario;
+    const conf = AI_SCENARIOS[scenario];
+    if (!conf) return;
+
+    // сообщение от пользователя
+    aiAddMessage(conf.title, 'user');
+    // ответ бота
+    aiAddMessage(conf.reply, 'bot');
   });
 });
 
+// разбор свободного текста от пользователя
+if (aiForm && aiInput) {
+  aiForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = aiInput.value.trim();
+    if (!text) return;
+
+    aiAddMessage(text, 'user');
+    aiInput.value = '';
+
+    const lower = text.toLowerCase();
+
+    let scenario = null;
+    if (lower.includes('фильм')) scenario = 'movie';
+    else if (lower.includes('гост') || lower.includes('компания')) scenario = 'guests';
+    else if (lower.includes('пп') || lower.includes('здоров') || lower.includes('кбжу')) scenario = 'healthy';
+    else if (lower.includes('дешев') || lower.includes('выгод')) scenario = 'cheap';
+    else if (lower.includes('завтрак')) scenario = 'healthy';
+
+    if (scenario && AI_SCENARIOS[scenario]) {
+      aiAddMessage(AI_SCENARIOS[scenario].reply, 'bot');
+    } else {
+      aiAddMessage(
+        'Понял. Подумай, для чего ты собираешь заказ — к фильму, к гостям, на завтрак или просто полезно поесть. ' +
+        'Выбери подходящую кнопку сверху, и я подскажу, в какие разделы каталога зайти 😊',
+        'bot'
+      );
+    }
+  });
+}
 
 /* ========== init ========== */
 function init() {
