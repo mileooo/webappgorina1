@@ -2198,6 +2198,10 @@ body.cart-has-items .search-big-btn {
     transform: scale(0.88);
   }
 }
+.hero-actions .btn-cta {
+  border: none !important;
+  box-shadow: none !important;
+}
 
 
 
