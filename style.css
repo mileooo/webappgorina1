@@ -113,7 +113,7 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
     position: absolute;
     left: 50%;
     transform: translateX(-50%); /* ← центрирует */
-    bottom: 30px;
+    bottom: 14px;
     display: flex;
     gap: 10px;
 }
@@ -2177,6 +2177,25 @@ body.cart-has-items .search-big-btn {
     max-height: none;  /* не режем */
     min-height: 590px; /* комфортный минимум */
     margin-bottom: 12px;
+  }
+}
+/* ===== HERO — уменьшение размера кнопок Каталог / Заказать сейчас ===== */
+
+.hero-actions .btn-cta,
+.hero-actions .btn-secondary {
+  font-size: 12px !important;
+  padding: 7px 14px !important;
+  border-radius: 999px !important;
+  transform: scale(0.92); /* лёгкое уменьшение */
+}
+
+/* На маленьких телефонах ещё меньше */
+@media (max-width: 600px) {
+  .hero-actions .btn-cta,
+  .hero-actions .btn-secondary {
+    font-size: 11px !important;
+    padding: 6px 12px !important;
+    transform: scale(0.88);
   }
 }
 
