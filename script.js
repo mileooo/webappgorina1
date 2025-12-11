@@ -854,31 +854,39 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       saveAddressToLocal({ city, street, house, apt });
     }
 
-    // Если запущено внутри Telegram WebApp — шлём заказ в бот
+        // Если запущено внутри Telegram WebApp — шлём заказ в бот
+    console.log("DEBUG tg object:", tg);
+
     if (tg && tg.sendData) {
+      const payload = {
+        type: "order",
+        total,
+        items,
+        mode: isPickup ? "pickup" : "delivery",
+        pickupPoint,
+        city,
+        street,
+        house,
+        apt,
+        timeText,
+        payment,
+        comment,
+        user: {
+          id: user.id,
+          phone: user.phone,
+          name
+        }
+      };
+
+      console.log("DEBUG: отправляю заказ в Telegram", payload);
+
       try {
-        tg.sendData(JSON.stringify({
-          type: "order",
-          total,
-          items,
-          mode: isPickup ? "pickup" : "delivery",
-          pickupPoint,
-          city,
-          street,
-          house,
-          apt,
-          timeText,
-          payment,
-          comment,
-          user: {
-            id: user.id,
-            phone: user.phone,
-            name
-          }
-        }));
+        tg.sendData(JSON.stringify(payload));
       } catch (e) {
         console.error("tg.sendData error:", e);
       }
+    } else {
+      console.warn("DEBUG: tg или tg.sendData недоступны, заказ не уходит в бота");
     }
 
     await refreshLoyalty();
