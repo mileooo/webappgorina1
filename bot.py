@@ -43,86 +43,83 @@ async def cmd_start(message: types.Message):
 # Обработка данных из WebApp
 @dp.message()
 async def handle_webapp(message: types.Message):
-    if not message.web_app_data:
-        await message.answer("👋 Отправь /start, чтобы оформить заказ.")
-        return
+    if message.web_app_data:
+        try:
+            data = json.loads(message.web_app_data.data)
 
-    try:
-        data = json.loads(message.web_app_data.data)
+            # Ожидаем словарь с type="order"
+            if not isinstance(data, dict) or data.get("type") != "order":
+                logging.info(f"Получены web_app_data непонятного формата: {data}")
+                return
 
-        # Ожидаем формат { type: "order", ... }
-        if data.get("type") != "order":
-          logging.info(f"Получены WebApp данные неизвестного типа: {data}")
-          return
+            items = data.get("items", []) or []
+            total = data.get("total", 0)
+            mode = data.get("mode", "delivery")
+            pickup_point = data.get("pickupPoint") or ""
+            city = data.get("city") or ""
+            street = data.get("street") or ""
+            house = data.get("house") or ""
+            apt = data.get("apt") or ""
+            time_text = data.get("timeText") or "как можно скорее"
+            payment = data.get("payment") or "не указано"
+            comment = data.get("comment") or ""
 
-        items = data.get("items", [])
-        total = data.get("total", 0)
-        mode = data.get("mode", "delivery")
-        pickup_point = data.get("pickupPoint")
-        city = data.get("city")
-        street = data.get("street")
-        house = data.get("house")
-        apt = data.get("apt")
-        time_text = data.get("timeText")
-        payment = data.get("payment")
-        comment = data.get("comment")
+            user = data.get("user") or {}
+            user_name = user.get("name") or "Без имени"
+            user_phone = user.get("phone") or "Без телефона"
 
-        user = data.get("user", {}) or {}
-        user_name = user.get("name") or "Без имени"
-        user_phone = user.get("phone") or "Без телефона"
+            if not items:
+                await message.answer("❗ Корзина пуста, заказ не распознан.")
+                return
 
-        if not items:
-            await message.answer("❗ Корзина пуста, заказ не распознан.")
-            return
-
-        # Формируем текст заказа
-        lines = []
-        lines.append("🧾 <b>Новый заказ</b>")
-        lines.append("")
-        lines.append(f"👤 Клиент: {user_name}")
-        lines.append(f"📞 Телефон: {user_phone}")
-        lines.append(f"💳 Оплата: {payment or 'не указано'}")
-        lines.append(f"⏱ Время: {time_text or 'как можно скорее'}")
-
-        if mode == "pickup":
-            lines.append(f"📍 Самовывоз: {pickup_point or 'не указан'}")
-        else:
-            addr_line = f"{city or ''}, {street or ''} {house or ''}"
-            if apt:
-                addr_line += f", кв. {apt}"
-            lines.append(f"📦 Доставка по адресу: {addr_line}")
-
-        if comment:
+            lines = []
+            lines.append("🧾 <b>Новый заказ</b>")
             lines.append("")
-            lines.append(f"💬 Комментарий: {comment}")
+            lines.append(f"👤 Клиент: {user_name}")
+            lines.append(f"📞 Телефон: {user_phone}")
+            lines.append(f"💳 Оплата: {payment}")
+            lines.append(f"⏱ Время: {time_text}")
 
-        lines.append("")
-        lines.append("📦 <b>Состав заказа:</b>")
-        for item in items:
-            name = item.get("name")
-            qty = item.get("qtyKg")
-            price = item.get("price")
-            total_item = item.get("total")
-            lines.append(f"• {name} — {qty} кг — {total_item} ₽")
+            if mode == "pickup":
+                lines.append(f"📍 Самовывоз: {pickup_point or 'не указан'}")
+            else:
+                addr_line = f"{city}, {street} {house}"
+                if apt:
+                    addr_line += f", кв. {apt}"
+                lines.append(f"📦 Доставка: {addr_line}")
 
-        lines.append("")
-        lines.append(f"💰 <b>Итого:</b> {total} ₽")
+            if comment:
+                lines.append("")
+                lines.append(f"💬 Комментарий: {comment}")
 
-        text = "\n".join(lines)
+            lines.append("")
+            lines.append("📦 <b>Состав заказа:</b>")
+            for item in items:
+                name = item.get("name")
+                qty = item.get("qtyKg")
+                line_total = item.get("total")
+                lines.append(f"• {name} — {qty} кг — {line_total} ₽")
 
-        # Отправляем всем админам
-        for admin_id in ADMINS:
-            try:
-                await bot.send_message(admin_id, text, parse_mode="HTML")
-            except Exception as e:
-                logging.error(f"Не удалось отправить сообщение админу {admin_id}: {e}")
+            lines.append("")
+            lines.append(f"💰 <b>Итого:</b> {total} ₽")
 
-        # Можно также ответить самому пользователю (если нужно)
-        await message.answer("✅ Заказ принят, спасибо!")
+            text = "\n".join(lines)
 
-    except Exception as e:
-        logging.error(f"Ошибка обработки данных из WebApp: {e}")
-        await message.answer("⚠️ Произошла ошибка при обработке заказа.")
+            # отправляем всем админам
+            for admin_id in ADMINS:
+                try:
+                    await bot.send_message(admin_id, text, parse_mode="HTML")
+                except Exception as e:
+                    logging.error(f"Не удалось отправить сообщение админу {admin_id}: {e}")
+
+            # отвечаем пользователю
+            await message.answer("✅ Заказ принят, спасибо!")
+
+        except Exception as e:
+            logging.error(f"Ошибка обработки данных из WebApp: {e}")
+            await message.answer("⚠️ Произошла ошибка при обработке заказа.")
+    else:
+        await message.answer("👋 Отправь /start, чтобы открыть магазин.")
 
 # Запуск бота
 async def main():
