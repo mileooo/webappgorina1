@@ -5,27 +5,29 @@ import asyncio
 import json
 import logging
 
-# Включаем логирование (полезно при отладке)
 logging.basicConfig(level=logging.INFO)
 
 API_TOKEN = "8269137514:AAHj6mSZgHb1w9S85GAjlP1249O9RceZBsM"
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
-# ID админов, которым слать уведомления
-# Подставь сюда реальные chat_id (их можно поймать из message.from_user.id)
+
+# список админов (сейчас только ты)
 ADMINS = [
-    1209683705,  # админ 1
+    1209683705,  # chat_id
 ]
 
-# Команда /start с кнопкой WebApp
+
+# команда /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     webapp_kb = ReplyKeyboardMarkup(
         keyboard=[[
             KeyboardButton(
                 text="🛒 Оформить заказ",
-                web_app=WebAppInfo(url="https://webappgorina1-27jw.vercel.app")  # <-- сюда можно вставить локальный или хостинг URL
+                web_app=WebAppInfo(
+                    url="https://webappgorina1-27jw.vercel.app"
+                )
             )
         ]],
         resize_keyboard=True
@@ -36,13 +38,26 @@ async def cmd_start(message: types.Message):
         reply_markup=webapp_kb
     )
 
-# Обработка данных из WebApp
+
+# команда /myid – чтобы проверять свой chat_id
+@dp.message(Command("myid"))
+async def cmd_myid(message: types.Message):
+    await message.answer(f"Твой chat_id: {message.from_user.id}")
+
+
+# обработка данных из WebApp (заказ)
 @dp.message()
 async def handle_webapp(message: types.Message):
+    # если пришли данные из WebApp
     if message.web_app_data:
-        logging.info(f"ПРИШЛИ ДАННЫЕ ИЗ WEBAPP: {message.web_app_data.data}")
-       
-            # Ожидаем словарь с type="order"
+        try:
+            raw = message.web_app_data.data
+            logging.info(f"ПРИШЛИ ДАННЫЕ ИЗ WEBAPP: {raw}")
+
+            # парсим JSON
+            data = json.loads(raw)
+
+            # ждём словарь с type="order"
             if not isinstance(data, dict) or data.get("type") != "order":
                 logging.info(f"Получены web_app_data непонятного формата: {data}")
                 return
@@ -67,6 +82,7 @@ async def handle_webapp(message: types.Message):
                 await message.answer("❗ Корзина пуста, заказ не распознан.")
                 return
 
+            # собираем текст заказа
             lines = []
             lines.append("🧾 <b>Новый заказ</b>")
             lines.append("")
@@ -105,7 +121,9 @@ async def handle_webapp(message: types.Message):
                 try:
                     await bot.send_message(admin_id, text, parse_mode="HTML")
                 except Exception as e:
-                    logging.error(f"Не удалось отправить сообщение админу {admin_id}: {e}")
+                    logging.error(
+                        f"Не удалось отправить сообщение админу {admin_id}: {e}"
+                    )
 
             # отвечаем пользователю
             await message.answer("✅ Заказ принят, спасибо!")
@@ -114,11 +132,13 @@ async def handle_webapp(message: types.Message):
             logging.error(f"Ошибка обработки данных из WebApp: {e}")
             await message.answer("⚠️ Произошла ошибка при обработке заказа.")
     else:
+        # любое обычное сообщение (без web_app_data)
         await message.answer("👋 Отправь /start, чтобы открыть магазин.")
 
-# Запуск бота
+
 async def main():
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
