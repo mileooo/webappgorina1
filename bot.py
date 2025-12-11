@@ -40,9 +40,8 @@ async def cmd_start(message: types.Message):
 @dp.message()
 async def handle_webapp(message: types.Message):
     if message.web_app_data:
-        try:
-            data = json.loads(message.web_app_data.data)
-
+        logging.info(f"ПРИШЛИ ДАННЫЕ ИЗ WEBAPP: {message.web_app_data.data}")
+       
             # Ожидаем словарь с type="order"
             if not isinstance(data, dict) or data.get("type") != "order":
                 logging.info(f"Получены web_app_data непонятного формата: {data}")
