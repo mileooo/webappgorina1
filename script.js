@@ -2016,134 +2016,139 @@ document.addEventListener('click', (e) => {
     setTimeout(showSearchFab, 300);
   }
 });
-// ===== BRAVO ИИ — простой умный помощник =====
+// ===================== BRAVO SUPER AI =====================
 
-const aiPanel      = document.querySelector('.ai-panel');
-const aiBtn        = document.querySelector('.ai-btn');
-const aiCloseBtn   = document.querySelector('.ai-close');
-const aiForm       = document.querySelector('.ai-form');
-const aiInput      = aiForm ? aiForm.querySelector('input') : null;
-const aiMsgList    = document.querySelector('.ai-messages');
+// кнопки и элементы
+const aiPanel = document.querySelector('.ai-panel');
+const aiBtn = document.querySelector('.ai-btn');
+const aiCloseBtn = document.querySelector('.ai-close');
+const aiForm = document.querySelector('.ai-form');
+const aiInput = aiForm ? aiForm.querySelector('input') : null;
+const aiMsgList = document.querySelector('.ai-messages');
 const aiScenarioBtns = document.querySelectorAll('[data-ai-scenario]');
 
-// аккуратное добавление сообщения в чат
-function aiAddMessage(text, from = 'bot') {
+// добавление сообщения
+function aiAddMessage(text, from = "bot") {
   if (!aiMsgList) return;
-  const msg = document.createElement('div');
-  msg.className = 'ai-msg ' + (from === 'bot' ? 'ai-msg-bot' : 'ai-msg-user');
-  msg.textContent = text;
-  aiMsgList.appendChild(msg);
+  const div = document.createElement("div");
+  div.className = "ai-msg " + (from === "user" ? "ai-msg-user" : "ai-msg-bot");
+  div.textContent = text;
+  aiMsgList.appendChild(div);
   aiMsgList.scrollTop = aiMsgList.scrollHeight;
 }
 
-// тексты для готовых сценариев
+// готовые сценарии
 const AI_SCENARIOS = {
   movie: {
-    title: 'Набор к фильму',
-    reply: 'К фильму чаще всего берут: фрукты, сладости, снеки и напитки. Загляни в разделы «Фрукты», «Сладости», «Напитки» и «Чай» — там соберёшь идеальную корзину к просмотру 🎬'
+    title: "Набор к фильму",
+    reply:
+      "🎬 Отличный выбор! К фильму чаще всего берут:\n\n" +
+      "• виноград без косточек\n" +
+      "• сладости (вафли, печенье)\n" +
+      "• напитки (кола, лимонады)\n" +
+      "• лёгкие фрукты (бананы, груши)\n\n" +
+      "Хочешь собрать готовую корзину? Могу предложить варианты!"
   },
+
   guests: {
-    title: 'К приходу гостей',
-    reply: 'Для гостей подойдут фрукты, овощи на закуски, напитки, сладости и что-то к чаю. Посмотри разделы «Фрукты», «Овощи», «Сладости», «Напитки» и «Чай» 🍇☕'
+    title: "К приходу гостей",
+    reply:
+      "🥂 Для гостей подойдут:\n\n" +
+      "• фруктовые наборы\n" +
+      "• овощи под нарезку\n" +
+      "• сладости к чаю\n" +
+      "• соки и лимонады\n\n" +
+      "Сколько будет человек? Соберу идеальный набор 👌"
   },
+
   healthy: {
-    title: 'Что-нибудь полезное',
-    reply: 'Для полезного рациона ищи фрукты, овощи, орехи, крупы и молочку. Обрати внимание на разделы «Фрукты», «Овощи», «Сухофрукты и орехи», «Крупы / бакалея» 🥦'
+    title: "Что-нибудь полезное",
+    reply:
+      "🥗 Для полезного рациона рекомендую:\n\n" +
+      "• ягоды, цитрусы, киви\n" +
+      "• овощи (огурцы, помидоры, капуста)\n" +
+      "• орехи, сухофрукты\n" +
+      "• чай или воду\n\n" +
+      "Могу подобрать продукты под КБЖУ или цели: похудеть / поддерживать вес / энергетичность."
   },
+
   cheap: {
-    title: 'Самое выгодное',
-    reply: 'За выгодой заглядывай в блоки «Выгодно сегодня», «Хиты продаж» и следи за акционными ценниками в каталоге. Так проще всего собрать бюджетную корзину 💰'
+    title: "Самое выгодное",
+    reply:
+      "💸 Лови бюджетные варианты!\n\n" +
+      "• яблоки\n" +
+      "• дыня / арбуз\n" +
+      "• овощи по акции\n" +
+      "• макароны, крупы\n\n" +
+      "Скажи бюджет — соберу максимально выгодную корзину."
   }
 };
 
-// открытие панели ИИ
-function openAiPanel(initialScenario) {
-  if (!aiPanel) return;
-  aiPanel.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('ai-open'); // если где-то в стилях это используется
+// открыть ИИ
+function openAiPanel(scenario = null) {
+  aiPanel.setAttribute("aria-hidden", "false");
+  aiMsgList.innerHTML = "";
 
-  // очистить чат и показать приветствие
-  if (aiMsgList) aiMsgList.innerHTML = '';
+  aiAddMessage("Привет! Я Bravo ИИ 👋\nПомогу собрать заказ, подобрать продукты или составить корзину.");
 
-  aiAddMessage(
-    'Привет! Я Bravo ИИ. Подскажу, что заказать: к фильму, к приходу гостей, на завтрак или просто что-нибудь полезное 😉'
-  );
-
-  if (initialScenario && AI_SCENARIOS[initialScenario]) {
-    const s = AI_SCENARIOS[initialScenario];
-    aiAddMessage(s.title + ':');
-    aiAddMessage(s.reply);
+  if (scenario && AI_SCENARIOS[scenario]) {
+    aiAddMessage("▶ " + AI_SCENARIOS[scenario].title, "user");
+    aiAddMessage(AI_SCENARIOS[scenario].reply, "bot");
   }
 
-  if (aiInput) {
-    aiInput.value = '';
-    aiInput.focus();
-  }
+  aiInput.value = "";
+  aiInput.focus();
 }
 
-// закрытие панели ИИ
+// закрыть ИИ
 function closeAiPanel() {
-  if (!aiPanel) return;
-  aiPanel.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('ai-open');
+  aiPanel.setAttribute("aria-hidden", "true");
 }
 
-// кнопка «ИИ помощник» на баннере
-if (aiBtn && aiPanel) {
-  aiBtn.addEventListener('click', () => {
-    openAiPanel();
-  });
+// клик по кнопке ИИ
+if (aiBtn) {
+  aiBtn.addEventListener("click", () => openAiPanel());
 }
 
-// крестик в правом верхнем углу панели
+// закрытие крестиком
 if (aiCloseBtn) {
-  aiCloseBtn.addEventListener('click', () => {
-    closeAiPanel();
-  });
+  aiCloseBtn.addEventListener("click", () => closeAiPanel());
 }
 
-// обработка кликов по быстрым сценариям сверху
-aiScenarioBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const scenario = btn.dataset.aiScenario;
-    const conf = AI_SCENARIOS[scenario];
-    if (!conf) return;
-
-    // сообщение от пользователя
-    aiAddMessage(conf.title, 'user');
-    // ответ бота
-    aiAddMessage(conf.reply, 'bot');
+// быстрые сценарии (кнопки)
+aiScenarioBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const sc = btn.dataset.aiScenario;
+    openAiPanel(sc);
   });
 });
 
-// разбор свободного текста от пользователя
+// понимание текста
+function aiUnderstand(text) {
+  const q = text.toLowerCase();
+
+  if (q.includes("фильм")) return AI_SCENARIOS.movie.reply;
+  if (q.includes("гост") || q.includes("вечерин")) return AI_SCENARIOS.guests.reply;
+  if (q.includes("пп") || q.includes("кбжу") || q.includes("диет")) return AI_SCENARIOS.healthy.reply;
+  if (q.includes("дешев") || q.includes("выгод")) return AI_SCENARIOS.cheap.reply;
+
+  return "Понял тебя! Расскажи подробнее: к фильму, к гостям, на завтрак или просто подобрать вкусное? 😊";
+}
+
+// обработка пользовательского ввода
 if (aiForm && aiInput) {
-  aiForm.addEventListener('submit', (e) => {
+  aiForm.addEventListener("submit", (e) => {
     e.preventDefault();
+
     const text = aiInput.value.trim();
     if (!text) return;
 
-    aiAddMessage(text, 'user');
-    aiInput.value = '';
+    aiAddMessage(text, "user");
 
-    const lower = text.toLowerCase();
+    const answer = aiUnderstand(text);
+    aiAddMessage(answer, "bot");
 
-    let scenario = null;
-    if (lower.includes('фильм')) scenario = 'movie';
-    else if (lower.includes('гост') || lower.includes('компания')) scenario = 'guests';
-    else if (lower.includes('пп') || lower.includes('здоров') || lower.includes('кбжу')) scenario = 'healthy';
-    else if (lower.includes('дешев') || lower.includes('выгод')) scenario = 'cheap';
-    else if (lower.includes('завтрак')) scenario = 'healthy';
-
-    if (scenario && AI_SCENARIOS[scenario]) {
-      aiAddMessage(AI_SCENARIOS[scenario].reply, 'bot');
-    } else {
-      aiAddMessage(
-        'Понял. Подумай, для чего ты собираешь заказ — к фильму, к гостям, на завтрак или просто полезно поесть. ' +
-        'Выбери подходящую кнопку сверху, и я подскажу, в какие разделы каталога зайти 😊',
-        'bot'
-      );
-    }
+    aiInput.value = "";
   });
 }
 
