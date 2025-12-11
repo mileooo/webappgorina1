@@ -844,6 +844,7 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       alert("Ошибка сохранения заказа: " + orderError.message);
       return;
     }
+
     // Сохраняем адрес в "Мои адреса", если доставка
     if (!isPickup && city && street && house) {
       saveAddressToLocal({ city, street, house, apt });
@@ -1036,7 +1037,7 @@ if (profilePaymentsBtn) {
 if (profileSupportBtn) {
   profileSupportBtn.addEventListener('click', () => {
     const supportLink = 'https://t.me/bravosupport';
-    if (typeof tg !== 'undefined' && tg.openTelegramLink) {
+    if (tg && typeof tg.openTelegramLink === 'function') {
       tg.openTelegramLink(supportLink);
     } else {
       window.open(supportLink, '_blank');
