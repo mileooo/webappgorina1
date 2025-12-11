@@ -2025,7 +2025,7 @@ const aiCloseBtn = document.querySelector('.ai-close');
 const aiForm = document.querySelector('.ai-form');
 const aiInput = aiForm ? aiForm.querySelector('input') : null;
 const aiMsgList = document.querySelector('.ai-messages');
-const aiScenarioBtns = document.querySelectorAll('[data-ai-scenario]');
+const aiScenarioBtns = document.querySelectorAll('[data-scenario]');
 
 // добавление сообщения
 function aiAddMessage(text, from = "bot") {
@@ -2116,10 +2116,15 @@ if (aiCloseBtn) {
 }
 
 // быстрые сценарии (кнопки)
-aiScenarioBtns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const sc = btn.dataset.aiScenario;
-    openAiPanel(sc);
+
+aiScenarioBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const scenario = btn.dataset.scenario;
+    const conf = AI_SCENARIOS[scenario];
+    if (!conf) return;
+
+    aiAddMessage(conf.title, 'user');
+    aiAddMessage(conf.reply, 'bot');
   });
 });
 
