@@ -598,6 +598,34 @@ h1,h2,h3,h4,h5,.logo h4,.name,.price{font-weight:900}
 .kbju-label{font-weight:600;margin-top:8px;color:var(--muted)}
 .kbju{background:#f7f8f6;padding:10px;border-radius:8px;border:1px solid var(--border);font-weight:700;margin:6px 0}
 .prod-desc{margin-top:10px;color:var(--muted);line-height:1.4}
+.saved-address-row {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fafafa;
+}
+
+.saved-address-row-main {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.saved-address-row-extra {
+  font-size: 12px;
+  color: #777;
+}
+
+.btn-small {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #179f21;
+  color: #fff;
+}
 /* ===== ОБНОВЛЁННЫЙ ВНЕШНИЙ ВИД КОРЗИНЫ, КАК НА САМОКАТЕ ===== */
 
 /* панель — шире, выше, более «страничная» */

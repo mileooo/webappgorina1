@@ -414,6 +414,129 @@ const pmQty = document.getElementById('pm-qty');
 const pmUnit = document.getElementById('pm-unit');
 const pmAdd = document.getElementById('pm-add');
 
+// === Мои адреса (localStorage) ===
+
+function loadSavedAddresses() {
+  try {
+    const raw = localStorage.getItem('bm_addresses');
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error('Ошибка парсинга bm_addresses', e);
+    return [];
+  }
+}
+
+function saveAddressToLocal(addr) {
+  if (!addr) return;
+
+  const list = loadSavedAddresses();
+
+  const exists = list.some(a =>
+    a.city   === addr.city &&
+    a.street === addr.street &&
+    a.house  === addr.house &&
+    (a.apt || '') === (addr.apt || '')
+  );
+  if (exists) return;
+
+  list.push({
+    id: Date.now(),
+    city: addr.city,
+    street: addr.street,
+    house: addr.house,
+    apt: addr.apt || ''
+  });
+
+  localStorage.setItem('bm_addresses', JSON.stringify(list));
+}
+
+function openAddressesModal() {
+  const modal = document.getElementById('addresses-modal');
+  const listEl = document.getElementById('saved-addresses-list');
+  if (!modal || !listEl) return;
+
+  const addrs = loadSavedAddresses();
+
+  if (!addrs.length) {
+    listEl.innerHTML = `
+      <div class="small">
+        Пока нет сохранённых адресов. Оформите доставку — и адрес появится здесь автоматически.
+      </div>
+    `;
+  } else {
+    listEl.innerHTML = '';
+    addrs.forEach((addr, idx) => {
+      const div = document.createElement('div');
+      div.className = 'saved-address-row';
+
+      const line = `${addr.city}, ${addr.street} ${addr.house}${
+        addr.apt ? ', кв. ' + addr.apt : ''
+      }`;
+
+      div.innerHTML = `
+        <div class="saved-address-row-main">${line}</div>
+        <div class="saved-address-row-extra">Доставка по этому адресу</div>
+        <div style="margin-top:6px">
+          <button class="btn-small" data-addr-index="${idx}">Использовать</button>
+        </div>
+      `;
+      listEl.appendChild(div);
+    });
+  }
+
+  modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+// закрытие модалки адресов
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'addresses-close' || e.target.id === 'addresses-modal') {
+    const modal = document.getElementById('addresses-modal');
+    if (!modal) return;
+    if (e.target.id === 'addresses-modal' && e.target !== modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+});
+
+// клик по "Использовать" адрес
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-small[data-addr-index]');
+  if (!btn) return;
+
+  const idx = Number(btn.dataset.addrIndex);
+  const addrs = loadSavedAddresses();
+  const addr = addrs[idx];
+  if (!addr) return;
+
+  const cityInput   = document.getElementById('cust-city');
+  const streetInput = document.getElementById('cust-street');
+  const houseInput  = document.getElementById('cust-house');
+  const aptInput    = document.getElementById('cust-apartment');
+
+  if (cityInput)   cityInput.value   = addr.city   || '';
+  if (streetInput) streetInput.value = addr.street || '';
+  if (houseInput)  houseInput.value  = addr.house  || '';
+  if (aptInput)    aptInput.value    = addr.apt    || '';
+
+  // включаем режим "доставка"
+  if (deliveryModeDelivery) deliveryModeDelivery.checked = true;
+  if (deliveryModePickup)   deliveryModePickup.checked   = false;
+  updateAddressVisibility();
+
+  // закрываем модалку
+  const modal = document.getElementById('addresses-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  // если есть товары — сразу кидаем в оформление
+  if (gotoCheckoutBtn && cart.length > 0) {
+    gotoCheckoutBtn.click();
+  }
+});
+
 /* PROFILE PANEL REFS */
 const profilePanel = document.getElementById('profile-panel');
 const profileCloseBtn = document.getElementById('profile-close');
@@ -721,6 +844,41 @@ if (checkoutSubmitBtn && checkoutOverlay) {
       alert("Ошибка сохранения заказа: " + orderError.message);
       return;
     }
+    // Сохраняем адрес в "Мои адреса", если доставка
+    if (!isPickup && city && street && house) {
+      saveAddressToLocal({ city, street, house, apt });
+    }
+        // Сохраняем адрес в "Мои адреса", если доставка
+    if (!isPickup && city && street && house) {
+      saveAddressToLocal({ city, street, house, apt });
+    }
+
+    // Если запущено внутри Telegram WebApp — шлём заказ в бот
+    if (tg && tg.sendData) {
+      try {
+        tg.sendData(JSON.stringify({
+          type: "order",
+          total,
+          items,
+          mode: isPickup ? "pickup" : "delivery",
+          pickupPoint,
+          city,
+          street,
+          house,
+          apt,
+          timeText,
+          payment,
+          comment,
+          user: {
+            id: user.id,
+            phone: user.phone,
+            name
+          }
+        }));
+      } catch (e) {
+        console.error("tg.sendData error:", e);
+      }
+    }
 
     await refreshLoyalty();
 
@@ -848,16 +1006,24 @@ if (profileCloseBtn && profilePanel) {
     }
   });
 }
-
 if (profileOrdersBtn) {
   profileOrdersBtn.addEventListener('click', () => {
+    // закрываем панель ЛК
+    if (profilePanel) {
+      profilePanel.setAttribute('aria-hidden', 'true');
+    }
+    // открываем историю заказов поверх всего
     openHistoryModal();
   });
 }
 
 if (profileAddressesBtn) {
   profileAddressesBtn.addEventListener('click', () => {
-    alert('Раздел "Мои адреса" появится скоро!');
+    // прячем ЛК
+    if (profilePanel) {
+      profilePanel.setAttribute('aria-hidden', 'true');
+    }
+    openAddressesModal();
   });
 }
 
@@ -869,7 +1035,7 @@ if (profilePaymentsBtn) {
 
 if (profileSupportBtn) {
   profileSupportBtn.addEventListener('click', () => {
-    const supportLink = 'https://t.me/your_support_username';
+    const supportLink = 'https://t.me/bravosupport';
     if (typeof tg !== 'undefined' && tg.openTelegramLink) {
       tg.openTelegramLink(supportLink);
     } else {

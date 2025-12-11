@@ -750,11 +750,28 @@
 </div>
 
 <!-- История заказов -->
-<div id="history-modal" class="product-modal" aria-hidden="true" style="z-index:1300">
+<div id="history-modal" class="product-modal" aria-hidden="true" style="z-index:1600">
   <div class="panel" style="max-width:650px">
     <button id="history-close" style="float:right;background:transparent;border:0;font-size:20px;cursor:pointer">✕</button>
     <h3 style="margin-bottom:12px">История заказов</h3>
     <div id="history-list" style="display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow:auto"></div>
+  </div>
+</div>
+
+<!-- Мои адреса -->
+<div id="addresses-modal" class="product-modal" aria-hidden="true" style="z-index:1600">
+  <div class="panel" style="max-width:650px">
+    <button id="addresses-close"
+            style="float:right;background:transparent;border:0;font-size:20px;cursor:pointer">
+      ✕
+    </button>
+    <h3 style="margin-bottom:12px">Мои адреса</h3>
+    <div class="small" style="margin-bottom:8px;color:#777">
+      Здесь сохраняются адреса доставки после ваших заказов.
+    </div>
+    <div id="saved-addresses-list"
+         style="display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow:auto">
+    </div>
   </div>
 </div>
 

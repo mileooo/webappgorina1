@@ -12,6 +12,15 @@ API_TOKEN = "8269137514:AAHj6mSZgHb1w9S85GAjlP1249O9RceZBsM"
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
+# ID админов, которым слать уведомления
+# Подставь сюда реальные chat_id (их можно поймать из message.from_user.id)
+ADMINS = [
+    1209683705,  # админ 1
+    681085718,  # админ 2
+    8462072838,  # админ 3
+    7833955992,  # админ 4
+    7334214419,  # админ 5
+]
 
 # Команда /start с кнопкой WebApp
 @dp.message(Command("start"))
@@ -34,31 +43,86 @@ async def cmd_start(message: types.Message):
 # Обработка данных из WebApp
 @dp.message()
 async def handle_webapp(message: types.Message):
-    if message.web_app_data:
-        try:
-            cart = json.loads(message.web_app_data.data)
-            if not cart:
-                await message.answer("❗ Корзина пуста, закажите что-нибудь 😉")
-                return
-
-            total = sum(item["price"] for item in cart)
-            text = "🧾 *Новый заказ:*\n\n" + "\n".join(
-                [f"• {item['name']} — {item['price']}₽" for item in cart]
-            )
-            text += f"\n\n💰 *Итого:* {total}₽"
-
-            await message.answer(text, parse_mode="Markdown")
-
-            # Здесь можно добавить сохранение в файл или базу данных:
-            # with open("orders.json", "a", encoding="utf-8") as f:
-            #     json.dump({"user": message.from_user.id, "order": cart}, f, ensure_ascii=False)
-            #     f.write("\n")
-
-        except Exception as e:
-            logging.error(f"Ошибка обработки данных из WebApp: {e}")
-            await message.answer("⚠️ Произошла ошибка при обработке заказа.")
-    else:
+    if not message.web_app_data:
         await message.answer("👋 Отправь /start, чтобы оформить заказ.")
+        return
+
+    try:
+        data = json.loads(message.web_app_data.data)
+
+        # Ожидаем формат { type: "order", ... }
+        if data.get("type") != "order":
+          logging.info(f"Получены WebApp данные неизвестного типа: {data}")
+          return
+
+        items = data.get("items", [])
+        total = data.get("total", 0)
+        mode = data.get("mode", "delivery")
+        pickup_point = data.get("pickupPoint")
+        city = data.get("city")
+        street = data.get("street")
+        house = data.get("house")
+        apt = data.get("apt")
+        time_text = data.get("timeText")
+        payment = data.get("payment")
+        comment = data.get("comment")
+
+        user = data.get("user", {}) or {}
+        user_name = user.get("name") or "Без имени"
+        user_phone = user.get("phone") or "Без телефона"
+
+        if not items:
+            await message.answer("❗ Корзина пуста, заказ не распознан.")
+            return
+
+        # Формируем текст заказа
+        lines = []
+        lines.append("🧾 <b>Новый заказ</b>")
+        lines.append("")
+        lines.append(f"👤 Клиент: {user_name}")
+        lines.append(f"📞 Телефон: {user_phone}")
+        lines.append(f"💳 Оплата: {payment or 'не указано'}")
+        lines.append(f"⏱ Время: {time_text or 'как можно скорее'}")
+
+        if mode == "pickup":
+            lines.append(f"📍 Самовывоз: {pickup_point or 'не указан'}")
+        else:
+            addr_line = f"{city or ''}, {street or ''} {house or ''}"
+            if apt:
+                addr_line += f", кв. {apt}"
+            lines.append(f"📦 Доставка по адресу: {addr_line}")
+
+        if comment:
+            lines.append("")
+            lines.append(f"💬 Комментарий: {comment}")
+
+        lines.append("")
+        lines.append("📦 <b>Состав заказа:</b>")
+        for item in items:
+            name = item.get("name")
+            qty = item.get("qtyKg")
+            price = item.get("price")
+            total_item = item.get("total")
+            lines.append(f"• {name} — {qty} кг — {total_item} ₽")
+
+        lines.append("")
+        lines.append(f"💰 <b>Итого:</b> {total} ₽")
+
+        text = "\n".join(lines)
+
+        # Отправляем всем админам
+        for admin_id in ADMINS:
+            try:
+                await bot.send_message(admin_id, text, parse_mode="HTML")
+            except Exception as e:
+                logging.error(f"Не удалось отправить сообщение админу {admin_id}: {e}")
+
+        # Можно также ответить самому пользователю (если нужно)
+        await message.answer("✅ Заказ принят, спасибо!")
+
+    except Exception as e:
+        logging.error(f"Ошибка обработки данных из WebApp: {e}")
+        await message.answer("⚠️ Произошла ошибка при обработке заказа.")
 
 # Запуск бота
 async def main():
