@@ -853,40 +853,46 @@ if (checkoutSubmitBtn && checkoutOverlay) {
     if (!isPickup && city && street && house) {
       saveAddressToLocal({ city, street, house, apt });
     }
+    // Готовим полезную нагрузку заказа
+    const payload = {
+      type: "order",
+      total,
+      items,
+      mode: isPickup ? "pickup" : "delivery",
+      pickupPoint,
+      city,
+      street,
+      house,
+      apt,
+      timeText,
+      payment,
+      comment,
+      user: {
+        id: user.id,
+        phone: user.phone,
+        name
+      }
+    };
 
-        // Если запущено внутри Telegram WebApp — шлём заказ в бот
+    // Если запущено внутри Telegram WebApp — пробуем tg.sendData
     console.log("DEBUG tg object:", tg);
 
     if (tg && tg.sendData) {
-      const payload = {
-        type: "order",
-        total,
-        items,
-        mode: isPickup ? "pickup" : "delivery",
-        pickupPoint,
-        city,
-        street,
-        house,
-        apt,
-        timeText,
-        payment,
-        comment,
-        user: {
-          id: user.id,
-          phone: user.phone,
-          name
-        }
-      };
-
-      console.log("DEBUG: отправляю заказ в Telegram", payload);
-
+      console.log("DEBUG: отправляю заказ в Telegram через tg.sendData", payload);
       try {
         tg.sendData(JSON.stringify(payload));
       } catch (e) {
         console.error("tg.sendData error:", e);
+        // даже если tg.sendData упал — шлём напрямую через HTTP
+        sendOrderDirectToTelegram(payload).catch(err =>
+          console.error("Ошибка direct Telegram отправки:", err)
+        );
       }
     } else {
-      console.warn("DEBUG: tg или tg.sendData недоступны, заказ не уходит в бота");
+      console.warn("DEBUG: tg или tg.sendData недоступны, шлём напрямую через HTTP к боту");
+      sendOrderDirectToTelegram(payload).catch(err =>
+        console.error("Ошибка direct Telegram отправки:", err)
+      );
     }
 
     await refreshLoyalty();
@@ -1912,6 +1918,83 @@ if (closeModalBtn) closeModalBtn.addEventListener('click', () => {
     setTimeout(() => showFloatingCart(), 120);
   }
 });
+
+// Прямая отправка заказа в Telegram бот-апи (без tg.sendData)
+async function sendOrderDirectToTelegram(payload) {
+  // ⚠️ БОТ-ТОКЕН — отсюда же, что и в bot.py
+  const BOT_TOKEN = "8269137514:AAHj6mSZgHb1w9S85GAjlP1249O9RceZBsM";
+
+  // ⚠️ Список админов, сейчас только ты
+  const ADMIN_IDS = [1209683705]; // сюда потом добавишь остальных, если захочешь
+
+  // Собираем текст так же, как в bot.py
+  const items = payload.items || [];
+  const total = payload.total || 0;
+  const mode = payload.mode || "delivery";
+  const pickupPoint = payload.pickupPoint || "";
+  const city = payload.city || "";
+  const street = payload.street || "";
+  const house = payload.house || "";
+  const apt = payload.apt || "";
+  const timeText = payload.timeText || "как можно скорее";
+  const payment = payload.payment || "не указано";
+  const comment = payload.comment || "";
+
+  const user = payload.user || {};
+  const userName = user.name || "Без имени";
+  const userPhone = user.phone || "Без телефона";
+
+  let lines = [];
+  lines.push("🧾 <b>Новый заказ</b>");
+  lines.push("");
+  lines.push(`👤 Клиент: ${userName}`);
+  lines.push(`📞 Телефон: ${userPhone}`);
+  lines.push(`💳 Оплата: ${payment}`);
+  lines.push(`⏱ Время: ${timeText}`);
+
+  if (mode === "pickup") {
+    lines.push(`📍 Самовывоз: ${pickupPoint || "не указан"}`);
+  } else {
+    let addrLine = `${city}, ${street} ${house}`;
+    if (apt) addrLine += `, кв. ${apt}`;
+    lines.push(`📦 Доставка: ${addrLine}`);
+  }
+
+  if (comment) {
+    lines.push("");
+    lines.push(`💬 Комментарий: ${comment}`);
+  }
+
+  lines.push("");
+  lines.push("📦 <b>Состав заказа:</b>");
+  items.forEach((item) => {
+    lines.push(
+      `• ${item.name} — ${item.qtyKg} кг — ${item.total} ₽`
+    );
+  });
+
+  lines.push("");
+  lines.push(`💰 <b>Итого:</b> ${total} ₽`);
+
+  const text = lines.join("\n");
+
+  // Шлём всем админам
+  await Promise.all(
+    ADMIN_IDS.map((adminId) =>
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: adminId,
+          text,
+          parse_mode: "HTML",
+        }),
+      }).catch((err) => {
+        console.error("Ошибка отправки заказа админу", adminId, err);
+      })
+    )
+  );
+}
 
 // закрытие по клику вне панели
 checkoutOverlay.addEventListener('click', (e) => {
